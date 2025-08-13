@@ -27,7 +27,7 @@ A modern, responsive personal resume and portfolio website built with **HTML**, 
 
 ## 📎 Links Included
 - **LinkedIn**: [My LinkedIn Profile](https://www.linkedin.com/in/ujjwal-bajpai-9aa242289/)  
-- **GitHub**: [My GitHub Profile](https://github.com/YourUsername)  
+- **GitHub**: [My GitHub Profile][(https://github.com/YourUsername)  ](https://github.com/Ujjwal120605)
 - **LeetCode**: [My LeetCode Profile](https://leetcode.com/u/ujjwalbajpai/)  
 - **Resume PDF** — Downloadable directly from the hero section  
 
