@@ -375,43 +375,39 @@
 
         /* Contact Section */
         .contact-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-top: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .contact-link {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1.5rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            text-decoration: none;
-            color: white;
-            transition: all 0.3s;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            min-width: 280px;
-            justify-content: flex-start;
-        }
-
-        .contact-link:hover {
-            background: rgba(0, 188, 212, 0.1);
-            transform: translateY(-3px);
-        }
-
-        .contact-icon {
-            width: 50px;
-            height: 50px;
-            background: #00bcd4;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-        }
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+.contact-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    text-decoration: none;
+    color: white;
+    transition: all 0.3s;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    justify-content: flex-start;
+}
+.contact-link:hover {
+    background: rgba(0, 188, 212, 0.1);
+    transform: translateY(-3px);
+}
+.contact-icon {
+    width: 50px;
+    height: 50px;
+    background: #00bcd4;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
 
         /* Footer */
         .footer {
@@ -443,6 +439,7 @@
             .contact-links {
                 flex-direction: column;
                 align-items: center;
+                grid-template-columns: 1fr;
             }
 
             .buttons {
@@ -656,7 +653,7 @@
         </div>
 
         <div class="project-card">
-            <h3>⚡ Battery Health Monitoring System using Machine Learning </h3>
+            <h3>⚡ Battery Health Monitoring System using Machine Learning </h3>
             <p>Built a predictive model to monitor battery health and efficiency, utilizing historical charge-discharge data. Employed regression techniques to estimate battery lifespan and optimize charging cycles, extending battery longevity.</p>
             <div class="tech-stack">
                 <span class="tech">IoT Sensors</span>
@@ -767,6 +764,29 @@
         <h2>Let's Connect</h2>
         
         <div class="contact-links">
+            <!-- NEW: Email contact -->
+            <a href="mailto:bajpaiujjwal3@gmail.com" class="contact-link">
+                <div class="contact-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div>
+                    <h3>Email</h3>
+                    <p>bajpaiujjwal3@gmail.com</p>
+                </div>
+            </a>
+    
+            <!-- NEW: Phone contact -->
+            <a href="tel:+918737006908" class="contact-link">
+                <div class="contact-icon">
+                    <i class="fas fa-phone"></i>
+                </div>
+                <div>
+                    <h3>Phone</h3>
+                    <p>8737006908</p>
+                </div>
+            </a>
+            
+            <!-- EXISTING: LinkedIn -->
             <a href="https://www.linkedin.com/in/ujjwal-bajpai-9aa242289/" class="contact-link" target="_blank" rel="noopener">
                 <div class="contact-icon">
                     <i class="fab fa-linkedin"></i>
@@ -777,6 +797,7 @@
                 </div>
             </a>
             
+            <!-- EXISTING: GitHub -->
             <a href="https://github.com/Ujjwal120605" class="contact-link" target="_blank" rel="noopener">
                 <div class="contact-icon">
                     <i class="fab fa-github"></i>
@@ -787,6 +808,7 @@
                 </div>
             </a>
             
+            <!-- EXISTING: LeetCode -->
             <a href="https://leetcode.com/u/ujjwalbajpai/" class="contact-link" target="_blank" rel="noopener">
                 <div class="contact-icon">
                     <i class="fas fa-code"></i>
