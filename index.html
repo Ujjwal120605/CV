@@ -523,24 +523,29 @@
     <section class="section" id="experience">
         <h2>Experience</h2>
         
-        <div class="card">
-            <div class="card-header">
-                <div class="company-icon">
-                    <i class="fas fa-seedling"></i>
-                </div>
-                <div>
-                    <h3>IT Intern</h3>
-                    <p>Indian Farmers Fertiliser Coop Ltd.</p>
-                    <p>Aonla, Uttar Pradesh, India</p>
-                </div>
-                <div class="duration">Jul 2025 - Sep 2025</div>
+        <!-- IFFCO Experience Card with background -->
+        <div class="card iffco-card">
+          <div class="card-header">
+            <div class="company-icon">
+              <i class="fas fa-seedling"></i>
             </div>
-            <p>Contributed to web development tasks for the HRMS portal, enhancing user interface and functionality. Participated in instrumentation and plant visits to gain insights into industrial automation systems and their IT integration. Gained hands-on exposure to the IT infrastructure supporting large-scale manufacturing and administrative operations.</p>
-            <div class="skills-list">
-                <span class="skill-tag">Problem Solving</span>
-                <span class="skill-tag">Communication</span>
-                <span class="skill-tag">Software Development</span>
+            <div>
+              <h3>IT Intern</h3>
+              <p>Indian Farmers Fertiliser Coop Ltd.</p>
+              <p>Aonla, Uttar Pradesh, India</p>
             </div>
+            <div class="duration">Jul 2025 - Sep 2025</div>
+          </div>
+          <p>
+            Contributed to web development tasks for the HRMS portal, enhancing user interface and functionality. 
+            Participated in instrumentation and plant visits to gain insights into industrial automation systems and their IT integration. 
+            Gained hands-on exposure to the IT infrastructure supporting large-scale manufacturing and administrative operations.
+          </p>
+          <div class="skills-list">
+            <span class="skill-tag">Problem Solving</span>
+            <span class="skill-tag">Communication</span>
+            <span class="skill-tag">Software Development</span>
+          </div>
         </div>
 
         <div class="card">
@@ -554,7 +559,8 @@
                 </div>
                 <div class="duration">Jan 2025 - Present</div>
             </div>
-            <p>Actively involved in organizing technical events and workshops, fostering a community of technology enthusiasts.</p>
+            <p>Participated in college and external hackathons, applying problem-solving and coding skills in real-world challenges.
+                Engaged with a network of peers and mentors, fostering collaboration and technical growth within the ACM community.</p>
         </div>
 
         <div class="card">
@@ -568,50 +574,144 @@
                 </div>
                 <div class="duration">Dec 2023 - Present</div>
             </div>
-            <p>Engaged in community service projects and leadership development.</p>
+            <p>Actively participated in diverse activities such as treks and marathons, contributing to team spirit and community engagement.
+                Made meaningful contributions through donation drives and social initiatives, supporting community welfare.</p>
         </div>
     </section>
+
+    <style>
+        /* Apply special effect only for IFFCO card */
+        .iffco-card {
+          position: relative;
+          overflow: hidden;
+          color: #fff; /* ensures readability */
+          z-index: 1;
+        }
+        
+        /* background image */
+        .iffco-card::before {
+          content: "";
+          position: absolute;
+          top: 0; left: 0;
+          width: 100%; height: 100%;
+          background: url("iffco.png") center/cover no-repeat;
+          opacity: 0.08; /* very dim by default */
+          transition: opacity 0.5s ease-in-out;
+          z-index: 0;
+        }
+        
+        /* hover reveal */
+        .iffco-card:hover::before {
+          opacity: 0.35; /* brighten when hovered */
+        }
+        
+        /* keep text/content above background */
+        .iffco-card * {
+          position: relative;
+          z-index: 1;
+        }
+        </style>
 
     <section class="section">
         <h2>Education</h2>
-        
-        <div class="card">
-            <div class="card-header">
-                <div class="company-icon">
-                    <i class="fas fa-graduation-cap"></i>
-                </div>
-                <div>
-                    <h3>Bachelor of Engineering</h3>
-                    <p>RV College of Engineering</p>
-                    <p>Electronics and Communications Engineering</p>
-                    <p><strong>CGPA: 8.52</strong></p>
-                </div>
-                <div class="duration">2023 - 2027</div>
+      
+        <!-- RV Card -->
+        <div class="education-card rv-bg">
+          <div class="education-details">
+            <h3><b>Bachelor of Engineering</b></h3>
+            <p>RV College of Engineering</p>
+            <p>Electronics and Communications Engineering</p>
+            <p><b>CGPA: 8.52</b></p>
+            <span class="year-tag">2023 - 2027</span>
+            <div class="tags">
+              <span>Python</span>
+              <span>MySQL</span>
+              <span>SOLIDWORKS</span>
+              <span>SQL</span>
+              <span>Machine Learning</span>
+              <span>Data Structures</span>
             </div>
-            <div class="skills-list">
-                <span class="skill-tag">Python</span>
-                <span class="skill-tag">MySQL</span>
-                <span class="skill-tag">SOLIDWORKS</span>
-                <span class="skill-tag">SQL</span>
-                <span class="skill-tag">Machine Learning</span>
-                <span class="skill-tag">Data Structures</span>
-            </div>
+          </div>
         </div>
-
-        <div class="card">
-            <div class="card-header">
-                <div class="company-icon">
-                    <i class="fas fa-school"></i>
-                </div>
-                <div>
-                    <h3>DAV Public School</h3>
-                    <p>Class 10th — <strong>97.4%</strong></p>
-                    <p>Class 12th — <strong>91.8%</strong></p>
-                </div>
-                <div class="duration">2019 - 2023</div>
+      
+        <div class="education-card dav-bg">
+            <div class="education-details">
+              <h3><b>DAV Public School</b></h3>
+              <p>Class 10th — <b>97.4%</b></p>
+              <p>Class 12th — <b>91.8%</b></p>
+              <span class="year-tag">2019 - 2023</span>
+              <div class="tags">
+                <span>Python</span>
+                <span>MySQL</span>
+                <span>Leadership</span>
+                <span>Presentation Skills</span>
+              </div>
             </div>
-        </div>
-    </section>
+          </div>
+        </section>
+      
+      <style>
+      /* ===== Education Section Cards ===== */
+      .education-card {
+        position: relative;
+        border-radius: 15px;
+        overflow: hidden;
+        padding: 20px;
+        color: white;
+        margin-bottom: 20px;
+        background-size: cover;
+        background-position: center;
+        transition: all 0.4s ease;
+      }
+      
+      /* Dim overlay (default = strong dim) */
+      .education-card::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.75); /* heavy dim */
+        z-index: 1;
+        transition: background 0.4s ease;
+      }
+      
+      .education-card:hover::before {
+        background: rgba(0,0,0,0.25); /* reduce dim on hover → picture shows */
+      }
+      
+      .education-details {
+        position: relative;
+        z-index: 2;
+        text-shadow: 1px 1px 4px rgba(0,0,0,0.8); /* make text stand out */
+      }
+      
+      .tags span {
+        background: rgba(255,255,255,0.2);
+        padding: 4px 8px;
+        border-radius: 8px;
+        margin: 3px;
+        display: inline-block;
+        font-size: 0.85em;
+      }
+      
+      .year-tag {
+        display: inline-block;
+        margin-top: 8px;
+        font-weight: bold;
+      }
+      
+      /* Background images */
+      .rv-bg {
+        background-image: url("rv.png");
+      }
+      
+      .dav-bg {
+        background-image: url("dav.png");
+      }
+      </style>
+      
+      
+      
 
     <section class="section" id="projects">
         <h2>Featured Projects</h2>
