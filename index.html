@@ -12,7 +12,6 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
 
         body {
             font-family: 'Inter', sans-serif;
@@ -22,18 +21,18 @@
             overflow-x: hidden;
         }
 
-        /* Particles.js Container - Crucial for click-through */
+        /* Particles.js Container */
         #particles-js {
             position: fixed;
             width: 100%;
             height: 100%;
-            background-color: transparent; /* Allow body background to show */
+            background-color: transparent;
             background-image: url('');
             background-repeat: no-repeat;
             background-size: cover;
             background-position: 50% 50%;
-            z-index: -1; /* Place behind all main content */
-            pointer-events: none; /* VERY IMPORTANT: Allows clicks to pass through particles to content below */
+            z-index: -1;
+            pointer-events: none;
         }
 
         /* Navigation */
@@ -41,10 +40,10 @@
             position: fixed;
             top: 0;
             width: 100%;
-            background: rgba(15, 15, 15, 0.95); /* More opaque for clarity */
+            background: rgba(15, 15, 15, 0.95);
             backdrop-filter: blur(10px);
             padding: 1rem 0;
-            z-index: 1000; /* Highest z-index */
+            z-index: 1000;
             border-bottom: 1px solid #333;
         }
 
@@ -54,7 +53,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 2rem;
+            padding: 0 1rem;
         }
 
         .logo {
@@ -79,15 +78,64 @@
             color: #00bcd4;
         }
 
+        /* Mobile Navigation Menu */
+        .mobile-menu {
+            display: none;
+            cursor: pointer;
+            color: #00bcd4;
+            font-size: 1.5rem;
+        }
+
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            background: rgba(15, 15, 15, 0.98);
+            backdrop-filter: blur(10px);
+            z-index: 999;
+            padding: 1rem 0;
+        }
+
+        .mobile-nav.active {
+            display: block;
+        }
+
+        .mobile-nav ul {
+            list-style: none;
+            text-align: center;
+        }
+
+        .mobile-nav ul li {
+            padding: 1rem 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .mobile-nav ul li:last-child {
+            border-bottom: none;
+        }
+
+        .mobile-nav ul li a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+
+        .mobile-nav ul li a:hover {
+            color: #00bcd4;
+        }
+
         /* Hero Section */
         .hero {
             min-height: 100vh;
             display: flex;
             align-items: center;
-            padding: 0 2rem;
-            background: rgba(15, 15, 15, 0.5); /* Semi-transparent overlay */
-            position: relative; /* Establish stacking context */
-            z-index: 1; /* Above particles */
+            padding: 0 1rem;
+            background: rgba(15, 15, 15, 0.5);
+            position: relative;
+            z-index: 1;
         }
 
         .hero-container {
@@ -120,6 +168,7 @@
         .buttons {
             display: flex;
             gap: 1rem;
+            flex-wrap: wrap;
         }
 
         .btn {
@@ -132,6 +181,9 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            text-align: center;
+            justify-content: center;
+            min-width: 120px;
         }
 
         .btn-primary {
@@ -159,16 +211,17 @@
             border-radius: 50%;
             object-fit: cover;
             border: 4px solid #00bcd4;
+            max-width: 100%;
         }
 
         /* Section Styles */
         .section {
-            padding: 5rem 2rem;
+            padding: 3rem 1rem;
             max-width: 1200px;
             margin: 0 auto;
-            position: relative; /* Establish stacking context */
-            z-index: 1; /* Above particles */
-            background: rgba(15, 15, 15, 0.8); /* Semi-transparent background */
+            position: relative;
+            z-index: 1;
+            background: rgba(15, 15, 15, 0.8);
             border-radius: 15px;
             margin-top: 2rem;
             margin-bottom: 2rem;
@@ -181,11 +234,11 @@
             color: #00bcd4;
         }
 
-        /* Card (General) */
+        /* Card Styles */
         .card {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 15px;
-            padding: 2rem;
+            padding: 1.5rem;
             margin-bottom: 2rem;
             border: 1px solid rgba(255, 255, 255, 0.1);
             transition: transform 0.3s;
@@ -200,6 +253,7 @@
             align-items: center;
             gap: 1rem;
             margin-bottom: 1rem;
+            flex-wrap: wrap;
         }
 
         .company-icon {
@@ -212,6 +266,7 @@
             justify-content: center;
             color: white;
             font-size: 1.2rem;
+            flex-shrink: 0;
         }
 
         .card h3 {
@@ -230,7 +285,7 @@
             padding: 0.3rem 1rem;
             border-radius: 20px;
             font-size: 0.9rem;
-            margin-left: auto;
+            white-space: nowrap;
         }
 
         .skills-list {
@@ -253,7 +308,7 @@
         .project-card {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 15px;
-            padding: 2rem;
+            padding: 1.5rem;
             border: 1px solid rgba(255, 255, 255, 0.1);
             transition: transform 0.3s;
             margin-bottom: 2rem;
@@ -270,50 +325,50 @@
         }
 
         .project-links {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1.5rem;
-}
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
 
-.btn-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.6rem 1.2rem;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
-}
+        .btn-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            text-align: center;
+            justify-content: center;
+            min-width: 100px;
+        }
 
-/* GitHub Button */
-.btn-link.github {
-    background: transparent !important;
-    color: #ff0000 !important;     /* 🔴 Bright red */
-    border: 2px solid #ff0000 !important;
-}
-.btn-link.github:hover {
-    background: #ff0000 !important;
-    color: #fff !important;
-    transform: translateY(-2px);
-}
+        /* GitHub Button */
+        .btn-link.github {
+            background: transparent !important;
+            color: #ff0000 !important;
+            border: 2px solid #ff0000 !important;
+        }
+        .btn-link.github:hover {
+            background: #ff0000 !important;
+            color: #fff !important;
+            transform: translateY(-2px);
+        }
 
-/* Live Demo Button */
-.btn-link.demo {
-    background: transparent !important;
-    color: #ff0000 !important;     /* 🔴 Bright red */
-    border: 2px solid #ff0000 !important;
-}
-.btn-link.demo:hover {
-    background: #ff0000 !important;
-    color: #fff !important;
-    transform: translateY(-2px);
-}
-
-
-
-
+        /* Live Demo Button */
+        .btn-link.demo {
+            background: transparent !important;
+            color: #ff0000 !important;
+            border: 2px solid #ff0000 !important;
+        }
+        .btn-link.demo:hover {
+            background: #ff0000 !important;
+            color: #fff !important;
+            transform: translateY(-2px);
+        }
 
         .tech-stack {
             display: flex;
@@ -330,11 +385,100 @@
             font-size: 0.85rem;
         }
 
+        /* Education Cards */
+        .education-card {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            padding: 20px;
+            color: white;
+            margin-bottom: 20px;
+            background-size: cover;
+            background-position: center;
+            transition: all 0.4s ease;
+        }
+
+        .education-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.75);
+            z-index: 1;
+            transition: background 0.4s ease;
+        }
+
+        .education-card:hover::before {
+            background: rgba(0,0,0,0.25);
+        }
+
+        .education-details {
+            position: relative;
+            z-index: 2;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
+        }
+
+        .tags {
+            margin-top: 1rem;
+        }
+
+        .tags span {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 8px;
+            border-radius: 8px;
+            margin: 3px;
+            display: inline-block;
+            font-size: 0.85em;
+        }
+
+        .year-tag {
+            display: inline-block;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        /* Background images */
+        .rv-bg {
+            background-image: url("rv.png");
+        }
+
+        .dav-bg {
+            background-image: url("dav.png");
+        }
+
+        /* IFFCO Card */
+        .iffco-card {
+            position: relative;
+            overflow: hidden;
+            color: #fff;
+            z-index: 1;
+        }
+
+        .iffco-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: url("iffco.png") center/cover no-repeat;
+            opacity: 0.08;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 0;
+        }
+
+        .iffco-card:hover::before {
+            opacity: 0.35;
+        }
+
+        .iffco-card * {
+            position: relative;
+            z-index: 1;
+        }
+
         /* Certifications Section */
         .cert-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
         }
 
         .cert-card {
@@ -380,11 +524,11 @@
             margin: 0 auto;
         }
 
-        /* Modal for Certificates - Ensure it's on top */
+        /* Modal for Certificates */
         .modal {
             display: none;
             position: fixed;
-            z-index: 1001; /* Higher than nav to ensure it's on top */
+            z-index: 1001;
             padding-top: 60px;
             left: 0;
             top: 0;
@@ -411,6 +555,7 @@
             font-size: 40px;
             font-weight: bold;
             transition: 0.3s;
+            cursor: pointer;
         }
 
         .close:hover,
@@ -422,86 +567,299 @@
 
         /* Contact Section */
         .contact-links {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
-}
-.contact-link {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1.5rem;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 15px;
-    text-decoration: none;
-    color: white;
-    transition: all 0.3s;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    justify-content: flex-start;
-}
-.contact-link:hover {
-    background: rgba(0, 188, 212, 0.1);
-    transform: translateY(-3px);
-}
-.contact-icon {
-    width: 50px;
-    height: 50px;
-    background: #00bcd4;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    flex-shrink: 0;
-}
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .contact-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            justify-content: flex-start;
+        }
+
+        .contact-link:hover {
+            background: rgba(0, 188, 212, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background: #00bcd4;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
 
         /* Footer */
         .footer {
             text-align: center;
-            padding: 2rem;
+            padding: 2rem 1rem;
             color: #666;
             border-top: 1px solid #333;
-            position: relative; /* Establish stacking context */
-            z-index: 1; /* Above particles */
+            position: relative;
+            z-index: 1;
             background: #0f0f0f;
         }
 
-        /* Responsive */
+        /* Mobile Responsive Styles */
         @media (max-width: 768px) {
-            .hero-container {
-                grid-template-columns: 1fr;
-                text-align: center;
-                gap: 2rem;
-            }
-
-            .hero-text h1 {
-                font-size: 2.5rem;
+            /* Navigation */
+            .nav-container {
+                padding: 0 1rem;
             }
 
             .nav-links {
                 display: none;
             }
 
-            .contact-links {
-                flex-direction: column;
-                align-items: center;
+            .mobile-menu {
+                display: block;
+            }
+
+            /* Hero Section */
+            .hero {
+                padding: 0 1rem;
+                margin-top: 70px;
+            }
+
+            .hero-container {
                 grid-template-columns: 1fr;
+                text-align: center;
+                gap: 2rem;
+                padding-top: 2rem;
+            }
+
+            .hero-text {
+                order: 2;
+            }
+
+            .hero-image {
+                order: 1;
+            }
+
+            .hero-text h1 {
+                font-size: 2.2rem;
+                line-height: 1.2;
+            }
+
+            .hero-text p {
+                font-size: 1rem;
+            }
+
+            .profile-pic {
+                width: 250px;
+                height: 250px;
             }
 
             .buttons {
-                flex-direction: column;
+                justify-content: center;
+                gap: 0.5rem;
             }
 
+            .btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.9rem;
+                min-width: 110px;
+            }
+
+            /* Sections */
+            .section {
+                padding: 2rem 1rem;
+                margin-left: 0.5rem;
+                margin-right: 0.5rem;
+            }
+
+            .section h2 {
+                font-size: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            /* Cards */
+            .card {
+                padding: 1rem;
+            }
+
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .duration {
+                align-self: flex-start;
+                margin-top: 0.5rem;
+            }
+
+            /* Project Cards */
+            .project-card {
+                padding: 1rem;
+            }
+
+            .project-card h3 {
+                font-size: 1.2rem;
+            }
+
+            .project-links {
+                justify-content: center;
+                gap: 0.5rem;
+            }
+
+            .btn-link {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+                min-width: 90px;
+            }
+
+            /* Skills */
+            .skills-list {
+                justify-content: center;
+            }
+
+            .skill-tag {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+            }
+
+            /* Tech Stack */
+            .tech-stack {
+                justify-content: center;
+            }
+
+            .tech {
+                font-size: 0.8rem;
+                padding: 0.3rem 0.8rem;
+            }
+
+            /* Education Cards */
+            .education-card {
+                padding: 15px;
+            }
+
+            /* Certifications */
             .cert-grid {
                 grid-template-columns: 1fr;
+                gap: 1rem;
             }
 
+            .cert-card {
+                padding: 1rem;
+            }
+
+            /* Contact Links */
+            .contact-links {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .contact-link {
+                padding: 1rem;
+            }
+
+            /* Modal */
             .modal-content {
                 width: 95%;
             }
-            .section {
-                padding: 3rem 1rem;
+
+            .close {
+                top: 10px;
+                right: 20px;
+                font-size: 30px;
+            }
+        }
+
+        /* Extra small devices */
+        @media (max-width: 480px) {
+            .hero-text h1 {
+                font-size: 1.8rem;
+            }
+
+            .profile-pic {
+                width: 200px;
+                height: 200px;
+            }
+
+            .section h2 {
+                font-size: 1.8rem;
+            }
+
+            .btn {
+                padding: 0.7rem 1.2rem;
+                font-size: 0.85rem;
+            }
+
+            .btn-link {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+                min-width: 80px;
+            }
+
+            .project-links {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .skill-tag, .tech {
+                font-size: 0.75rem;
+                padding: 0.3rem 0.6rem;
+            }
+        }
+
+        /* Landscape orientation on mobile */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .hero {
+                min-height: auto;
+                padding: 1rem;
+            }
+
+            .hero-container {
+                grid-template-columns: 1fr 1fr;
+                gap: 2rem;
+            }
+
+            .hero-text {
+                order: 1;
+            }
+
+            .hero-image {
+                order: 2;
+            }
+
+            .profile-pic {
+                width: 200px;
+                height: 200px;
+            }
+        }
+
+        /* Smooth scrolling for anchor links */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Ensure text is readable on all devices */
+        @media (max-width: 768px) {
+            body {
+                font-size: 14px;
+            }
+        }
+
+        /* Improve touch targets on mobile */
+        @media (max-width: 768px) {
+            .btn, .btn-link, .contact-link, .cert-card {
+                min-height: 44px;
             }
         }
     </style>
@@ -520,6 +878,20 @@
                 <li><a href="#skills-section">Skills</a></li>
                 <li><a href="#certifications">Certifications</a></li>
                 <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="mobile-menu" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+        <div class="mobile-nav" id="mobileNav">
+            <ul>
+                <li><a href="#home" onclick="closeMobileMenu()">Home</a></li>
+                <li><a href="#about" onclick="closeMobileMenu()">About</a></li>
+                <li><a href="#experience" onclick="closeMobileMenu()">Experience</a></li>
+                <li><a href="#projects" onclick="closeMobileMenu()">Projects</a></li>
+                <li><a href="#skills-section" onclick="closeMobileMenu()">Skills</a></li>
+                <li><a href="#certifications" onclick="closeMobileMenu()">Certifications</a></li>
+                <li><a href="#contact" onclick="closeMobileMenu()">Contact</a></li>
             </ul>
         </div>
     </nav>
@@ -626,39 +998,6 @@
         </div>
     </section>
 
-    <style>
-        /* Apply special effect only for IFFCO card */
-        .iffco-card {
-          position: relative;
-          overflow: hidden;
-          color: #fff; /* ensures readability */
-          z-index: 1;
-        }
-        
-        /* background image */
-        .iffco-card::before {
-          content: "";
-          position: absolute;
-          top: 0; left: 0;
-          width: 100%; height: 100%;
-          background: url("iffco.png") center/cover no-repeat;
-          opacity: 0.08; /* very dim by default */
-          transition: opacity 0.5s ease-in-out;
-          z-index: 0;
-        }
-        
-        /* hover reveal */
-        .iffco-card:hover::before {
-          opacity: 0.35; /* brighten when hovered */
-        }
-        
-        /* keep text/content above background */
-        .iffco-card * {
-          position: relative;
-          z-index: 1;
-        }
-        </style>
-
     <section class="section">
         <h2>Education</h2>
       
@@ -696,69 +1035,6 @@
             </div>
           </div>
         </section>
-      
-      <style>
-      /* ===== Education Section Cards ===== */
-      .education-card {
-        position: relative;
-        border-radius: 15px;
-        overflow: hidden;
-        padding: 20px;
-        color: white;
-        margin-bottom: 20px;
-        background-size: cover;
-        background-position: center;
-        transition: all 0.4s ease;
-      }
-      
-      /* Dim overlay (default = strong dim) */
-      .education-card::before {
-        content: "";
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: rgba(0,0,0,0.75); /* heavy dim */
-        z-index: 1;
-        transition: background 0.4s ease;
-      }
-      
-      .education-card:hover::before {
-        background: rgba(0,0,0,0.25); /* reduce dim on hover → picture shows */
-      }
-      
-      .education-details {
-        position: relative;
-        z-index: 2;
-        text-shadow: 1px 1px 4px rgba(0,0,0,0.8); /* make text stand out */
-      }
-      
-      .tags span {
-        background: rgba(255,255,255,0.2);
-        padding: 4px 8px;
-        border-radius: 8px;
-        margin: 3px;
-        display: inline-block;
-        font-size: 0.85em;
-      }
-      
-      .year-tag {
-        display: inline-block;
-        margin-top: 8px;
-        font-weight: bold;
-      }
-      
-      /* Background images */
-      .rv-bg {
-        background-image: url("rv.png");
-      }
-      
-      .dav-bg {
-        background-image: url("dav.png");
-      }
-      </style>
-      
-      
-      
 
     <section class="section" id="projects">
         <h2>Featured Projects</h2>
@@ -793,7 +1069,6 @@
     </div>
 </div>
 
-
         <div class="project-card">
             <h3>🌱 Hyperspectral Crop Mapping using Machine Learning</h3>
             <p>Developed a deep learning model for classifying and mapping crop types using hyperspectral imagery, achieving enhanced accuracy. Leveraged Convolutional Neural Network (CNN) architectures and spectral feature extraction techniques. Aimed at enabling precision agriculture through automated crop health and distribution mapping.</p>
@@ -807,10 +1082,6 @@
 
        <div class="project-card"> <h3>🌐 IFFCO Login & Information Website</h3> <p> Built a complete web application during my internship at IFFCO featuring a secure login system and interactive sections for <b>About</b>, <b>Products</b>, and <b>Contact</b>. Designed using <b>HTML, CSS, JavaScript, and JSON</b>, the website ensures a modern UI/UX while maintaining modular and scalable code. </p> <div class="tech-stack"> <span class="tech">HTML</span> <span class="tech">CSS</span> <span class="tech">JavaScript</span> <span class="tech">JSON</span> <span class="tech">UI/UX</span> </div> <div class="project-links"> <a href="https://github.com/Ujjwal120605/iffco_project" target="_blank" class="btn-link github"> <i class="fab fa-github"></i> GitHub </a> <a href="https://iffco-project.vercel.app/" target="_blank" class="btn-link demo"> <i class="fas fa-external-link-alt"></i> Live Demo </a> </div> </div>
 
-        
-
-         
-         
 <div class="project-card">
   <h3>🌐 Metaverse Website</h3>
   <p>
@@ -837,8 +1108,6 @@
   </div>
 </div>
 
-
-
         <div class="project-card">
             <h3>🔊 Noise Cancellation using Machine Learning</h3>
             <p>
@@ -862,7 +1131,7 @@
                 </a>
             </div>
         </div>
-        
+    </section>
 
     <section class="section" id="skills-section">
         <h2>Skills</h2>
@@ -1016,6 +1285,7 @@
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
+        // Particles.js configuration
         particlesJS('particles-js', {
             "particles": {
                 "number": {
@@ -1127,6 +1397,32 @@
             "retina_detect": true
         });
 
+        // Mobile menu toggle functions
+        function toggleMobileMenu() {
+            const mobileNav = document.getElementById('mobileNav');
+            const menuIcon = document.querySelector('.mobile-menu i');
+            
+            mobileNav.classList.toggle('active');
+            
+            if (mobileNav.classList.contains('active')) {
+                menuIcon.classList.remove('fa-bars');
+                menuIcon.classList.add('fa-times');
+            } else {
+                menuIcon.classList.remove('fa-times');
+                menuIcon.classList.add('fa-bars');
+            }
+        }
+
+        function closeMobileMenu() {
+            const mobileNav = document.getElementById('mobileNav');
+            const menuIcon = document.querySelector('.mobile-menu i');
+            
+            mobileNav.classList.remove('active');
+            menuIcon.classList.remove('fa-times');
+            menuIcon.classList.add('fa-bars');
+        }
+
+        // Certificate modal functions
         function openCertModal(imageSrc) {
             const modal = document.getElementById('certModal');
             const modalImg = document.getElementById('certModalImg');
@@ -1139,11 +1435,32 @@
             modal.style.display = 'none';
         }
 
+        // Close modal when clicking outside of it
         window.onclick = function(event) {
             const modal = document.getElementById('certModal');
             if (event.target == modal) {
                 modal.style.display = 'none';
             }
         }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const mobileNav = document.getElementById('mobileNav');
+            const mobileMenu = document.querySelector('.mobile-menu');
+            const navContainer = document.querySelector('.nav-container');
+            
+            if (!navContainer.contains(event.target) && mobileNav.classList.contains('active')) {
+                closeMobileMenu();
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            const mobileNav = document.getElementById('mobileNav');
+            if (window.innerWidth > 768 && mobileNav.classList.contains('active')) {
+                closeMobileMenu();
+            }
+        });
     </script>
 </body>
+</html>
