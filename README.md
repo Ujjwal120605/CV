@@ -16,7 +16,7 @@ A modern, responsive personal resume and portfolio website built with **HTML**, 
 *(Replace with an actual screenshot of your site)*
 
 ## 🔗 Live Demo
-[Click here to view the website][(https://your-github-pages-link) ][(https://ujjwal120605.github.io/CV/) ](https://ujjwal120605.github.io/CV/)
+[Click here to view the website]https://cv-seven-puce.vercel.app/
 
 
 ## 🛠️ Built With What???
