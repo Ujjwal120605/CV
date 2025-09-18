@@ -1155,8 +1155,6 @@
                 <span class="skill-tag">SOLIDWORKS</span>
                 <span class="skill-tag">Battery Management Systems</span>
                 <span class="skill-tag">Kaggle</span>
-                <span class="skill-tag">Nextjs</span>
-                <span class="skill-tag">Tailwind css</span>
                 <span class="skill-tag">Operating Systems</span>
                 <span class="skill-tag">Git</span>
                 <span class="skill-tag">MySQL</span>
@@ -1220,66 +1218,614 @@
         <img class="modal-content" id="certModalImg">
     </div>
     
-    <section class="section" id="contact">
-        <h2>Let's Connect</h2>
-        
-        <div class="contact-links">
-            <!-- NEW: Email contact -->
-            <a href="mailto:bajpaiujjwal3@gmail.com" class="contact-link">
-                <div class="contact-icon">
-                    <i class="fas fa-envelope"></i>
-                </div>
-                <div>
-                    <h3>Email</h3>
-                    <p>bajpaiujjwal3@gmail.com</p>
-                </div>
-            </a>
+    <!-- Enhanced Contact Section - Replace the existing contact section with this -->
+<section class="section" id="contact">
+    <h2>Contact Me</h2>
     
-            <!-- NEW: Phone contact -->
-            <a href="tel:+918737006908" class="contact-link">
-                <div class="contact-icon">
-                    <i class="fas fa-phone"></i>
+    <div class="contact-container">
+        <!-- Contact Form -->
+        <div class="contact-form-wrapper">
+            <div class="contact-form-card">
+                <div class="form-header">
+                    <h3><i class="fas fa-paper-plane"></i> Get In Touch</h3>
+                    <p>Have a project in mind or want to collaborate? I'd love to hear from you!</p>
                 </div>
-                <div>
-                    <h3>Phone</h3>
-                    <p>8737006908</p>
-                </div>
-            </a>
-            
-            <!-- EXISTING: LinkedIn -->
-            <a href="https://www.linkedin.com/in/ujjwal-bajpai-9aa242289/" class="contact-link" target="_blank" rel="noopener">
-                <div class="contact-icon">
-                    <i class="fab fa-linkedin"></i>
-                </div>
-                <div>
-                    <h3>LinkedIn</h3>
-                    <p>Connect with me</p>
-                </div>
-            </a>
-            
-            <!-- EXISTING: GitHub -->
-            <a href="https://github.com/Ujjwal120605" class="contact-link" target="_blank" rel="noopener">
-                <div class="contact-icon">
-                    <i class="fab fa-github"></i>
-                </div>
-                <div>
-                    <h3>GitHub</h3>
-                    <p>Check my projects</p>
-                </div>
-            </a>
-            
-            <!-- EXISTING: LeetCode -->
-            <a href="https://leetcode.com/u/ujjwalbajpai/" class="contact-link" target="_blank" rel="noopener">
-                <div class="contact-icon">
-                    <i class="fas fa-code"></i>
-                </div>
-                <div>
-                    <h3>LeetCode</h3>
-                    <p>Coding profile</p>
-                </div>
-            </a>
+                
+                <form class="contact-form" id="contactForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name"><i class="fas fa-user"></i> Your Name</label>
+                            <input type="text" id="name" name="name" required placeholder="John Doe">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email"><i class="fas fa-envelope"></i> Your Email</label>
+                            <input type="email" id="email" name="email" required placeholder="john@example.com">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subject"><i class="fas fa-tag"></i> Subject</label>
+                        <input type="text" id="subject" name="subject" required placeholder="Let's work together!">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message"><i class="fas fa-comment"></i> Message</label>
+                        <textarea id="message" name="message" rows="6" required placeholder="Tell me about your project or inquiry..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary send-btn">
+                        <i class="fas fa-paper-plane"></i>
+                        Send Message
+                    </button>
+                </form>
+            </div>
         </div>
-    </section>
+        
+        <!-- Social Links & Contact Info -->
+        <div class="social-links-wrapper">
+            <div class="social-header">
+                <h3><i class="fas fa-share-alt"></i> Connect With Me</h3>
+                <p>Find me on these platforms and let's connect!</p>
+            </div>
+            
+            <div class="social-links-grid">
+                <a href="https://www.linkedin.com/in/ujjwal-bajpai-9aa242289/" class="social-card linkedin" target="_blank" rel="noopener">
+                    <div class="social-icon">
+                        <i class="fab fa-linkedin-in"></i>
+                    </div>
+                    <div class="social-content">
+                        <h4>LinkedIn</h4>
+                        <p>Professional Network</p>
+                        <span class="social-handle">@ujjwal-bajpai</span>
+                    </div>
+                    <div class="social-arrow">
+                        <i class="fas fa-external-link-alt"></i>
+                    </div>
+                </a>
+                
+                <a href="https://github.com/Ujjwal120605" class="social-card github" target="_blank" rel="noopener">
+                    <div class="social-icon">
+                        <i class="fab fa-github"></i>
+                    </div>
+                    <div class="social-content">
+                        <h4>GitHub</h4>
+                        <p>Code Repository</p>
+                        <span class="social-handle">@Ujjwal120605</span>
+                    </div>
+                    <div class="social-arrow">
+                        <i class="fas fa-external-link-alt"></i>
+                    </div>
+                </a>
+                
+                <a href="https://leetcode.com/u/ujjwalbajpai/" class="social-card leetcode" target="_blank" rel="noopener">
+                    <div class="social-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <div class="social-content">
+                        <h4>LeetCode</h4>
+                        <p>Coding Practice</p>
+                        <span class="social-handle">@ujjwalbajpai</span>
+                    </div>
+                    <div class="social-arrow">
+                        <i class="fas fa-external-link-alt"></i>
+                    </div>
+                </a>
+            </div>
+            
+            <!-- Direct Contact Info Cards -->
+            <div class="contact-info-cards">
+                <div class="contact-info-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="contact-details">
+                        <h4>Email</h4>
+                        <p>bajpaiujjwal3@gmail.com</p>
+                    </div>
+                    <button class="copy-btn" onclick="copyToClipboard('bajpaiujjwal3@gmail.com')">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+                
+                <div class="contact-info-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="contact-details">
+                        <h4>Phone</h4>
+                        <p>+91 8737006908</p>
+                    </div>
+                    <button class="copy-btn" onclick="copyToClipboard('+91 8737006908')">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+/* Enhanced Contact Section Styles */
+.contact-container {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 4rem;
+    align-items: start;
+    margin-top: 2rem;
+}
+
+/* Contact Form Styles */
+.contact-form-wrapper {
+    width: 100%;
+}
+
+.contact-form-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    border-radius: 20px;
+    padding: 2.5rem;
+    border: 1px solid rgba(0, 188, 212, 0.2);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-form-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #00bcd4, #ff6b6b, #4caf50, #ff9800);
+    background-size: 300% 100%;
+    animation: gradientShift 3s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.form-header h3 {
+    font-size: 1.8rem;
+    color: #00bcd4;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.form-header p {
+    color: #aaa;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    color: #ccc;
+    margin-bottom: 0.8rem;
+    font-weight: 500;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-group label i {
+    color: #00bcd4;
+}
+
+.form-group input,
+.form-group textarea {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1.2rem;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #00bcd4;
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.1);
+    transform: translateY(-2px);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #888;
+}
+
+.send-btn {
+    margin-top: 1rem;
+    align-self: flex-start;
+    padding: 1.2rem 2.5rem;
+    font-size: 1.1rem;
+    border-radius: 12px;
+    background: linear-gradient(45deg, #00bcd4, #00acc1);
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.send-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.send-btn:hover::before {
+    left: 100%;
+}
+
+.send-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 188, 212, 0.3);
+}
+
+/* Social Links Styles */
+.social-links-wrapper {
+    width: 100%;
+}
+
+.social-header h3 {
+    font-size: 1.8rem;
+    color: #00bcd4;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.social-header p {
+    color: #aaa;
+    margin-bottom: 2rem;
+    font-size: 1rem;
+}
+
+.social-links-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.social-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    text-decoration: none;
+    color: white;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.social-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: #00bcd4;
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+}
+
+.social-card:hover::before {
+    transform: scaleY(1);
+}
+
+.social-card:hover {
+    transform: translateX(5px);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.social-card.linkedin:hover { box-shadow: 0 5px 20px rgba(0, 119, 181, 0.3); }
+.social-card.github:hover { box-shadow: 0 5px 20px rgba(88, 96, 105, 0.3); }
+.social-card.leetcode:hover { box-shadow: 0 5px 20px rgba(255, 161, 22, 0.3); }
+
+.social-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.social-card.linkedin .social-icon { background: linear-gradient(45deg, #0077b5, #005885); }
+.social-card.github .social-icon { background: linear-gradient(45deg, #333, #24292e); }
+.social-card.leetcode .social-icon { background: linear-gradient(45deg, #ffa116, #ff8f00); }
+
+.social-content {
+    flex-grow: 1;
+}
+
+.social-content h4 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #fff;
+    font-weight: 600;
+}
+
+.social-content p {
+    margin: 0.2rem 0;
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+.social-handle {
+    color: #00bcd4;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.social-arrow {
+    color: #666;
+    transition: all 0.3s ease;
+}
+
+.social-card:hover .social-arrow {
+    color: #00bcd4;
+    transform: translateX(3px);
+}
+
+/* Contact Info Cards */
+.contact-info-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.contact-info-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.contact-info-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+}
+
+.contact-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(45deg, #00bcd4, #00acc1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.contact-details {
+    flex-grow: 1;
+}
+
+.contact-details h4 {
+    margin: 0;
+    font-size: 1rem;
+    color: #fff;
+    font-weight: 600;
+}
+
+.contact-details p {
+    margin: 0.2rem 0 0 0;
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+.copy-btn {
+    background: rgba(0, 188, 212, 0.2);
+    border: 1px solid rgba(0, 188, 212, 0.3);
+    border-radius: 8px;
+    padding: 0.5rem;
+    color: #00bcd4;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.copy-btn:hover {
+    background: rgba(0, 188, 212, 0.3);
+    transform: scale(1.1);
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+    .contact-container {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .contact-form-card {
+        padding: 2rem;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .form-header h3 {
+        font-size: 1.6rem;
+    }
+    
+    .social-header h3 {
+        font-size: 1.6rem;
+    }
+    
+    .social-card {
+        padding: 1.2rem;
+    }
+    
+    .social-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .contact-form-card {
+        padding: 1.5rem;
+        border-radius: 15px;
+    }
+    
+    .form-header h3 {
+        font-size: 1.4rem;
+    }
+    
+    .social-header h3 {
+        font-size: 1.4rem;
+    }
+    
+    .send-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .social-card {
+        padding: 1rem;
+    }
+    
+    .contact-info-card {
+        padding: 1rem;
+    }
+}
+</style>
+
+<script>
+// Enhanced contact form handling
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const subject = document.getElementById('subject').value;
+    const message = document.getElementById('message').value;
+    
+    // Create mailto link with form data
+    const mailtoLink = `mailto:bajpaiujjwal3@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
+        `Hello Ujjwal,\n\nName: ${name}\nEmail: ${email}\n\nMessage:\n${message}\n\nBest regards,\n${name}`
+    )}`;
+    
+    // Open default email client
+    window.location.href = mailtoLink;
+    
+    // Show success feedback
+    const submitBtn = document.querySelector('.send-btn');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-check"></i> Message Sent!';
+    submitBtn.style.background = 'linear-gradient(45deg, #4caf50, #45a049)';
+    
+    setTimeout(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.style.background = 'linear-gradient(45deg, #00bcd4, #00acc1)';
+        document.getElementById('contactForm').reset();
+    }, 3000);
+});
+
+// Copy to clipboard function
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(function() {
+        // Show temporary feedback
+        const copyBtns = document.querySelectorAll('.copy-btn');
+        copyBtns.forEach(btn => {
+            if (btn.onclick && btn.onclick.toString().includes(text)) {
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i>';
+                btn.style.background = 'rgba(76, 175, 80, 0.3)';
+                btn.style.color = '#4caf50';
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.style.background = 'rgba(0, 188, 212, 0.2)';
+                    btn.style.color = '#00bcd4';
+                }, 2000);
+            }
+        });
+    }).catch(function(err) {
+        console.error('Could not copy text: ', err);
+    });
+}
+
+// Add smooth animations on scroll
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, observerOptions);
+
+// Observe contact elements for animation
+document.addEventListener('DOMContentLoaded', function() {
+    const contactElements = document.querySelectorAll('.contact-form-card, .social-card, .contact-info-card');
+    contactElements.forEach((el, index) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+        observer.observe(el);
+    });
+});
+</script>
 
     <footer class="footer">
         <p>&copy; 2025 Ujjwal Bajpai. All rights reserved.</p>
