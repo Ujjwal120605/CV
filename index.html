@@ -411,6 +411,225 @@
         .education-card:hover::before {
             background: rgba(0,0,0,0.25);
         }
+        .chatbot-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1001;
+}
+
+.chatbot-toggle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #00bcd4, #00acc1);
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0, 188, 212, 0.3);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chatbot-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(0, 188, 212, 0.4);
+}
+
+.chatbot-window {
+    position: absolute;
+    bottom: 80px;
+    right: 0;
+    width: 350px;
+    height: 500px;
+    background: rgba(15, 15, 15, 0.95);
+    border: 1px solid rgba(0, 188, 212, 0.3);
+    border-radius: 15px;
+    backdrop-filter: blur(20px);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.chatbot-window.open {
+    display: flex;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.chatbot-header {
+    padding: 15px;
+    background: linear-gradient(45deg, #00bcd4, #00acc1);
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.chatbot-header h4 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.chatbot-status {
+    width: 8px;
+    height: 8px;
+    background: #4caf50;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.chatbot-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.chatbot-message {
+    max-width: 80%;
+    padding: 10px 15px;
+    border-radius: 18px;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.chatbot-message.bot {
+    background: rgba(0, 188, 212, 0.2);
+    color: #00bcd4;
+    align-self: flex-start;
+    border-bottom-left-radius: 5px;
+}
+
+.chatbot-message.user {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 5px;
+}
+
+.chatbot-input-container {
+    padding: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    gap: 10px;
+}
+
+.chatbot-input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 14px;
+}
+
+.chatbot-input:focus {
+    outline: none;
+    border-color: #00bcd4;
+}
+
+.chatbot-input::placeholder {
+    color: #aaa;
+}
+
+.chatbot-send {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: #00bcd4;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.chatbot-send:hover {
+    background: #00acc1;
+    transform: scale(1.1);
+}
+
+.chatbot-typing {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+    padding: 10px 15px;
+}
+
+.chatbot-typing span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #00bcd4;
+    animation: typing 1.4s infinite;
+}
+
+.chatbot-typing span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.chatbot-typing span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typing {
+    0%, 60%, 100% {
+        transform: translateY(0);
+        opacity: 0.4;
+    }
+    30% {
+        transform: translateY(-10px);
+        opacity: 1;
+    }
+}
+@media (max-width: 768px) {
+    .theme-toggle {
+        right: 15px;
+        top: 45%;
+    }
+    
+    .chatbot-container {
+        bottom: 15px;
+        right: 15px;
+    }
+    
+    .chatbot-window {
+        width: 90vw;
+        right: -15vw;
+        height: 70vh;
+    }
+    
+    .chatbot-toggle {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+}
+
 
         .education-details {
             position: relative;
@@ -865,6 +1084,31 @@
     </style>
 </head>
 <body>
+    <div class="chatbot-container">
+        <button class="chatbot-toggle" onclick="toggleChatbot()">
+            <i class="fas fa-comments" id="chatbot-icon"></i>
+        </button>
+        
+        <div class="chatbot-window" id="chatbot-window">
+            <div class="chatbot-header">
+                <div class="chatbot-status"></div>
+                <h4>Chat with Ujjwal's Assistant</h4>
+            </div>
+            
+            <div class="chatbot-messages" id="chatbot-messages">
+                <div class="chatbot-message bot">
+                    👋 Hi! I'm Ujjwal's virtual assistant. I can help you learn more about his experience, skills, and projects. What would you like to know?
+                </div>
+            </div>
+            
+            <div class="chatbot-input-container">
+                <input type="text" class="chatbot-input" id="chatbot-input" placeholder="Ask me anything..." onkeypress="handleChatKeyPress(event)">
+                <button class="chatbot-send" onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
     <div id="particles-js"></div>
 
     <nav class="nav">
@@ -2009,6 +2253,481 @@ document.addEventListener('DOMContentLoaded', function() {
                 closeMobileMenu();
             }
         });
+        function toggleTheme() {
+    const body = document.body;
+    const themeIcon = document.getElementById('theme-icon');
+    
+    body.classList.toggle('light-theme');
+    
+    if (body.classList.contains('light-theme')) {
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+        localStorage.setItem('theme', 'light');
+    } else {
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+        localStorage.setItem('theme', 'dark');
+    }
+}
+
+// Load saved theme
+function loadTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const body = document.body;
+    const themeIcon = document.getElementById('theme-icon');
+    
+    if (savedTheme === 'light' || (!savedTheme && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+        body.classList.add('light-theme');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+    }
+}
+
+// Chatbot Functionality
+let chatbotOpen = false;
+
+function toggleChatbot() {
+    const chatbotWindow = document.getElementById('chatbot-window');
+    const chatbotIcon = document.getElementById('chatbot-icon');
+    
+    chatbotOpen = !chatbotOpen;
+    
+    if (chatbotOpen) {
+        chatbotWindow.classList.add('open');
+        chatbotIcon.classList.remove('fa-comments');
+        chatbotIcon.classList.add('fa-times');
+    } else {
+        chatbotWindow.classList.remove('open');
+        chatbotIcon.classList.remove('fa-times');
+        chatbotIcon.classList.add('fa-comments');
+    }
+}
+
+function sendMessage() {
+    const input = document.getElementById('chatbot-input');
+    const message = input.value.trim();
+    
+    if (message) {
+        addMessage(message, 'user');
+        input.value = '';
+        
+        // Show typing indicator
+        showTyping();
+        
+        // Generate response
+        setTimeout(() => {
+            hideTyping();
+            const response = generateResponse(message);
+            addMessage(response, 'bot');
+        }, 1000 + Math.random() * 1000);
+    }
+}
+
+function addMessage(message, sender) {
+    const messagesContainer = document.getElementById('chatbot-messages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `chatbot-message ${sender}`;
+    messageDiv.textContent = message;
+    
+    messagesContainer.appendChild(messageDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+function showTyping() {
+    const messagesContainer = document.getElementById('chatbot-messages');
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'chatbot-typing';
+    typingDiv.id = 'typing-indicator';
+    typingDiv.innerHTML = '<span></span><span></span><span></span>';
+    
+    messagesContainer.appendChild(typingDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+function hideTyping() {
+    const typingIndicator = document.getElementById('typing-indicator');
+    if (typingIndicator) {
+        typingIndicator.remove();
+    }
+}
+
+// Enhanced generateResponse function with comprehensive knowledge base
+function generateResponse(message) {
+    const lowerMessage = message.toLowerCase();
+    
+    // Create comprehensive knowledge base
+    const knowledgeBase = {
+        // Personal Information
+        name: "Ujjwal Bajpai",
+        age: calculateAge("2005-06-12"), // Assuming birth date based on typical age
+        location: "Agra, Uttar Pradesh, India",
+        currentLocation: "Bangalore, Karnataka (for college)",
+        
+        // Education Details
+        education: {
+            current: {
+                degree: "Bachelor of Engineering in Electronics and Communication",
+                college: "RV College of Engineering (RVCE)",
+                cgpa: "8.52",
+                year: "Pre-final year (2023-2027)",
+                location: "Bangalore, Karnataka"
+            },
+            school: {
+                name: "DAV Public School",
+                class10: "97.4%",
+                class12: "91.8%",
+                years: "2019-2023",
+                location: "Agra, Uttar Pradesh"
+            }
+        },
+        
+        // Contact Information
+        contact: {
+            email: "bajpaiujjwal3@gmail.com",
+            phone: "+91 8737006908",
+            linkedin: "https://www.linkedin.com/in/ujjwal-bajpai-9aa242289/",
+            github: "https://github.com/Ujjwal120605",
+            leetcode: "https://leetcode.com/u/ujjwalbajpai/"
+        },
+        
+        // Experience
+        experience: [
+            {
+                role: "IT Intern",
+                company: "Indian Farmers Fertiliser Cooperative Limited (IFFCO)",
+                duration: "July 2025 - September 2025",
+                location: "Aonla, Uttar Pradesh",
+                responsibilities: ["HRMS portal development", "Web development tasks", "Industrial automation exposure"]
+            },
+            {
+                role: "ACM Student Chapter Member",
+                organization: "RV College of Engineering",
+                duration: "January 2025 - Present",
+                activities: ["Hackathon participation", "Technical collaboration"]
+            },
+            {
+                role: "Rotaract Club Member",
+                organization: "RV College of Engineering",
+                duration: "December 2023 - Present",
+                activities: ["Community service", "Social initiatives", "Team activities"]
+            }
+        ],
+        
+        // Skills
+        skills: {
+            programming: ["Python", "C++", "C", "SQL", "HTML", "CSS", "JavaScript", "Verilog", "MATLAB"],
+            technologies: ["MySQL", "Git", "SOLIDWORKS", "Streamlit", "Machine Learning", "Deep Learning", "Data Science"],
+            domains: ["Data Structures & Algorithms", "Machine Learning", "Web Development", "Database Management", "Circuit Design"],
+            soft_skills: ["Communication", "Team Leadership", "Problem Solving", "Presentation Skills", "Team Coordination"]
+        },
+        
+        // Projects
+        projects: [
+            {
+                name: "Responsive Personal Resume Website",
+                description: "Modern portfolio website with downloadable PDF resume",
+                tech: ["HTML", "CSS", "JavaScript", "Responsive Design"],
+                links: {
+                    github: "https://github.com/Ujjwal120605/CV",
+                    demo: "https://cv-seven-puce.vercel.app/"
+                }
+            },
+            {
+                name: "Hyperspectral Crop Mapping using Machine Learning",
+                description: "Deep learning model for crop classification using CNN architectures",
+                tech: ["Python", "Machine Learning", "CNN", "Remote Sensing"],
+                domain: "Agriculture Technology"
+            },
+            {
+                name: "IFFCO Login & Information Website",
+                description: "Web application with secure login and interactive sections",
+                tech: ["HTML", "CSS", "JavaScript", "JSON"],
+                links: {
+                    github: "https://github.com/Ujjwal120605/iffco_project",
+                    demo: "https://iffco-project.vercel.app/"
+                }
+            },
+            {
+                name: "Metaverse Website",
+                description: "Modern Next.js project with 3D web experiences",
+                tech: ["Next.js", "React", "Tailwind CSS", "JavaScript"],
+                links: {
+                    github: "https://github.com/Ujjwal120605/metaverse-website",
+                    demo: "https://metaverse-website-mocha.vercel.app/"
+                }
+            },
+            {
+                name: "Noise Cancellation using Machine Learning",
+                description: "ML-based pipeline for real-time background noise suppression",
+                tech: ["Python", "Machine Learning", "Audio Processing"],
+                links: {
+                    github: "https://github.com/Ujjwal120605/CognitiveNoiseCancellation"
+                }
+            }
+        ],
+        
+        // Achievements & Certifications
+        achievements: [
+            {
+                title: "BITS Pilani API Hackathon - 2nd Runner-Up",
+                description: "AI-based Food Compliance System",
+                year: "2024"
+            }
+        ],
+        
+        certifications: [
+            "NPTEL - Database Management Systems",
+            "Infosys Springboard - Advanced Programming",
+            "Udemy - C++ Programming Mastery",
+            "Udemy - Operating Systems Fundamentals"
+        ],
+        
+        // Interests
+        interests: ["Machine Learning", "Data Structures & Algorithms", "Web Development", "Circuit Design", "Problem Solving", "Competitive Programming"]
+    };
+    
+    // Helper function to calculate age
+    function calculateAge(birthDate) {
+        const today = new Date();
+        const birth = new Date(birthDate);
+        let age = today.getFullYear() - birth.getFullYear();
+        const monthDiff = today.getMonth() - birth.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+            age--;
+        }
+        return age;
+    }
+    
+    // Enhanced keyword matching with synonyms and variations
+    function matchesKeywords(message, keywords) {
+        return keywords.some(keyword => message.includes(keyword));
+    }
+    
+    // Personal Information Responses
+    if (matchesKeywords(lowerMessage, ['name', 'who are you', 'who is ujjwal', 'your name'])) {
+        return `His full name is ${knowledgeBase.name}. He's a passionate Electronics and Communication Engineering student currently in his pre-final year at RVCE.`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['age', 'how old', 'old is he', 'years old'])) {
+        return `Ujjwal is ${knowledgeBase.age} years old, born in 2005.`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['from', 'hometown', 'where is he from', 'location', 'city'])) {
+        return `Ujjwal is from ${knowledgeBase.location}. He's currently studying in ${knowledgeBase.currentLocation} at RV College of Engineering.`;
+    }
+    
+    // Education Responses - Detailed
+    if (matchesKeywords(lowerMessage, ['cgpa', 'gpa', 'grades', 'marks in college', 'college marks'])) {
+        return `Ujjwal has a CGPA of ${knowledgeBase.education.current.cgpa} in his Electronics and Communication Engineering degree at RVCE.`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['10th', 'tenth', 'class 10', 'board exam', '10th marks', '10th percentage'])) {
+        return `Ujjwal scored ${knowledgeBase.education.school.class10} in his Class 10th board exams from DAV Public School.`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['12th', 'twelfth', 'class 12', '12th marks', '12th percentage', 'intermediate'])) {
+        return `Ujjwal achieved ${knowledgeBase.education.school.class12} in his Class 12th board exams from DAV Public School.`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['school', 'dav', 'schooling', 'where did he study'])) {
+        return `Ujjwal completed his schooling at ${knowledgeBase.education.school.name} (${knowledgeBase.education.school.years}) with ${knowledgeBase.education.school.class10} in 10th and ${knowledgeBase.education.school.class12} in 12th.`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['college', 'rvce', 'rv college', 'university', 'degree', 'graduation'])) {
+        return `Ujjwal is pursuing ${knowledgeBase.education.current.degree} at ${knowledgeBase.education.current.college} with a CGPA of ${knowledgeBase.education.current.cgpa}. He's currently in his ${knowledgeBase.education.current.year}.`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['ece', 'electronics', 'communication', 'branch', 'stream', 'major'])) {
+        return `Ujjwal is studying Electronics and Communication Engineering (ECE) at RVCE. This field combines his interests in circuit design, signal processing, and communication systems.`;
+    }
+    
+    // Contact Information
+    if (matchesKeywords(lowerMessage, ['contact', 'email', 'reach', 'get in touch', 'mail'])) {
+        return `You can reach Ujjwal at:\n📧 Email: ${knowledgeBase.contact.email}\n📱 Phone: ${knowledgeBase.contact.phone}\n💼 LinkedIn: Check his profile\n💻 GitHub: ${knowledgeBase.contact.github}`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['phone', 'number', 'call', 'mobile'])) {
+        return `Ujjwal's phone number is ${knowledgeBase.contact.phone}. Feel free to give him a call!`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['linkedin', 'professional network'])) {
+        return `You can connect with Ujjwal on LinkedIn to see his professional updates and network with him.`;
+    }
+    
+    // Skills - Detailed
+    if (matchesKeywords(lowerMessage, ['programming', 'languages', 'code', 'coding'])) {
+        return `Ujjwal is proficient in: ${knowledgeBase.skills.programming.join(', ')}. He's particularly strong in Python and C++ for problem-solving and development.`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['python', 'py'])) {
+        return `Ujjwal is highly skilled in Python and uses it for machine learning projects, data analysis, web development, and competitive programming.`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['c++', 'cpp', 'c plus plus'])) {
+        return `Ujjwal is proficient in C++ and actively uses it for Data Structures & Algorithms practice on LeetCode and competitive programming.`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['sql', 'database', 'mysql'])) {
+        return `Ujjwal has strong database skills with SQL and MySQL. He's also certified in Database Management Systems from NPTEL.`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['web development', 'html', 'css', 'javascript', 'frontend'])) {
+        return `Ujjwal has web development skills in HTML, CSS, and JavaScript. You can see his work in his portfolio website and IFFCO project.`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['solidworks', 'cad', 'design'])) {
+        return `Ujjwal is skilled in SOLIDWORKS for 3D modeling and design, which complements his Electronics and Communication Engineering background.`;
+    }
+    
+    // Machine Learning & Technical
+    if (matchesKeywords(lowerMessage, ['machine learning', 'ml', 'ai', 'artificial intelligence', 'deep learning'])) {
+        return `Ujjwal is passionate about Machine Learning and has worked on projects like Hyperspectral Crop Mapping and Noise Cancellation using ML techniques. He's experienced with various ML algorithms and deep learning approaches.`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['data structures', 'algorithms', 'dsa', 'leetcode'])) {
+        return `Ujjwal actively practices Data Structures & Algorithms on LeetCode and has strong problem-solving skills. He uses C++ and Python for competitive programming and technical interviews.`;
+    }
+    
+    // Experience - Detailed
+    if (matchesKeywords(lowerMessage, ['experience', 'work', 'job', 'internship', 'intern'])) {
+        return `Ujjwal's experience includes:\n🏢 IT Intern at IFFCO (July-Sep 2025) - HRMS portal development\n👥 ACM Chapter Member at RVCE (Jan 2025-Present)\n🤝 Rotaract Club Member at RVCE (Dec 2023-Present)`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['iffco', 'fertilizer', 'internship work', 'current work'])) {
+        return `At IFFCO, Ujjwal works as an IT Intern contributing to HRMS portal development, web development tasks, and gaining exposure to industrial automation systems and IT infrastructure.`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['acm', 'chapter', 'hackathon', 'competitive'])) {
+        return `As an ACM Student Chapter Member at RVCE, Ujjwal participates in hackathons and collaborates on technical projects. He was 2nd Runner-Up at BITS Pilani API Hackathon!`;
+    }
+    
+    // Projects - Comprehensive
+    if (matchesKeywords(lowerMessage, ['projects', 'portfolio', 'work', 'built', 'developed'])) {
+        const projectList = knowledgeBase.projects.map(p => `• ${p.name}`).join('\n');
+        return `Ujjwal has worked on several impressive projects:\n${projectList}\n\nWould you like to know more about any specific project?`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['website', 'portfolio site', 'personal website'])) {
+        return `Ujjwal built his responsive personal portfolio website using HTML, CSS, and JavaScript. It features a modern design, downloadable resume, and showcases all his work professionally.`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['hyperspectral', 'crop mapping', 'agriculture'])) {
+        return `The Hyperspectral Crop Mapping project uses deep learning and CNN architectures for crop classification from satellite imagery. It's aimed at precision agriculture and automated crop health monitoring.`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['noise cancellation', 'audio', 'signal processing'])) {
+        return `Ujjwal developed an ML-based noise cancellation system for real-time background noise suppression in audio signals, combining his ECE background with machine learning expertise.`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['metaverse', 'nextjs', 'react'])) {
+        return `The Metaverse Website is a modern Next.js project showcasing 3D web experiences with React and Tailwind CSS. It demonstrates his frontend development skills and modern web technologies.`;
+    }
+    
+    // Achievements
+    if (matchesKeywords(lowerMessage, ['achievements', 'awards', 'hackathon', 'winner', 'bits pilani'])) {
+        return `Ujjwal's notable achievement includes being 2nd Runner-Up at BITS Pilani API Hackathon for developing an AI-based Food Compliance System. He actively participates in various hackathons and competitions.`;
+    }
+    
+    // Certifications
+    if (matchesKeywords(lowerMessage, ['certifications', 'certificates', 'courses', 'nptel', 'infosys', 'udemy'])) {
+        const certList = knowledgeBase.certifications.join('\n• ');
+        return `Ujjwal's certifications include:\n• ${certList}\n\nThese demonstrate his commitment to continuous learning and skill development.`;
+    }
+    
+    // GitHub & Online Presence
+    if (matchesKeywords(lowerMessage, ['github', 'repositories', 'code', 'open source'])) {
+        return `Ujjwal's GitHub (${knowledgeBase.contact.github}) showcases his projects and contributions. You can find his portfolio website, IFFCO project, Metaverse website, and ML projects there.`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['leetcode', 'competitive programming', 'problem solving'])) {
+        return `Ujjwal actively practices on LeetCode (${knowledgeBase.contact.leetcode}) and has strong problem-solving skills in Data Structures & Algorithms using C++ and Python.`;
+    }
+    
+    // Career & Future
+    if (matchesKeywords(lowerMessage, ['career', 'future', 'goals', 'plans', 'aspiration'])) {
+        return `Ujjwal aims to bridge the gap between hardware and software, combining his ECE background with programming skills. He's interested in ML, embedded systems, and developing innovative tech solutions.`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['looking for', 'opportunities', 'hiring', 'job', 'internship opportunity'])) {
+        return `Ujjwal is always open to exciting opportunities in software development, machine learning, and electronics. Feel free to reach out to him with interesting projects or positions!`;
+    }
+    
+    // Interests & Personal
+    if (matchesKeywords(lowerMessage, ['interests', 'hobbies', 'likes', 'passionate about'])) {
+        return `Ujjwal is passionate about ${knowledgeBase.interests.join(', ')}. He enjoys solving complex problems and building innovative solutions that make a real-world impact.`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['personality', 'person', 'character', 'about him'])) {
+        return `Ujjwal is a curious and driven individual with strong analytical thinking and adaptability. He thrives on continuous learning and enjoys collaborating on innovative projects.`;
+    }
+    
+    // Resume & CV
+    if (matchesKeywords(lowerMessage, ['resume', 'cv', 'download', 'pdf'])) {
+        return `You can download Ujjwal's detailed resume from the homepage of his portfolio. It contains comprehensive information about his experience, education, skills, projects, and achievements.`;
+    }
+    
+    // Greetings & Common Phrases
+    if (matchesKeywords(lowerMessage, ['hello', 'hi', 'hey', 'greetings'])) {
+        return `Hello! I'm here to help you learn more about Ujjwal Bajpai. Feel free to ask about his education, experience, projects, skills, achievements, or anything else you'd like to know!`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['thanks', 'thank you', 'appreciate'])) {
+        return `You're welcome! If you have any other questions about Ujjwal's background, projects, experience, or skills, feel free to ask. I'm here to help!`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['help', 'what can you tell', 'information'])) {
+        return `I can tell you about Ujjwal's education (CGPA: 8.52, 10th: 97.4%, 12th: 91.8%), current internship at IFFCO, programming skills, ML projects, achievements, and much more! What would you like to know?`;
+    }
+    
+    // Specific technical queries
+    if (matchesKeywords(lowerMessage, ['percentage', '%', 'marks', 'scores'])) {
+        return `Ujjwal's academic scores: 10th - ${knowledgeBase.education.school.class10}, 12th - ${knowledgeBase.education.school.class12}, Current CGPA - ${knowledgeBase.education.current.cgpa}`;
+    }
+    
+    // Default responses for unrecognized queries
+    const defaultResponses = [
+        "That's an interesting question! Could you be more specific? I can tell you about Ujjwal's education, experience, projects, skills, or achievements.",
+        "I'd be happy to help! You can ask me about his CGPA (8.52), board percentages (10th: 97.4%, 12th: 91.8%), internship at IFFCO, projects, or technical skills.",
+        "Feel free to ask about specific topics like his machine learning projects, programming skills, hackathon achievements, or academic performance.",
+        "I can provide detailed information about Ujjwal's background. Try asking about his education, work experience, technical skills, or project details!"
+    ];
+    
+    return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+}
+
+function handleChatKeyPress(event) {
+    if (event.key === 'Enter') {
+        sendMessage();
+    }
+}
+
+// Initialize theme on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadTheme();
+    
+    // Add some predefined quick questions after a delay
+    setTimeout(() => {
+        if (Math.random() > 0.7) { // 30% chance to show suggestion
+            const suggestions = [
+                "Try asking: 'Tell me about his projects'",
+                "Try asking: 'What are his skills?'",
+                "Try asking: 'How can I contact him?'"
+            ];
+            const randomSuggestion = suggestions[Math.floor(Math.random() * suggestions.length)];
+            addMessage(randomSuggestion, 'bot');
+        }
+    }, 5000);
+});
+
+// Close chatbot when clicking outside
+document.addEventListener('click', function(event) {
+    const chatbotContainer = document.querySelector('.chatbot-container');
+    if (chatbotOpen && !chatbotContainer.contains(event.target)) {
+        toggleChatbot();
+    }
+    
+});
+
     </script>
 </body>
 </html>
