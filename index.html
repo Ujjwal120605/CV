@@ -213,6 +213,299 @@
             border: 4px solid #00bcd4;
             max-width: 100%;
         }
+        .voice-chatbot {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1002;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.voice-chatbot-toggle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #9c27b0, #673ab7);
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(156, 39, 176, 0.3);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.voice-chatbot-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(156, 39, 176, 0.4);
+}
+
+.voice-chatbot-toggle.listening {
+    background: linear-gradient(45deg, #4caf50, #45a049);
+    animation: voicePulse 1.5s infinite;
+}
+
+.voice-chatbot-toggle.processing {
+    background: linear-gradient(45deg, #ff9800, #f57c00);
+    animation: voiceProcessing 2s linear infinite;
+}
+
+.voice-chatbot-toggle.speaking {
+    background: linear-gradient(45deg, #00bcd4, #00acc1);
+    animation: voiceSpeaking 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes voicePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+@keyframes voiceProcessing {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes voiceSpeaking {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1.08); opacity: 0.8; }
+}
+
+.voice-wave {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    border: 2px solid rgba(76, 175, 80, 0.4);
+    border-radius: 50%;
+    opacity: 0;
+    animation: voiceWave 2s infinite;
+}
+
+.voice-chatbot-toggle.listening .voice-wave {
+    opacity: 1;
+}
+
+@keyframes voiceWave {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.4; }
+    100% { transform: translate(-50%, -50%) scale(1.8); opacity: 0; }
+}
+
+.voice-status-bubble {
+    position: absolute;
+    bottom: 80px;
+    left: 0;
+    background: rgba(15, 15, 15, 0.95);
+    border: 1px solid rgba(156, 39, 176, 0.3);
+    color: #9c27b0;
+    padding: 12px 18px;
+    border-radius: 25px;
+    font-size: 14px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    max-width: 250px;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+.voice-status-bubble.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-5px);
+}
+
+.voice-status-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 20px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid rgba(15, 15, 15, 0.95);
+}
+
+.voice-help-panel {
+    position: absolute;
+    bottom: 80px;
+    left: 80px;
+    background: rgba(15, 15, 15, 0.95);
+    border: 1px solid rgba(156, 39, 176, 0.3);
+    border-radius: 15px;
+    padding: 20px;
+    width: 300px;
+    backdrop-filter: blur(20px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.voice-help-panel.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(10px);
+}
+
+.voice-help-panel h4 {
+    color: #9c27b0;
+    margin-bottom: 15px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.voice-help-panel .help-examples {
+    color: #ccc;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.voice-help-panel .help-examples strong {
+    color: #9c27b0;
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.voice-conversation-history {
+    position: absolute;
+    bottom: 80px;
+    left: 0;
+    background: rgba(15, 15, 15, 0.95);
+    border: 1px solid rgba(156, 39, 176, 0.3);
+    border-radius: 15px;
+    padding: 15px;
+    width: 320px;
+    max-height: 300px;
+    backdrop-filter: blur(20px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow-y: auto;
+}
+
+.voice-conversation-history.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-10px);
+}
+
+.voice-message {
+    margin-bottom: 10px;
+    font-size: 13px;
+    padding: 8px 12px;
+    border-radius: 12px;
+    max-width: 90%;
+}
+
+.voice-message.user {
+    background: rgba(156, 39, 176, 0.2);
+    color: #9c27b0;
+    margin-left: auto;
+    text-align: right;
+    border-bottom-right-radius: 4px;
+}
+
+.voice-message.bot {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ccc;
+    border-bottom-left-radius: 4px;
+}
+
+/* Light theme adjustments */
+body.light-theme .voice-status-bubble {
+    background: rgba(255, 255, 255, 0.95);
+    color: #9c27b0;
+    border-color: rgba(156, 39, 176, 0.3);
+}
+
+body.light-theme .voice-status-bubble::after {
+    border-top-color: rgba(255, 255, 255, 0.95);
+}
+
+body.light-theme .voice-help-panel,
+body.light-theme .voice-conversation-history {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(156, 39, 176, 0.3);
+}
+
+body.light-theme .voice-help-panel .help-examples,
+body.light-theme .voice-message.bot {
+    color: #333;
+}
+
+body.light-theme .voice-message.user {
+    background: rgba(156, 39, 176, 0.15);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .voice-chatbot {
+        bottom: 15px;
+        left: 15px;
+    }
+    
+    .voice-chatbot-toggle {
+        width: 55px;
+        height: 55px;
+        font-size: 22px;
+    }
+    
+    .voice-help-panel {
+        width: calc(100vw - 120px);
+        left: 70px;
+        bottom: 85px;
+    }
+    
+    .voice-conversation-history {
+        width: calc(100vw - 50px);
+        max-height: 250px;
+    }
+    
+    .voice-status-bubble {
+        max-width: 200px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .voice-chatbot-toggle {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+    
+    .voice-help-panel {
+        width: calc(100vw - 90px);
+        left: 65px;
+        padding: 15px;
+    }
+    
+    .voice-conversation-history {
+        width: calc(100vw - 40px);
+        max-height: 200px;
+    }
+}
+
+/* Accessibility */
+.voice-chatbot-toggle:focus {
+    outline: 2px solid #9c27b0;
+    outline-offset: 3px;
+}
 
         /* Section Styles */
         .section {
@@ -1419,6 +1712,40 @@
                     <i class="fas fa-paper-plane"></i>
                 </button>
             </div>
+        </div>
+    </div>
+    <div class="voice-chatbot">
+        <button class="voice-chatbot-toggle" id="voiceChatbotToggle" onclick="toggleVoiceChatbot()" 
+                aria-label="Voice chatbot toggle" title="Click to talk">
+            <i class="fas fa-microphone" id="voiceChatbotIcon"></i>
+            <div class="voice-wave"></div>
+        </button>
+        
+        <div class="voice-status-bubble" id="voiceStatusBubble">
+            Click to ask me anything!
+        </div>
+        
+        <div class="voice-help-panel" id="voiceHelpPanel">
+            <h4><i class="fas fa-comments"></i> Voice Assistant</h4>
+            <div class="help-examples">
+                <strong>Try asking me:</strong>
+                "What are Ujjwal's skills?"<br>
+                "Tell me about his experience"<br>
+                "What's his CGPA?"<br>
+                "Who are his parents?"<br>
+                "Show me his projects"<br>
+                "How can I contact him?"<br><br>
+                <strong>Commands:</strong><br>
+                "Show conversation" - View chat history<br>
+                "Stop listening" - End conversation
+            </div>
+        </div>
+        
+        <div class="voice-conversation-history" id="voiceConversationHistory">
+            <h4 style="color: #9c27b0; margin-bottom: 10px; font-size: 14px;">
+                <i class="fas fa-history"></i> Conversation History
+            </h4>
+            <div id="voiceMessages"></div>
         </div>
     </div>
     <div id="particles-js"></div>
@@ -2673,7 +3000,7 @@ function generateResponse(message) {
         // Personal Information
         name: "Ujjwal Bajpai",
         age: calculateAge("2005-06-12"),
-        location: "Aonla,Bareily Uttar Pradesh, India",
+        location: "Agra, Uttar Pradesh, India",
         currentLocation: "Bangalore, Karnataka (for college)",
         
         // Family Information
@@ -2716,7 +3043,7 @@ function generateResponse(message) {
                 role: "IT Intern",
                 company: "Indian Farmers Fertiliser Cooperative Limited (IFFCO)",
                 duration: "July 2025 - September 2025",
-                location: "Aonla,Bareily,Uttar Pradesh",
+                location: "Aonla, Uttar Pradesh",
                 responsibilities: ["HRMS portal development", "Web development tasks", "Industrial automation exposure"]
             },
             {
@@ -3062,7 +3389,389 @@ document.addEventListener('click', function(event) {
     if (chatbotOpen && !chatbotContainer.contains(event.target)) {
         toggleChatbot();
     }
+
     
+    
+});
+class VoiceChatbot {
+    constructor() {
+        this.isListening = false;
+        this.isSpeaking = false;
+        this.recognition = null;
+        this.synthesis = window.speechSynthesis;
+        this.isSupported = this.checkSupport();
+        this.currentUtterance = null;
+        this.conversationHistory = [];
+        this.helpVisible = false;
+        this.historyVisible = false;
+        
+        if (this.isSupported) {
+            this.initializeRecognition();
+            this.showWelcomeMessage();
+        } else {
+            this.showUnsupportedMessage();
+        }
+    }
+    
+    checkSupport() {
+        return 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window;
+    }
+    
+    showWelcomeMessage() {
+        setTimeout(() => {
+            this.showStatus("Click to ask me anything about Ujjwal!", 3000);
+        }, 1000);
+    }
+    
+    initializeRecognition() {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        this.recognition = new SpeechRecognition();
+        
+        this.recognition.continuous = false;
+        this.recognition.interimResults = false;
+        this.recognition.lang = 'en-US';
+        this.recognition.maxAlternatives = 1;
+        
+        this.recognition.onstart = () => {
+            this.updateUI('listening');
+            this.showStatus('Listening... Ask me anything!');
+        };
+        
+        this.recognition.onresult = (event) => {
+            const question = event.results[0][0].transcript.trim();
+            this.updateUI('processing');
+            this.showStatus('Processing your question...');
+            this.processVoiceQuestion(question);
+        };
+        
+        this.recognition.onerror = (event) => {
+            console.error('Speech recognition error:', event.error);
+            this.updateUI('idle');
+            this.showStatus('Sorry, I had trouble hearing you. Try again!', 3000);
+        };
+        
+        this.recognition.onend = () => {
+            if (this.isListening) {
+                this.isListening = false;
+                this.updateUI('idle');
+            }
+        };
+    }
+    
+    toggleVoiceChatbot() {
+        if (!this.isSupported) {
+            this.showUnsupportedMessage();
+            return;
+        }
+        
+        if (this.isSpeaking) {
+            this.stopSpeaking();
+            return;
+        }
+        
+        if (this.isListening) {
+            this.stopListening();
+        } else {
+            this.startListening();
+        }
+    }
+    
+    startListening() {
+        if (this.synthesis.speaking) {
+            this.synthesis.cancel();
+        }
+        
+        this.hideHelp();
+        this.hideHistory();
+        
+        try {
+            this.isListening = true;
+            this.recognition.start();
+        } catch (error) {
+            console.error('Failed to start recognition:', error);
+            this.showStatus('Failed to start listening. Try again!', 3000);
+            this.isListening = false;
+        }
+    }
+    
+    stopListening() {
+        this.isListening = false;
+        if (this.recognition) {
+            this.recognition.stop();
+        }
+        this.updateUI('idle');
+    }
+    
+    stopSpeaking() {
+        if (this.synthesis.speaking) {
+            this.synthesis.cancel();
+        }
+        this.isSpeaking = false;
+        this.updateUI('idle');
+    }
+    
+    processVoiceQuestion(question) {
+        console.log('Voice question received:', question);
+        
+        // Add to conversation history
+        this.addToHistory(question, 'user');
+        
+        const lowerQuestion = question.toLowerCase();
+        
+        // Check for special commands first
+        if (lowerQuestion.includes('show conversation') || lowerQuestion.includes('show history')) {
+            this.showHistory();
+            this.speak("Here's our conversation history");
+            this.updateUI('idle');
+            return;
+        }
+        
+        if (lowerQuestion.includes('help') || lowerQuestion.includes('what can you do')) {
+            this.showHelp();
+            this.speak("I can answer questions about Ujjwal's background, experience, skills, education, and more. Just ask me anything!");
+            this.updateUI('idle');
+            return;
+        }
+        
+        if (lowerQuestion.includes('stop') || lowerQuestion.includes('quit') || lowerQuestion.includes('bye')) {
+            this.speak("Thanks for chatting! Click anytime to ask more questions.");
+            this.addToHistory("Thanks for chatting! Click anytime to ask more questions.", 'bot');
+            this.updateUI('idle');
+            return;
+        }
+        
+        // Use existing chatbot knowledge base
+        const response = generateResponse(question);
+        
+        // Add response to history
+        this.addToHistory(response, 'bot');
+        
+        // Speak the response
+        this.speak(response);
+        
+        setTimeout(() => {
+            this.updateUI('idle');
+        }, 1000);
+    }
+    
+    addToHistory(message, sender) {
+        this.conversationHistory.push({
+            message: message,
+            sender: sender,
+            timestamp: new Date()
+        });
+        
+        // Keep only last 10 messages
+        if (this.conversationHistory.length > 10) {
+            this.conversationHistory = this.conversationHistory.slice(-10);
+        }
+        
+        this.updateHistoryDisplay();
+    }
+    
+    updateHistoryDisplay() {
+        const container = document.getElementById('voiceMessages');
+        container.innerHTML = '';
+        
+        this.conversationHistory.forEach(item => {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `voice-message ${item.sender}`;
+            
+            // Truncate long messages for display
+            let displayMessage = item.message;
+            if (displayMessage.length > 100) {
+                displayMessage = displayMessage.substring(0, 97) + '...';
+            }
+            
+            messageDiv.textContent = displayMessage;
+            container.appendChild(messageDiv);
+        });
+        
+        // Scroll to bottom
+        container.scrollTop = container.scrollHeight;
+    }
+    
+    speak(text) {
+        if (this.synthesis.speaking) {
+            this.synthesis.cancel();
+        }
+        
+        this.isSpeaking = true;
+        this.updateUI('speaking');
+        this.showStatus('Speaking...');
+        
+        // Split long text into shorter chunks for better speech
+        const maxLength = 200;
+        const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+        let chunks = [];
+        let currentChunk = '';
+        
+        sentences.forEach(sentence => {
+            if ((currentChunk + sentence).length > maxLength && currentChunk.length > 0) {
+                chunks.push(currentChunk.trim());
+                currentChunk = sentence;
+            } else {
+                currentChunk += (currentChunk ? '. ' : '') + sentence;
+            }
+        });
+        
+        if (currentChunk.trim().length > 0) {
+            chunks.push(currentChunk.trim());
+        }
+        
+        if (chunks.length === 0) {
+            chunks = [text];
+        }
+        
+        this.speakChunks(chunks, 0);
+    }
+    
+    speakChunks(chunks, index) {
+        if (index >= chunks.length || !this.isSpeaking) {
+            this.isSpeaking = false;
+            this.updateUI('idle');
+            return;
+        }
+        
+        this.currentUtterance = new SpeechSynthesisUtterance(chunks[index]);
+        this.currentUtterance.rate = 0.9;
+        this.currentUtterance.pitch = 1;
+        this.currentUtterance.volume = 0.8;
+        
+        // Try to use a more natural voice
+        const voices = this.synthesis.getVoices();
+        const preferredVoice = voices.find(voice => 
+            voice.lang.includes('en') && (
+                voice.name.includes('Google') || 
+                voice.name.includes('Microsoft') ||
+                voice.name.includes('Natural')
+            )
+        );
+        if (preferredVoice) {
+            this.currentUtterance.voice = preferredVoice;
+        }
+        
+        this.currentUtterance.onend = () => {
+            if (this.isSpeaking) {
+                this.speakChunks(chunks, index + 1);
+            }
+        };
+        
+        this.currentUtterance.onerror = () => {
+            console.error('Speech synthesis error');
+            this.isSpeaking = false;
+            this.updateUI('idle');
+        };
+        
+        this.synthesis.speak(this.currentUtterance);
+    }
+    
+    updateUI(state) {
+        const toggle = document.getElementById('voiceChatbotToggle');
+        const icon = document.getElementById('voiceChatbotIcon');
+        
+        toggle.classList.remove('listening', 'processing', 'speaking');
+        
+        switch (state) {
+            case 'listening':
+                toggle.classList.add('listening');
+                icon.className = 'fas fa-microphone-slash';
+                break;
+            case 'processing':
+                toggle.classList.add('processing');
+                icon.className = 'fas fa-cog';
+                break;
+            case 'speaking':
+                toggle.classList.add('speaking');
+                icon.className = 'fas fa-volume-up';
+                break;
+            default:
+                icon.className = 'fas fa-microphone';
+                this.hideStatus();
+        }
+    }
+    
+    showStatus(message, duration = 5000) {
+        const status = document.getElementById('voiceStatusBubble');
+        status.textContent = message;
+        status.classList.add('show');
+        
+        if (duration > 0) {
+            setTimeout(() => this.hideStatus(), duration);
+        }
+    }
+    
+    hideStatus() {
+        const status = document.getElementById('voiceStatusBubble');
+        status.classList.remove('show');
+    }
+    
+    showHelp() {
+        this.hideHistory();
+        const help = document.getElementById('voiceHelpPanel');
+        help.classList.add('show');
+        this.helpVisible = true;
+        
+        setTimeout(() => {
+            this.hideHelp();
+        }, 8000);
+    }
+    
+    hideHelp() {
+        const help = document.getElementById('voiceHelpPanel');
+        help.classList.remove('show');
+        this.helpVisible = false;
+    }
+    
+    showHistory() {
+        this.hideHelp();
+        const history = document.getElementById('voiceConversationHistory');
+        history.classList.add('show');
+        this.historyVisible = true;
+        
+        setTimeout(() => {
+            this.hideHistory();
+        }, 10000);
+    }
+    
+    hideHistory() {
+        const history = document.getElementById('voiceConversationHistory');
+        history.classList.remove('show');
+        this.historyVisible = false;
+    }
+    
+    showUnsupportedMessage() {
+        this.showStatus('Voice chat not supported in this browser', 5000);
+    }
+}
+
+// Initialize voice chatbot
+let voiceChatbot;
+
+function toggleVoiceChatbot() {
+    if (!voiceChatbot) {
+        voiceChatbot = new VoiceChatbot();
+    }
+    voiceChatbot.toggleVoiceChatbot();
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize voices for better speech synthesis
+    if ('speechSynthesis' in window) {
+        speechSynthesis.getVoices();
+        window.speechSynthesis.onvoiceschanged = function() {
+            speechSynthesis.getVoices();
+        };
+    }
+});
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', function() {
+    if (voiceChatbot) {
+        voiceChatbot.stopListening();
+        voiceChatbot.stopSpeaking();
+    }
 });
 
     </script>
