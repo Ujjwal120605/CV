@@ -629,6 +629,342 @@
         font-size: 20px;
     }
 }
+/* Enhanced Mobile Chatbot Styles - Add this to your existing CSS */
+
+/* Improved Mobile responsive */
+@media (max-width: 768px) {
+    .theme-toggle {
+        right: 15px;
+        top: 45%;
+        width: 45px;
+        height: 25px;
+        padding: 6px;
+    }
+    
+    .theme-toggle-inner {
+        width: 35px;
+        height: 18px;
+    }
+    
+    .theme-toggle-circle {
+        width: 16px;
+        height: 16px;
+        font-size: 8px;
+    }
+    
+    body.light-theme .theme-toggle-circle {
+        left: 17px;
+    }
+    
+    .chatbot-container {
+        bottom: 15px;
+        right: 15px;
+    }
+    
+    .chatbot-window {
+        width: calc(100vw - 30px);
+        right: calc(-100vw + 45px);
+        height: 75vh;
+        max-height: 600px;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+    
+    .chatbot-toggle {
+        width: 55px;
+        height: 55px;
+        font-size: 22px;
+        box-shadow: 0 4px 15px rgba(0, 188, 212, 0.4);
+    }
+    
+    .chatbot-header {
+        padding: 18px 20px;
+        border-radius: 20px 20px 0 0;
+    }
+    
+    .chatbot-header h4 {
+        font-size: 17px;
+        font-weight: 600;
+    }
+    
+    .chatbot-messages {
+        padding: 15px 18px;
+        gap: 15px;
+    }
+    
+    .chatbot-message {
+        font-size: 15px;
+        line-height: 1.5;
+        padding: 12px 16px;
+        border-radius: 20px;
+        max-width: 85%;
+        word-wrap: break-word;
+    }
+    
+    .chatbot-message.bot {
+        border-bottom-left-radius: 8px;
+        background: rgba(0, 188, 212, 0.15);
+        border: 1px solid rgba(0, 188, 212, 0.2);
+    }
+    
+    .chatbot-message.user {
+        border-bottom-right-radius: 8px;
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Enhanced Input Container for Mobile */
+    .chatbot-input-container {
+        padding: 15px 18px 18px;
+        gap: 12px;
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+        background: rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 0 0 20px 20px;
+    }
+    
+    .chatbot-input {
+        flex: 1;
+        padding: 14px 18px;
+        border-radius: 25px;
+        font-size: 16px; /* Prevents zoom on iOS */
+        background: rgba(255, 255, 255, 0.08);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        color: white;
+        transition: all 0.3s ease;
+        min-height: 48px; /* Better touch target */
+    }
+    
+    .chatbot-input:focus {
+        border-color: #00bcd4;
+        background: rgba(255, 255, 255, 0.12);
+        box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.1);
+        transform: none; /* Remove transform to prevent layout shift */
+    }
+    
+    .chatbot-input::placeholder {
+        color: #aaa;
+        font-size: 15px;
+    }
+    
+    /* Enhanced Send Button for Mobile */
+    .chatbot-send {
+        width: 48px;
+        height: 48px;
+        border: none;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #00bcd4, #00acc1);
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 188, 212, 0.3);
+        font-size: 18px;
+        flex-shrink: 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .chatbot-send:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, #00acc1, #0097a7);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        border-radius: 50%;
+    }
+    
+    .chatbot-send:active {
+        transform: scale(0.95);
+        box-shadow: 0 2px 8px rgba(0, 188, 212, 0.4);
+    }
+    
+    .chatbot-send:active:before {
+        opacity: 1;
+    }
+    
+    .chatbot-send i {
+        position: relative;
+        z-index: 1;
+    }
+    
+    /* Improved Typing Indicator for Mobile */
+    .chatbot-typing {
+        padding: 12px 16px;
+        margin-left: 5px;
+        background: rgba(0, 188, 212, 0.1);
+        border-radius: 18px;
+        border-bottom-left-radius: 5px;
+        align-self: flex-start;
+        border: 1px solid rgba(0, 188, 212, 0.2);
+    }
+    
+    /* Light Theme Mobile Adjustments */
+    body.light-theme .chatbot-window {
+        background: rgba(255, 255, 255, 0.98);
+        border: 1px solid rgba(0, 188, 212, 0.2);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    body.light-theme .chatbot-message.user {
+        background: rgba(0, 188, 212, 0.08);
+        color: #333;
+        border: 1px solid rgba(0, 188, 212, 0.15);
+    }
+    
+    body.light-theme .chatbot-message.bot {
+        background: rgba(0, 188, 212, 0.12);
+        border: 1px solid rgba(0, 188, 212, 0.2);
+    }
+    
+    body.light-theme .chatbot-input {
+        background: rgba(0, 0, 0, 0.04);
+        color: #333;
+        border: 2px solid rgba(0, 0, 0, 0.1);
+    }
+    
+    body.light-theme .chatbot-input:focus {
+        background: rgba(0, 0, 0, 0.06);
+        border-color: #00bcd4;
+        box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.1);
+    }
+    
+    body.light-theme .chatbot-input::placeholder {
+        color: #666;
+    }
+    
+    body.light-theme .chatbot-input-container {
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        background: rgba(0, 0, 0, 0.02);
+    }
+    
+    body.light-theme .chatbot-typing {
+        background: rgba(0, 188, 212, 0.08);
+        border: 1px solid rgba(0, 188, 212, 0.15);
+    }
+}
+
+/* Extra small devices (phones in portrait) */
+@media (max-width: 480px) {
+    .chatbot-window {
+        width: calc(100vw - 20px);
+        right: calc(-100vw + 35px);
+        height: 70vh;
+        max-height: 500px;
+    }
+    
+    .chatbot-toggle {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+    
+    .chatbot-header {
+        padding: 15px 16px;
+    }
+    
+    .chatbot-header h4 {
+        font-size: 16px;
+    }
+    
+    .chatbot-messages {
+        padding: 12px 15px;
+    }
+    
+    .chatbot-message {
+        font-size: 14px;
+        padding: 10px 14px;
+        max-width: 90%;
+    }
+    
+    .chatbot-input-container {
+        padding: 12px 15px 15px;
+        gap: 10px;
+    }
+    
+    .chatbot-input {
+        padding: 12px 16px;
+        font-size: 16px;
+        min-height: 44px;
+    }
+    
+    .chatbot-send {
+        width: 44px;
+        height: 44px;
+        font-size: 16px;
+    }
+    
+    .theme-toggle {
+        width: 40px;
+        height: 22px;
+        padding: 5px;
+        top: 40%;
+    }
+    
+    .theme-toggle-inner {
+        width: 30px;
+        height: 16px;
+    }
+    
+    .theme-toggle-circle {
+        width: 14px;
+        height: 14px;
+        font-size: 7px;
+    }
+    
+    body.light-theme .theme-toggle-circle {
+        left: 14px;
+    }
+}
+
+/* Landscape orientation adjustments */
+@media (max-width: 768px) and (orientation: landscape) {
+    .chatbot-window {
+        height: 85vh;
+        max-height: 400px;
+    }
+}
+
+/* Touch-friendly improvements */
+@media (max-width: 768px) {
+    .chatbot-toggle:active {
+        transform: scale(0.9);
+    }
+    
+    .chatbot-message {
+        -webkit-user-select: text;
+        user-select: text;
+    }
+    
+    /* Prevent zooming on input focus */
+    .chatbot-input {
+        font-size: 16px !important;
+        transform: translateZ(0);
+        -webkit-appearance: none;
+    }
+    
+    /* Smooth scrolling for messages */
+    .chatbot-messages {
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Better accessibility */
+    .chatbot-send:focus {
+        outline: 2px solid #00bcd4;
+        outline-offset: 2px;
+    }
+    
+    .chatbot-input:focus {
+        outline: none;
+    }
+}
 
 
         .education-details {
