@@ -2664,6 +2664,7 @@ function hideTyping() {
 }
 
 // Enhanced generateResponse function with comprehensive knowledge base
+// Enhanced generateResponse function with family information included
 function generateResponse(message) {
     const lowerMessage = message.toLowerCase();
     
@@ -2671,9 +2672,16 @@ function generateResponse(message) {
     const knowledgeBase = {
         // Personal Information
         name: "Ujjwal Bajpai",
-        age: calculateAge("2005-06-12"), // Assuming birth date based on typical age
+        age: calculateAge("2005-06-12"),
         location: "Agra, Uttar Pradesh, India",
         currentLocation: "Bangalore, Karnataka (for college)",
+        
+        // Family Information
+        family: {
+            father: "Ajay Bajpai",
+            mother: "Soni Bajpai",
+            surname: "Bajpai"
+        },
         
         // Education Details
         education: {
@@ -2815,8 +2823,25 @@ function generateResponse(message) {
         return keywords.some(keyword => message.includes(keyword));
     }
     
+    // Family Information Responses - NEW SECTION
+    if (matchesKeywords(lowerMessage, ['parents', 'family', 'mother', 'father', 'mom', 'dad', 'family members'])) {
+        return `Ujjwal's parents are ${knowledgeBase.family.father} (father) and ${knowledgeBase.family.mother} (mother). The family surname is ${knowledgeBase.family.surname}.`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['father', 'dad', 'papa', 'father name', "father's name"])) {
+        return `Ujjwal's father's name is ${knowledgeBase.family.father}.`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['mother', 'mom', 'mama', 'mother name', "mother's name", 'mummy'])) {
+        return `Ujjwal's mother's name is ${knowledgeBase.family.mother}.`;
+    }
+    
+    if (matchesKeywords(lowerMessage, ['surname', 'last name', 'family name', 'bajpai'])) {
+        return `The family surname is ${knowledgeBase.family.surname}. His full name is ${knowledgeBase.name}.`;
+    }
+    
     // Personal Information Responses
-    if (matchesKeywords(lowerMessage, ['name', 'who are you', 'who is ujjwal', 'your name'])) {
+    if (matchesKeywords(lowerMessage, ['name', 'who are you', 'who is ujjwal', 'your name', 'full name'])) {
         return `His full name is ${knowledgeBase.name}. He's a passionate Electronics and Communication Engineering student currently in his pre-final year at RVCE.`;
     }
     
@@ -2908,12 +2933,6 @@ function generateResponse(message) {
     if (matchesKeywords(lowerMessage, ['iffco', 'fertilizer', 'internship work', 'current work'])) {
         return `At IFFCO, Ujjwal works as an IT Intern contributing to HRMS portal development, web development tasks, and gaining exposure to industrial automation systems and IT infrastructure.`;
     }
-    if (matchesKeywords(lowerMessage, ['father','name'])) {
-        return `The name of ujjwal bajpai's father is ajay bajpai`;
-    }
-    if (matchesKeywords(lowerMessage, ['mother','name'])) {
-        return `The name of ujjwal bajpai's mother is soni bajpai`;
-    }
     
     if (matchesKeywords(lowerMessage, ['acm', 'chapter', 'hackathon', 'competitive'])) {
         return `As an ACM Student Chapter Member at RVCE, Ujjwal participates in hackathons and collaborates on technical projects. He was 2nd Runner-Up at BITS Pilani API Hackathon!`;
@@ -2994,7 +3013,7 @@ function generateResponse(message) {
     }
     
     if (matchesKeywords(lowerMessage, ['help', 'what can you tell', 'information'])) {
-        return `I can tell you about Ujjwal's education (CGPA: 8.52, 10th: 97.4%, 12th: 91.8%), current internship at IFFCO, programming skills, ML projects, achievements, and much more! What would you like to know?`;
+        return `I can tell you about Ujjwal's education (CGPA: 8.52, 10th: 97.4%, 12th: 91.8%), current internship at IFFCO, programming skills, ML projects, achievements, family (parents: Ajay and Soni Bajpai), and much more! What would you like to know?`;
     }
     
     // Specific technical queries
@@ -3004,10 +3023,10 @@ function generateResponse(message) {
     
     // Default responses for unrecognized queries
     const defaultResponses = [
-        "That's an interesting question! Could you be more specific? I can tell you about Ujjwal's education, experience, projects, skills, or achievements.",
-        "I'd be happy to help! You can ask me about his CGPA (8.52), board percentages (10th: 97.4%, 12th: 91.8%), internship at IFFCO, projects, or technical skills.",
-        "Feel free to ask about specific topics like his machine learning projects, programming skills, hackathon achievements, or academic performance.",
-        "I can provide detailed information about Ujjwal's background. Try asking about his education, work experience, technical skills, or project details!"
+        "That's an interesting question! Could you be more specific? I can tell you about Ujjwal's education, experience, projects, skills, achievements, or family.",
+        "I'd be happy to help! You can ask me about his CGPA (8.52), board percentages (10th: 97.4%, 12th: 91.8%), internship at IFFCO, projects, family (parents: Ajay and Soni Bajpai), or technical skills.",
+        "Feel free to ask about specific topics like his machine learning projects, programming skills, hackathon achievements, academic performance, or family background.",
+        "I can provide detailed information about Ujjwal's background. Try asking about his education, work experience, technical skills, project details, or family!"
     ];
     
     return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
