@@ -213,6 +213,203 @@
             border: 4px solid #00bcd4;
             max-width: 100%;
         }
+        /* Animated Projects Section */
+.projects-showcase {
+    display: flex;
+    gap: 1rem;
+    height: 700px;
+    overflow-x: auto;
+    padding: 1rem 0;
+    scroll-snap-type: x mandatory;
+}
+
+.animated-project-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 170px;
+    height: 700px;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: flex 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    scroll-snap-align: start;
+    overflow: hidden;
+}
+
+.animated-project-card.active {
+    flex: 3.5;
+}
+
+.animated-project-card:not(.active) {
+    flex: 0.5;
+}
+
+.project-background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 24px;
+    filter: brightness(0.7);
+    transition: filter 0.3s ease;
+}
+
+.animated-project-card:hover .project-background {
+    filter: brightness(0.9);
+}
+
+.project-title-vertical {
+    position: absolute;
+    bottom: 5rem;
+    left: 50%;
+    transform: translateX(-50%) rotate(-90deg);
+    transform-origin: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: white;
+    white-space: nowrap;
+    z-index: 2;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+}
+
+.project-content-expanded {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2rem;
+    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+    border-radius: 0 0 24px 24px;
+    color: white;
+    transform: translateY(0);
+    transition: transform 0.3s ease;
+}
+
+.project-icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 1rem;
+}
+
+.project-subtitle {
+    font-size: 1rem;
+    text-transform: uppercase;
+    color: #00bcd4;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+.project-main-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.project-description-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #ccc;
+    margin-bottom: 1.5rem;
+}
+
+.project-tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.tech-tag-animated {
+    background: rgba(0, 188, 212, 0.2);
+    color: #00bcd4;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    border: 1px solid rgba(0, 188, 212, 0.3);
+}
+
+.project-links-animated {
+    display: flex;
+    gap: 1rem;
+}
+
+.project-link-animated {
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.project-link-primary {
+    background: #00bcd4;
+    color: white;
+}
+
+.project-link-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.project-link-animated:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .projects-showcase {
+        height: 500px;
+        flex-direction: column;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    
+    .animated-project-card {
+        width: 100%;
+        height: 400px;
+        min-width: unset;
+        flex: unset !important;
+        margin-bottom: 1rem;
+    }
+    
+    .animated-project-card.active {
+        height: 500px;
+    }
+    
+    .project-title-vertical {
+        transform: translateX(-50%) rotate(0deg);
+        bottom: 2rem;
+        font-size: 1.2rem;
+    }
+    
+    .project-main-title {
+        font-size: 1.5rem;
+    }
+    
+    .project-content-expanded {
+        padding: 1.5rem;
+    }
+    
+    .project-links-animated {
+        flex-direction: column;
+    }
+}
         /* GitHub Dashboard Styles */
 .github-dashboard {
     background: rgba(255, 255, 255, 0.05);
@@ -2213,102 +2410,13 @@ body.light-theme .voice-message.user {
           </div>
         </section>
 
-    <section class="section" id="projects">
-        <h2>Featured Projects</h2>
-        
-        <div class="project-card">
-    <h3>💼 Responsive Personal Resume Website</h3>
-    <p>
-        A responsive personal resume website built with <b>HTML, CSS, and JavaScript</b>, featuring a modern design, 
-        downloadable PDF resume, and dedicated sections for <b>Experience, Projects, and Contact</b>. 
-        Showcases my skills, education, and work in a clean, professional format.
-    </p>
-    <div class="tech-stack">
-        <span class="tech">HTML</span>
-        <span class="tech">CSS</span>
-        <span class="tech">JavaScript</span>
-        <span class="tech">Responsive Design</span>
-        <span class="tech">UI/UX</span>
-    </div>
-
-    <!-- 🔗 Project Links -->
-    <div class="project-links">
-        <a href="https://github.com/Ujjwal120605/CV" 
-           target="_blank" 
-           class="btn-link github">
-            <i class="fab fa-github"></i> GitHub
-        </a>
-        <a href="https://cv-seven-puce.vercel.app/" 
-           target="_blank" 
-           class="btn-link demo">
-            <i class="fas fa-external-link-alt"></i> Live Demo
-        </a>
-    </div>
-</div>
-
-        <div class="project-card">
-            <h3>🌱 Hyperspectral Crop Mapping using Machine Learning</h3>
-            <p>Developed a deep learning model for classifying and mapping crop types using hyperspectral imagery, achieving enhanced accuracy. Leveraged Convolutional Neural Network (CNN) architectures and spectral feature extraction techniques. Aimed at enabling precision agriculture through automated crop health and distribution mapping.</p>
-            <div class="tech-stack">
-                <span class="tech">Hyperspectral Imaging</span>
-                <span class="tech">Remote Sensing</span>
-                <span class="tech">Machine Learning</span>
-                <span class="tech">Python</span>
+        <section class="section" id="projects">
+            <h2>Featured Projects</h2>
+            
+            <div class="projects-showcase" id="projectsShowcase">
+               
             </div>
-        </div>
-
-       <div class="project-card"> <h3>🌐 IFFCO Login & Information Website</h3> <p> Built a complete web application during my internship at IFFCO featuring a secure login system and interactive sections for <b>About</b>, <b>Products</b>, and <b>Contact</b>. Designed using <b>HTML, CSS, JavaScript, and JSON</b>, the website ensures a modern UI/UX while maintaining modular and scalable code. </p> <div class="tech-stack"> <span class="tech">HTML</span> <span class="tech">CSS</span> <span class="tech">JavaScript</span> <span class="tech">JSON</span> <span class="tech">UI/UX</span> </div> <div class="project-links"> <a href="https://github.com/Ujjwal120605/iffco_project" target="_blank" class="btn-link github"> <i class="fab fa-github"></i> GitHub </a> <a href="https://iffco-project.vercel.app/" target="_blank" class="btn-link demo"> <i class="fas fa-external-link-alt"></i> Live Demo </a> </div> </div>
-
-<div class="project-card">
-  <h3>🌐 Metaverse Website</h3>
-  <p>
-    A modern <b>Next.js</b> and <b>Tailwind CSS</b> project inspired by cutting-edge 3D web experiences.  
-    The site demonstrates responsive design, smooth animations, and component-based architecture —  
-    offering an immersive glimpse into the future of the web.
-  </p>
-
-  <div class="tech-stack">
-    <span class="tech">Next.js</span>
-    <span class="tech">React</span>
-    <span class="tech">Tailwind CSS</span>
-    <span class="tech">JavaScript</span>
-    <span class="tech">Vercel</span>
-  </div>
-
-  <div class="project-links">
-    <a href="https://github.com/Ujjwal120605/metaverse-website" target="_blank" class="btn-link github">
-      <i class="fab fa-github"></i> GitHub
-    </a>
-    <a href="https://metaverse-website-mocha.vercel.app/" target="_blank" class="btn-link demo">
-      <i class="fas fa-external-link-alt"></i> Live Demo
-    </a>
-  </div>
-</div>
-
-        <div class="project-card">
-            <h3>🔊 Noise Cancellation using Machine Learning</h3>
-            <p>
-                Designed an ML-based pipeline for real-time background noise suppression in audio signals. 
-                Utilized deep learning models to effectively distinguish between desired signals and noise 
-                for enhanced audio clarity.
-            </p>
-            <div class="tech-stack">
-                <span class="tech">Machine Learning</span>
-                <span class="tech">Deep Learning</span>
-                <span class="tech">Audio Processing</span>
-                <span class="tech">Python</span>
-            </div>
-        
-            <!-- 🔗 Project Links -->
-            <div class="project-links">
-                <a href="https://github.com/Ujjwal120605/CognitiveNoiseCancellation" 
-                   target="_blank" 
-                   class="btn-link github">
-                    <i class="fab fa-github"></i> GitHub
-                </a>
-            </div>
-        </div>
-    </section>
+        </section>
     <section class="section" id="github-dashboard">
         <h2><i class="fab fa-github"></i> GitHub Dashboard</h2>
         
@@ -4341,6 +4449,153 @@ function generateActivityGrid() {
 document.addEventListener('DOMContentLoaded', function() {
     fetchGitHubData();
     generateActivityGrid();
+});
+// Project data with background images/gradients
+const projectsData = [
+    {
+        id: 'portfolio-site',
+        title: 'Personal Portfolio',
+        subtitle: 'Web Development',
+        description: 'A responsive personal resume website built with HTML, CSS, and JavaScript, featuring a modern design, downloadable PDF resume, and dedicated sections for Experience, Projects, and Contact.',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        icon: 'fas fa-globe',
+        tech: ['HTML', 'CSS', 'JavaScript', 'Responsive Design'],
+        links: [
+            { type: 'github', url: 'https://github.com/Ujjwal120605/CV', text: 'View Code' },
+            { type: 'demo', url: 'https://cv-seven-puce.vercel.app/', text: 'Live Demo' }
+        ]
+    },
+    {
+        id: 'crop-mapping',
+        title: 'Hyperspectral Crop Mapping',
+        subtitle: 'Machine Learning',
+        description: 'Developed a deep learning model for classifying and mapping crop types using hyperspectral imagery, achieving enhanced accuracy with CNN architectures and spectral feature extraction techniques.',
+        background: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
+        icon: 'fas fa-seedling',
+        tech: ['Python', 'Machine Learning', 'CNN', 'Remote Sensing'],
+        links: []
+    },
+    {
+        id: 'iffco-website',
+        title: 'IFFCO Information Portal',
+        subtitle: 'Full Stack Development',
+        description: 'Built a complete web application during internship at IFFCO featuring secure login system and interactive sections for About, Products, and Contact with modern UI/UX design.',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        icon: 'fas fa-building',
+        tech: ['HTML', 'CSS', 'JavaScript', 'JSON', 'UI/UX'],
+        links: [
+            { type: 'github', url: 'https://github.com/Ujjwal120605/iffco_project', text: 'View Code' },
+            { type: 'demo', url: 'https://iffco-project.vercel.app/', text: 'Live Demo' }
+        ]
+    },
+    {
+        id: 'metaverse-site',
+        title: 'Metaverse Website',
+        subtitle: 'Modern Web Development',
+        description: 'A modern Next.js and Tailwind CSS project inspired by cutting-edge 3D web experiences. Demonstrates responsive design, smooth animations, and component-based architecture.',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        icon: 'fas fa-vr-cardboard',
+        tech: ['Next.js', 'React', 'Tailwind CSS', 'JavaScript', 'Vercel'],
+        links: [
+            { type: 'github', url: 'https://github.com/Ujjwal120605/metaverse-website', text: 'View Code' },
+            { type: 'demo', url: 'https://metaverse-website-mocha.vercel.app/', text: 'Live Demo' }
+        ]
+    },
+    {
+        id: 'noise-cancellation',
+        title: 'Noise Cancellation ML',
+        subtitle: 'Audio Processing',
+        description: 'Designed an ML-based pipeline for real-time background noise suppression in audio signals using deep learning models to distinguish between desired signals and noise.',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        icon: 'fas fa-volume-mute',
+        tech: ['Python', 'Machine Learning', 'Deep Learning', 'Audio Processing'],
+        links: [
+            { type: 'github', url: 'https://github.com/Ujjwal120605/CognitiveNoiseCancellation', text: 'View Code' }
+        ]
+    }
+];
+
+// Initialize animated projects
+function initAnimatedProjects() {
+    const container = document.getElementById('projectsShowcase');
+    let activeProject = projectsData[0].id;
+    
+    // Generate project cards
+    projectsData.forEach((project, index) => {
+        const card = createAnimatedProjectCard(project, index === 0);
+        container.appendChild(card);
+    });
+    
+    // Add click handlers
+    // Add click handlers
+document.querySelectorAll('.animated-project-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+        const clickedId = card.getAttribute('data-project-id');
+        
+        if (clickedId !== activeProject) {
+            // Hide all expanded content and show all vertical titles
+            document.querySelectorAll('.animated-project-card').forEach(c => {
+                c.classList.remove('active');
+                c.querySelector('.project-title-vertical').style.display = 'block';
+                c.querySelector('.project-content-expanded').style.display = 'none';
+            });
+            
+            // Show clicked card's expanded content and hide its vertical title
+            card.classList.add('active');
+            card.querySelector('.project-title-vertical').style.display = 'none';
+            card.querySelector('.project-content-expanded').style.display = 'block';
+            
+            activeProject = clickedId;
+        }
+    });
+});
+}
+
+function createAnimatedProjectCard(project, isActive = false) {
+    const card = document.createElement('div');
+    card.className = `animated-project-card ${isActive ? 'active' : ''}`;
+    card.setAttribute('data-project-id', project.id);
+    
+    card.innerHTML = `
+        <div class="project-background" style="background: ${project.background}"></div>
+        
+        <!-- Vertical title (shown when inactive) -->
+        <h3 class="project-title-vertical" style="display: ${isActive ? 'none' : 'block'}">${project.title}</h3>
+        
+        <!-- Expanded content (shown when active) -->
+        <div class="project-content-expanded" style="display: ${isActive ? 'block' : 'none'}">
+            <div class="project-icon-container">
+                <i class="${project.icon}" style="color: #00bcd4; font-size: 1.5rem;"></i>
+            </div>
+            
+            <p class="project-subtitle">${project.subtitle}</p>
+            <h2 class="project-main-title">${project.title}</h2>
+            <p class="project-description-text">${project.description}</p>
+            
+            <div class="project-tech-tags">
+                ${project.tech.map(tech => `<span class="tech-tag-animated">${tech}</span>`).join('')}
+            </div>
+            
+            ${project.links.length > 0 ? `
+                <div class="project-links-animated">
+                    ${project.links.map(link => `
+                        <a href="${link.url}" target="_blank" class="project-link-animated ${link.type === 'github' ? 'project-link-secondary' : 'project-link-primary'}">
+                            <i class="fas ${link.type === 'github' ? 'fa-code' : 'fa-external-link-alt'}"></i>
+                            ${link.text}
+                        </a>
+                    `).join('')}
+                </div>
+            ` : ''}
+        </div>
+    `;
+    
+    return card;
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // ... your existing initialization code ...
+    initAnimatedProjects();
 });
 
     </script>
