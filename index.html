@@ -2908,6 +2908,12 @@ function generateResponse(message) {
     if (matchesKeywords(lowerMessage, ['iffco', 'fertilizer', 'internship work', 'current work'])) {
         return `At IFFCO, Ujjwal works as an IT Intern contributing to HRMS portal development, web development tasks, and gaining exposure to industrial automation systems and IT infrastructure.`;
     }
+    if (matchesKeywords(lowerMessage, ['father'])) {
+        return `The name of ujjwal bajpai's father is ajay bajpai`;
+    }
+    if (matchesKeywords(lowerMessage, ['mother'])) {
+        return `The name of ujjwal bajpai's mother is soni bajpai`;
+    }
     
     if (matchesKeywords(lowerMessage, ['acm', 'chapter', 'hackathon', 'competitive'])) {
         return `As an ACM Student Chapter Member at RVCE, Ujjwal participates in hackathons and collaborates on technical projects. He was 2nd Runner-Up at BITS Pilani API Hackathon!`;
