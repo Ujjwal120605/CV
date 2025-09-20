@@ -1412,7 +1412,8 @@
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
-        .voice-chatbot {
+        /* Voice Chatbot Styles */
+.voice-chatbot {
     position: fixed;
     bottom: 20px;
     left: 20px;
@@ -1662,22 +1663,69 @@ body.light-theme .voice-message.user {
         width: 55px;
         height: 55px;
         font-size: 22px;
+        background: linear-gradient(45deg, #9c27b0, #673ab7);
+        box-shadow: 0 4px 20px rgba(156, 39, 176, 0.4);
+        border: 3px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .voice-chatbot-toggle:active {
+        transform: scale(0.95);
+        box-shadow: 0 2px 10px rgba(156, 39, 176, 0.6);
+    }
+    
+    .voice-chatbot-toggle.listening {
+        background: linear-gradient(45deg, #4caf50, #45a049);
+        animation: voicePulse 1.5s infinite, voiceRipple 2s infinite;
+        box-shadow: 0 6px 25px rgba(76, 175, 80, 0.5);
+    }
+    
+    .voice-chatbot-toggle.processing {
+        background: linear-gradient(45deg, #ff9800, #f57c00);
+        animation: voiceProcessing 1.5s linear infinite;
+        box-shadow: 0 6px 25px rgba(255, 152, 0, 0.5);
+    }
+    
+    .voice-chatbot-toggle.speaking {
+        background: linear-gradient(45deg, #00bcd4, #00acc1);
+        animation: voiceSpeaking 0.6s ease-in-out infinite alternate;
+        box-shadow: 0 6px 25px rgba(0, 188, 212, 0.5);
     }
     
     .voice-help-panel {
         width: calc(100vw - 120px);
         left: 70px;
-        bottom: 85px;
+        bottom: 75px;
+        max-width: 350px;
+        font-size: 13px;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     }
     
     .voice-conversation-history {
         width: calc(100vw - 50px);
         max-height: 250px;
+        bottom: 75px;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     }
     
     .voice-status-bubble {
-        max-width: 200px;
+        max-width: 220px;
         font-size: 12px;
+        bottom: 75px;
+        left: -10px;
+        border-radius: 20px;
+        padding: 10px 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .voice-status-bubble::after {
+        bottom: -6px;
+        left: 25px;
+        border-top: 6px solid rgba(15, 15, 15, 0.95);
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
     }
 }
 
@@ -1686,24 +1734,92 @@ body.light-theme .voice-message.user {
         width: 50px;
         height: 50px;
         font-size: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.2);
     }
     
     .voice-help-panel {
         width: calc(100vw - 90px);
-        left: 65px;
+        left: 60px;
         padding: 15px;
+        font-size: 12px;
+        bottom: 65px;
     }
     
     .voice-conversation-history {
         width: calc(100vw - 40px);
         max-height: 200px;
+        bottom: 65px;
+        left: -10px;
+    }
+    
+    .voice-status-bubble {
+        max-width: 180px;
+        font-size: 11px;
+        bottom: 65px;
+        left: -15px;
+    }
+}
+
+/* Enhanced animations for mobile */
+@keyframes voiceRipple {
+    0% {
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7), 0 6px 25px rgba(76, 175, 80, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(76, 175, 80, 0.3), 0 6px 25px rgba(76, 175, 80, 0.5);
+    }
+    100% {
+        box-shadow: 0 0 0 20px rgba(76, 175, 80, 0), 0 6px 25px rgba(76, 175, 80, 0.5);
+    }
+}
+
+/* Touch-specific optimizations */
+@media (hover: none) and (pointer: coarse) {
+    .voice-chatbot-toggle:hover {
+        transform: none;
+    }
+    
+    .voice-chatbot-toggle {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+    }
+}
+
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+    .voice-chatbot-toggle {
+        -webkit-appearance: none;
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+        -webkit-focus-ring-color: rgba(0,0,0,0);
+        outline: none;
+    }
+    
+    .voice-status-bubble {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
     }
 }
 
 /* Accessibility */
 .voice-chatbot-toggle:focus {
-    outline: 2px solid #9c27b0;
+    outline: 3px solid #9c27b0;
     outline-offset: 3px;
+}
+
+.voice-chatbot-toggle[aria-pressed="true"] {
+    background: linear-gradient(45deg, #4caf50, #45a049);
+}
+
+/* Performance optimizations */
+.voice-chatbot-toggle,
+.voice-status-bubble,
+.voice-help-panel,
+.voice-conversation-history {
+    will-change: transform, opacity;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
         /* Section Styles */
@@ -4577,7 +4693,11 @@ document.addEventListener('click', function(event) {
     
     
 });
-class VoiceChatbot {
+/**
+ * Enhanced Voice Chatbot with cross-platform support
+ * Optimized for iPhone, Android, and Desktop browsers
+ */
+ class VoiceChatbot {
     constructor() {
         this.isListening = false;
         this.isSpeaking = false;
@@ -4588,6 +4708,14 @@ class VoiceChatbot {
         this.conversationHistory = [];
         this.helpVisible = false;
         this.historyVisible = false;
+        this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        this.isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        this.voices = [];
+        this.preferredVoice = null;
+        this.retryCount = 0;
+        this.maxRetries = 3;
+        
+        this.initializeVoices();
         
         if (this.isSupported) {
             this.initializeRecognition();
@@ -4598,7 +4726,52 @@ class VoiceChatbot {
     }
     
     checkSupport() {
-        return 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window;
+        const hasRecognition = 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window;
+        const hasSynthesis = 'speechSynthesis' in window;
+        
+        if (!hasRecognition || !hasSynthesis) {
+            console.warn('Speech APIs not fully supported');
+        }
+        
+        return hasRecognition && hasSynthesis;
+    }
+    
+    initializeVoices() {
+        // Wait for voices to load (especially important on mobile)
+        const loadVoices = () => {
+            this.voices = this.synthesis.getVoices();
+            
+            if (this.voices.length === 0) {
+                setTimeout(loadVoices, 100);
+                return;
+            }
+            
+            // Find best voice for different platforms
+            if (this.isIOS) {
+                this.preferredVoice = this.voices.find(voice => 
+                    voice.lang.includes('en') && (
+                        voice.name.includes('Samantha') || 
+                        voice.name.includes('Alex') ||
+                        voice.name.includes('Victoria')
+                    )
+                ) || this.voices.find(voice => voice.lang.includes('en-US'));
+            } else {
+                this.preferredVoice = this.voices.find(voice => 
+                    voice.lang.includes('en') && (
+                        voice.name.includes('Google') || 
+                        voice.name.includes('Microsoft') ||
+                        voice.name.includes('Chrome')
+                    )
+                ) || this.voices.find(voice => voice.lang.includes('en'));
+            }
+            
+            console.log('Voice initialized:', this.preferredVoice?.name || 'Default voice');
+        };
+        
+        if (this.synthesis.getVoices().length === 0) {
+            this.synthesis.addEventListener('voiceschanged', loadVoices);
+        }
+        loadVoices();
     }
     
     showWelcomeMessage() {
@@ -4609,37 +4782,157 @@ class VoiceChatbot {
     
     initializeRecognition() {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        
+        if (!SpeechRecognition) {
+            console.error('Speech recognition not supported');
+            return;
+        }
+        
         this.recognition = new SpeechRecognition();
         
+        // Enhanced configuration for better mobile support
         this.recognition.continuous = false;
         this.recognition.interimResults = false;
         this.recognition.lang = 'en-US';
-        this.recognition.maxAlternatives = 1;
+        this.recognition.maxAlternatives = 3; // Get multiple alternatives for better accuracy
+        
+        // Mobile-specific optimizations
+        if (this.isMobile) {
+            this.recognition.grammars = undefined; // Remove grammars for mobile compatibility
+        }
         
         this.recognition.onstart = () => {
+            console.log('Speech recognition started');
+            this.isListening = true;
+            this.retryCount = 0;
             this.updateUI('listening');
-            this.showStatus('Listening... Ask me anything!');
+            this.showStatus('Listening... Speak clearly!');
+            
+            // Auto-timeout for mobile devices
+            if (this.isMobile) {
+                setTimeout(() => {
+                    if (this.isListening) {
+                        this.stopListening();
+                        this.showStatus('Listening timeout. Tap to try again!', 3000);
+                    }
+                }, 10000);
+            }
         };
         
         this.recognition.onresult = (event) => {
-            const question = event.results[0][0].transcript.trim();
-            this.updateUI('processing');
-            this.showStatus('Processing your question...');
-            this.processVoiceQuestion(question);
+            console.log('Speech recognition result:', event);
+            
+            let question = '';
+            let confidence = 0;
+            
+            // Try to get the best result from alternatives
+            if (event.results && event.results.length > 0) {
+                const result = event.results[0];
+                if (result.length > 0) {
+                    question = result[0].transcript.trim();
+                    confidence = result[0].confidence || 0;
+                    
+                    // If confidence is low and we have alternatives, try the next one
+                    if (confidence < 0.7 && result.length > 1) {
+                        const altResult = result[1];
+                        if (altResult.confidence > confidence) {
+                            question = altResult.transcript.trim();
+                            confidence = altResult.confidence;
+                        }
+                    }
+                }
+            }
+            
+            console.log(`Recognized: "${question}" (confidence: ${confidence})`);
+            
+            if (question.length > 0) {
+                this.updateUI('processing');
+                this.showStatus('Processing your question...');
+                this.processVoiceQuestion(question);
+            } else {
+                this.handleRecognitionRetry('No speech detected');
+            }
         };
         
         this.recognition.onerror = (event) => {
             console.error('Speech recognition error:', event.error);
-            this.updateUI('idle');
-            this.showStatus('Sorry, I had trouble hearing you. Try again!', 3000);
+            
+            let errorMessage = 'Speech recognition error';
+            
+            switch (event.error) {
+                case 'no-speech':
+                    errorMessage = 'No speech detected. Try speaking louder!';
+                    break;
+                case 'audio-capture':
+                    errorMessage = 'Microphone access denied or unavailable';
+                    break;
+                case 'not-allowed':
+                    errorMessage = 'Microphone permission denied. Please allow microphone access!';
+                    break;
+                case 'network':
+                    errorMessage = 'Network error. Check your connection!';
+                    break;
+                case 'service-not-allowed':
+                    errorMessage = 'Speech recognition service not available';
+                    break;
+                case 'bad-grammar':
+                case 'language-not-supported':
+                    errorMessage = 'Language not supported';
+                    break;
+                default:
+                    errorMessage = `Recognition error: ${event.error}`;
+            }
+            
+            this.handleRecognitionError(errorMessage);
         };
         
         this.recognition.onend = () => {
+            console.log('Speech recognition ended');
+            
             if (this.isListening) {
                 this.isListening = false;
                 this.updateUI('idle');
+                
+                // Don't show message if we're processing a result
+                if (!this.isSpeaking) {
+                    this.showStatus('Tap to speak again', 2000);
+                }
             }
         };
+    }
+    
+    handleRecognitionError(message) {
+        this.isListening = false;
+        this.updateUI('idle');
+        
+        if (this.retryCount < this.maxRetries) {
+            this.retryCount++;
+            this.showStatus(`${message} Retrying... (${this.retryCount}/${this.maxRetries})`, 3000);
+            
+            setTimeout(() => {
+                if (!this.isListening && !this.isSpeaking) {
+                    this.startListening();
+                }
+            }, 1500);
+        } else {
+            this.showStatus(`${message} Please try again!`, 5000);
+        }
+    }
+    
+    handleRecognitionRetry(reason) {
+        if (this.retryCount < this.maxRetries) {
+            this.retryCount++;
+            this.showStatus(`${reason} Retrying... (${this.retryCount}/${this.maxRetries})`, 2000);
+            
+            setTimeout(() => {
+                if (!this.isSpeaking) {
+                    this.startListening();
+                }
+            }, 1000);
+        } else {
+            this.updateUI('idle');
+            this.showStatus('Having trouble hearing you. Please try again!', 4000);
+        }
     }
     
     toggleVoiceChatbot() {
@@ -4656,11 +4949,41 @@ class VoiceChatbot {
         if (this.isListening) {
             this.stopListening();
         } else {
-            this.startListening();
+            // Request microphone permission first on mobile
+            if (this.isMobile) {
+                this.requestMicrophonePermission().then(() => {
+                    this.startListening();
+                }).catch((error) => {
+                    console.error('Microphone permission denied:', error);
+                    this.showStatus('Microphone access required for voice chat!', 5000);
+                });
+            } else {
+                this.startListening();
+            }
         }
     }
     
+    requestMicrophonePermission() {
+        return new Promise((resolve, reject) => {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then(stream => {
+                        // Stop the stream immediately - we just needed permission
+                        stream.getTracks().forEach(track => track.stop());
+                        resolve();
+                    })
+                    .catch(error => {
+                        reject(error);
+                    });
+            } else {
+                // Fallback - just try to start recognition
+                resolve();
+            }
+        });
+    }
+    
     startListening() {
+        // Stop any ongoing speech
         if (this.synthesis.speaking) {
             this.synthesis.cancel();
         }
@@ -4668,20 +4991,44 @@ class VoiceChatbot {
         this.hideHelp();
         this.hideHistory();
         
+        // Reset retry count for new session
+        this.retryCount = 0;
+        
         try {
             this.isListening = true;
-            this.recognition.start();
+            
+            // iOS-specific workaround
+            if (this.isIOS) {
+                // On iOS, speech recognition must be triggered by user interaction
+                // and we need to handle it more carefully
+                setTimeout(() => {
+                    if (this.recognition && this.isListening) {
+                        this.recognition.start();
+                    }
+                }, 100);
+            } else {
+                this.recognition.start();
+            }
         } catch (error) {
             console.error('Failed to start recognition:', error);
-            this.showStatus('Failed to start listening. Try again!', 3000);
             this.isListening = false;
+            
+            if (error.name === 'InvalidStateError') {
+                this.showStatus('Please wait before trying again...', 2000);
+            } else {
+                this.showStatus('Failed to start listening. Please try again!', 3000);
+            }
         }
     }
     
     stopListening() {
         this.isListening = false;
         if (this.recognition) {
-            this.recognition.stop();
+            try {
+                this.recognition.stop();
+            } catch (error) {
+                console.error('Error stopping recognition:', error);
+            }
         }
         this.updateUI('idle');
     }
@@ -4691,6 +5038,7 @@ class VoiceChatbot {
             this.synthesis.cancel();
         }
         this.isSpeaking = false;
+        this.currentUtterance = null;
         this.updateUI('idle');
     }
     
@@ -4755,6 +5103,8 @@ class VoiceChatbot {
     
     updateHistoryDisplay() {
         const container = document.getElementById('voiceMessages');
+        if (!container) return;
+        
         container.innerHTML = '';
         
         this.conversationHistory.forEach(item => {
@@ -4776,6 +5126,13 @@ class VoiceChatbot {
     }
     
     speak(text) {
+        if (!text || text.trim().length === 0) {
+            console.warn('No text to speak');
+            this.updateUI('idle');
+            return;
+        }
+        
+        // Cancel any ongoing speech
         if (this.synthesis.speaking) {
             this.synthesis.cancel();
         }
@@ -4784,75 +5141,153 @@ class VoiceChatbot {
         this.updateUI('speaking');
         this.showStatus('Speaking...');
         
-        // Split long text into shorter chunks for better speech
-        const maxLength = 200;
-        const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
-        let chunks = [];
-        let currentChunk = '';
+        // Clean and optimize text for speech
+        let cleanText = this.cleanTextForSpeech(text);
         
-        sentences.forEach(sentence => {
-            if ((currentChunk + sentence).length > maxLength && currentChunk.length > 0) {
-                chunks.push(currentChunk.trim());
-                currentChunk = sentence;
-            } else {
-                currentChunk += (currentChunk ? '. ' : '') + sentence;
-            }
-        });
-        
-        if (currentChunk.trim().length > 0) {
-            chunks.push(currentChunk.trim());
-        }
-        
-        if (chunks.length === 0) {
-            chunks = [text];
-        }
+        // iOS requires shorter utterances for reliable playback
+        const maxLength = this.isIOS ? 150 : 200;
+        const chunks = this.splitTextIntoChunks(cleanText, maxLength);
         
         this.speakChunks(chunks, 0);
+    }
+    
+    cleanTextForSpeech(text) {
+        return text
+            // Remove markdown and formatting
+            .replace(/\*\*/g, '')
+            .replace(/\*/g, '')
+            .replace(/`/g, '')
+            .replace(/#{1,6}\s/g, '')
+            .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+            .replace(/\bML\b/g, 'Machine Learning')
+            .replace(/\bAI\b/g, 'Artificial Intelligence')
+            .replace(/\bAPI\b/g, 'A P I')
+            .replace(/\bHTML\b/g, 'H T M L')
+            .replace(/\bCSS\b/g, 'C S S')
+            .replace(/\bJS\b/g, 'JavaScript')
+            .replace(/\bCGPA\b/g, 'C G P A')
+            .replace(/\bECE\b/g, 'Electronics and Communication Engineering')
+            .replace(/\bRVCE\b/g, 'R V College of Engineering')
+            .replace(/\bIFFCO\b/g, 'Indian Farmers Fertiliser Cooperative')
+            // Clean up punctuation for better speech flow
+            .replace(/([.!?])\s*([.!?])/g, '$1 ')
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
+    
+    splitTextIntoChunks(text, maxLength) {
+        if (text.length <= maxLength) {
+            return [text];
+        }
+        
+        const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+        const chunks = [];
+        let currentChunk = '';
+        
+        for (const sentence of sentences) {
+            const trimmedSentence = sentence.trim();
+            if (!trimmedSentence) continue;
+            
+            const potentialChunk = currentChunk 
+                ? `${currentChunk}. ${trimmedSentence}`
+                : trimmedSentence;
+            
+            if (potentialChunk.length > maxLength && currentChunk.length > 0) {
+                chunks.push(currentChunk.trim() + '.');
+                currentChunk = trimmedSentence;
+            } else {
+                currentChunk = potentialChunk;
+            }
+        }
+        
+        if (currentChunk.trim().length > 0) {
+            chunks.push(currentChunk.trim() + (currentChunk.endsWith('.') ? '' : '.'));
+        }
+        
+        return chunks.length > 0 ? chunks : [text];
     }
     
     speakChunks(chunks, index) {
         if (index >= chunks.length || !this.isSpeaking) {
             this.isSpeaking = false;
             this.updateUI('idle');
+            this.hideStatus();
             return;
         }
         
-        this.currentUtterance = new SpeechSynthesisUtterance(chunks[index]);
-        this.currentUtterance.rate = 0.9;
-        this.currentUtterance.pitch = 1;
-        this.currentUtterance.volume = 0.8;
+        const text = chunks[index];
+        console.log(`Speaking chunk ${index + 1}/${chunks.length}: "${text.substring(0, 50)}..."`);
         
-        // Try to use a more natural voice
-        const voices = this.synthesis.getVoices();
-        const preferredVoice = voices.find(voice => 
-            voice.lang.includes('en') && (
-                voice.name.includes('Google') || 
-                voice.name.includes('Microsoft') ||
-                voice.name.includes('Natural')
-            )
-        );
-        if (preferredVoice) {
-            this.currentUtterance.voice = preferredVoice;
+        this.currentUtterance = new SpeechSynthesisUtterance(text);
+        
+        // Optimize settings for different platforms
+        if (this.isIOS) {
+            this.currentUtterance.rate = 0.85;
+            this.currentUtterance.pitch = 1.0;
+            this.currentUtterance.volume = 0.9;
+        } else if (this.isMobile) {
+            this.currentUtterance.rate = 0.9;
+            this.currentUtterance.pitch = 1.0;
+            this.currentUtterance.volume = 0.8;
+        } else {
+            this.currentUtterance.rate = 0.95;
+            this.currentUtterance.pitch = 1.0;
+            this.currentUtterance.volume = 0.8;
         }
         
+        // Use preferred voice if available
+        if (this.preferredVoice) {
+            this.currentUtterance.voice = this.preferredVoice;
+        }
+        
+        // Set up event handlers
         this.currentUtterance.onend = () => {
+            console.log(`Finished speaking chunk ${index + 1}`);
             if (this.isSpeaking) {
-                this.speakChunks(chunks, index + 1);
+                // Small delay between chunks for better mobile experience
+                setTimeout(() => {
+                    this.speakChunks(chunks, index + 1);
+                }, this.isMobile ? 200 : 100);
             }
         };
         
-        this.currentUtterance.onerror = () => {
-            console.error('Speech synthesis error');
-            this.isSpeaking = false;
-            this.updateUI('idle');
+        this.currentUtterance.onerror = (event) => {
+            console.error('Speech synthesis error:', event);
+            
+            // Try to recover on mobile devices
+            if (this.isMobile && index === 0) {
+                setTimeout(() => {
+                    if (this.isSpeaking) {
+                        this.speakChunks(chunks, index);
+                    }
+                }, 300);
+            } else {
+                this.isSpeaking = false;
+                this.updateUI('idle');
+                this.showStatus('Speech playback error. The response was processed successfully.', 3000);
+            }
         };
         
-        this.synthesis.speak(this.currentUtterance);
+        this.currentUtterance.onstart = () => {
+            console.log(`Started speaking chunk ${index + 1}`);
+        };
+        
+        // Start speaking
+        try {
+            this.synthesis.speak(this.currentUtterance);
+        } catch (error) {
+            console.error('Failed to start speech synthesis:', error);
+            this.isSpeaking = false;
+            this.updateUI('idle');
+            this.showStatus('Unable to speak response, but I understood your question!', 3000);
+        }
     }
     
     updateUI(state) {
         const toggle = document.getElementById('voiceChatbotToggle');
         const icon = document.getElementById('voiceChatbotIcon');
+        
+        if (!toggle || !icon) return;
         
         toggle.classList.remove('listening', 'processing', 'speaking');
         
@@ -4860,23 +5295,29 @@ class VoiceChatbot {
             case 'listening':
                 toggle.classList.add('listening');
                 icon.className = 'fas fa-microphone-slash';
+                toggle.setAttribute('aria-pressed', 'true');
                 break;
             case 'processing':
                 toggle.classList.add('processing');
                 icon.className = 'fas fa-cog';
+                toggle.setAttribute('aria-pressed', 'true');
                 break;
             case 'speaking':
                 toggle.classList.add('speaking');
                 icon.className = 'fas fa-volume-up';
+                toggle.setAttribute('aria-pressed', 'true');
                 break;
             default:
                 icon.className = 'fas fa-microphone';
+                toggle.setAttribute('aria-pressed', 'false');
                 this.hideStatus();
         }
     }
     
     showStatus(message, duration = 5000) {
         const status = document.getElementById('voiceStatusBubble');
+        if (!status) return;
+        
         status.textContent = message;
         status.classList.add('show');
         
@@ -4887,74 +5328,171 @@ class VoiceChatbot {
     
     hideStatus() {
         const status = document.getElementById('voiceStatusBubble');
-        status.classList.remove('show');
+        if (status) {
+            status.classList.remove('show');
+        }
     }
     
     showHelp() {
         this.hideHistory();
         const help = document.getElementById('voiceHelpPanel');
-        help.classList.add('show');
-        this.helpVisible = true;
-        
-        setTimeout(() => {
-            this.hideHelp();
-        }, 8000);
+        if (help) {
+            help.classList.add('show');
+            this.helpVisible = true;
+            
+            setTimeout(() => {
+                this.hideHelp();
+            }, 8000);
+        }
     }
     
     hideHelp() {
         const help = document.getElementById('voiceHelpPanel');
-        help.classList.remove('show');
-        this.helpVisible = false;
+        if (help) {
+            help.classList.remove('show');
+            this.helpVisible = false;
+        }
     }
     
     showHistory() {
         this.hideHelp();
         const history = document.getElementById('voiceConversationHistory');
-        history.classList.add('show');
-        this.historyVisible = true;
-        
-        setTimeout(() => {
-            this.hideHistory();
-        }, 10000);
+        if (history) {
+            history.classList.add('show');
+            this.historyVisible = true;
+            
+            setTimeout(() => {
+                this.hideHistory();
+            }, 10000);
+        }
     }
     
     hideHistory() {
         const history = document.getElementById('voiceConversationHistory');
-        history.classList.remove('show');
-        this.historyVisible = false;
+        if (history) {
+            history.classList.remove('show');
+            this.historyVisible = false;
+        }
     }
     
     showUnsupportedMessage() {
-        this.showStatus('Voice chat not supported in this browser', 5000);
+        const supportInfo = this.getSupportInfo();
+        this.showStatus(supportInfo.message, 8000);
+        
+        // Update button to show unsupported state
+        const toggle = document.getElementById('voiceChatbotToggle');
+        const icon = document.getElementById('voiceChatbotIcon');
+        
+        if (toggle && icon) {
+            toggle.style.background = 'linear-gradient(45deg, #666, #555)';
+            icon.className = 'fas fa-microphone-slash';
+            toggle.setAttribute('aria-label', 'Voice chat not supported');
+        }
+        
+        console.warn('Voice chat not supported:', supportInfo.details);
+    }
+    
+    getSupportInfo() {
+        const hasRecognition = 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window;
+        const hasSynthesis = 'speechSynthesis' in window;
+        
+        if (!hasRecognition && !hasSynthesis) {
+            return {
+                message: 'Voice chat not supported in this browser. Try Chrome, Safari, or Edge.',
+                details: 'Neither speech recognition nor synthesis available'
+            };
+        }
+        
+        if (!hasRecognition) {
+            return {
+                message: 'Voice input not supported. You can still interact with the text chatbot below.',
+                details: 'Speech recognition not available'
+            };
+        }
+        
+        if (!hasSynthesis) {
+            return {
+                message: 'Voice responses not supported, but I can listen to you!',
+                details: 'Speech synthesis not available'
+            };
+        }
+        
+        return {
+            message: 'Voice features should be supported. Please check microphone permissions.',
+            details: 'APIs available but may have permission issues'
+        };
     }
 }
 
-// Initialize voice chatbot
+// Initialize voice chatbot with better error handling
 let voiceChatbot;
 
 function toggleVoiceChatbot() {
-    if (!voiceChatbot) {
-        voiceChatbot = new VoiceChatbot();
+    try {
+        if (!voiceChatbot) {
+            voiceChatbot = new VoiceChatbot();
+        }
+        voiceChatbot.toggleVoiceChatbot();
+    } catch (error) {
+        console.error('Voice chatbot initialization error:', error);
+        
+        // Fallback: show manual message
+        const statusBubble = document.getElementById('voiceStatusBubble');
+        if (statusBubble) {
+            statusBubble.textContent = 'Voice chat unavailable. Try the text chatbot below!';
+            statusBubble.classList.add('show');
+            setTimeout(() => statusBubble.classList.remove('show'), 5000);
+        }
     }
-    voiceChatbot.toggleVoiceChatbot();
 }
 
-// Initialize when page loads
+// Enhanced initialization
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize voices for better speech synthesis
     if ('speechSynthesis' in window) {
-        speechSynthesis.getVoices();
-        window.speechSynthesis.onvoiceschanged = function() {
-            speechSynthesis.getVoices();
+        const initVoices = () => {
+            const voices = speechSynthesis.getVoices();
+            console.log('Available voices:', voices.length);
+            
+            if (voices.length === 0) {
+                setTimeout(initVoices, 100);
+            }
         };
+        
+        speechSynthesis.addEventListener('voiceschanged', initVoices);
+        initVoices();
+    }
+    
+    // Add accessibility attributes
+    const voiceToggle = document.getElementById('voiceChatbotToggle');
+    if (voiceToggle) {
+        voiceToggle.setAttribute('aria-label', 'Toggle voice chat');
+        voiceToggle.setAttribute('role', 'button');
+        voiceToggle.setAttribute('aria-pressed', 'false');
     }
 });
 
-// Cleanup on page unload
+// Enhanced cleanup on page unload
 window.addEventListener('beforeunload', function() {
     if (voiceChatbot) {
-        voiceChatbot.stopListening();
-        voiceChatbot.stopSpeaking();
+        try {
+            voiceChatbot.stopListening();
+            voiceChatbot.stopSpeaking();
+        } catch (error) {
+            console.error('Cleanup error:', error);
+        }
+    }
+});
+
+// Handle page visibility changes
+document.addEventListener('visibilitychange', function() {
+    if (document.hidden && voiceChatbot) {
+        try {
+            voiceChatbot.stopListening();
+            voiceChatbot.stopSpeaking();
+        } catch (error) {
+            console.error('Visibility change cleanup error:', error);
+        }
     }
 });
 // GitHub API Integration
