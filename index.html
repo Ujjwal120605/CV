@@ -214,13 +214,18 @@
             max-width: 100%;
         }
         /* Animated Projects Section */
+/* Enhanced Animated Projects Section */
 .projects-showcase {
     display: flex;
     gap: 1rem;
     height: 700px;
     overflow-x: auto;
+    overflow-y: hidden;
     padding: 1rem 0;
     scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.02);
 }
 
 .animated-project-card {
@@ -228,21 +233,30 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 170px;
+    min-width: 200px;
     height: 700px;
     border-radius: 24px;
     cursor: pointer;
-    transition: flex 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     scroll-snap-align: start;
     overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .animated-project-card.active {
+    min-width: 500px;
     flex: 3.5;
 }
 
 .animated-project-card:not(.active) {
-    flex: 0.5;
+    min-width: 200px;
+    flex: 0.8;
+}
+
+.animated-project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 188, 212, 0.2);
 }
 
 .project-background {
@@ -253,37 +267,63 @@
     border-radius: 24px;
     filter: brightness(0.7);
     transition: filter 0.3s ease;
+    z-index: 0;
 }
 
 .animated-project-card:hover .project-background {
     filter: brightness(0.9);
 }
 
+.animated-project-card.active .project-background {
+    filter: brightness(0.8);
+}
+
 .project-title-vertical {
     position: absolute;
-    bottom: 5rem;
+    bottom: 3rem;
     left: 50%;
     transform: translateX(-50%) rotate(-90deg);
     transform-origin: center;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 600;
     color: white;
     white-space: nowrap;
     z-index: 2;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+    transition: opacity 0.3s ease;
+    pointer-events: none;
 }
 
 .project-content-expanded {
     position: absolute;
-    bottom: 0;
+    top: 0;
     left: 0;
     right: 0;
-    padding: 2rem;
-    background: linear-gradient(transparent, rgba(0,0,0,0.8));
-    border-radius: 0 0 24px 24px;
+    bottom: 0;
+    padding: 2.5rem;
+    background: linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.7) 100%);
+    border-radius: 24px;
     color: white;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.4s ease;
+    z-index: 3;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.animated-project-card.active .project-content-expanded {
+    opacity: 1;
+    visibility: visible;
     transform: translateY(0);
-    transition: transform 0.3s ease;
+}
+
+.animated-project-card.active .project-title-vertical {
+    opacity: 0;
+    visibility: hidden;
 }
 
 .project-icon-container {
@@ -292,122 +332,271 @@
     justify-content: center;
     width: 60px;
     height: 60px;
-    border-radius: 24px;
-    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    background: rgba(0, 188, 212, 0.15);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    margin-bottom: 1rem;
+    border: 2px solid rgba(0, 188, 212, 0.3);
+    margin-bottom: 1.5rem;
+    flex-shrink: 0;
 }
 
 .project-subtitle {
-    font-size: 1rem;
+    font-size: 0.9rem;
     text-transform: uppercase;
     color: #00bcd4;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    letter-spacing: 1px;
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
 }
 
 .project-main-title {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 1.2rem;
     line-height: 1.2;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
 .project-description-text {
-    font-size: 0.95rem;
-    line-height: 1.6;
-    color: #ccc;
-    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #e0e0e0;
+    margin-bottom: 2rem;
+    flex-grow: 1;
+    min-height: 0;
 }
 
 .project-tech-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
+    gap: 0.8rem;
+    margin-bottom: 2rem;
+    flex-shrink: 0;
 }
 
 .tech-tag-animated {
     background: rgba(0, 188, 212, 0.2);
-    color: #00bcd4;
-    padding: 0.3rem 0.8rem;
-    border-radius: 15px;
-    font-size: 0.8rem;
-    border: 1px solid rgba(0, 188, 212, 0.3);
+    color: #00e5ff;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: 1px solid rgba(0, 188, 212, 0.4);
+    transition: all 0.3s ease;
+}
+
+.tech-tag-animated:hover {
+    background: rgba(0, 188, 212, 0.3);
+    transform: translateY(-2px);
 }
 
 .project-links-animated {
     display: flex;
     gap: 1rem;
+    flex-shrink: 0;
 }
 
 .project-link-animated {
-    padding: 0.8rem 1.5rem;
-    border-radius: 12px;
+    padding: 1rem 2rem;
+    border-radius: 15px;
     text-decoration: none;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.8rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.project-link-animated::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.6s;
+}
+
+.project-link-animated:hover::before {
+    left: 100%;
 }
 
 .project-link-primary {
-    background: #00bcd4;
+    background: linear-gradient(135deg, #00bcd4, #00acc1);
     color: white;
+    box-shadow: 0 4px 15px rgba(0, 188, 212, 0.3);
 }
 
 .project-link-secondary {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.15);
     color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
 }
 
 .project-link-animated:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
 }
 
-/* Mobile Responsive */
+.project-link-primary:hover {
+    box-shadow: 0 10px 25px rgba(0, 188, 212, 0.4);
+}
+
+.project-link-secondary:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(0, 188, 212, 0.5);
+}
+
+/* Mobile Responsive - Completely Redesigned */
 @media (max-width: 768px) {
     .projects-showcase {
-        height: 500px;
         flex-direction: column;
-        overflow-y: auto;
+        height: auto;
+        max-height: none;
         overflow-x: hidden;
+        overflow-y: visible;
+        padding: 0;
+        gap: 1.5rem;
+        background: transparent;
     }
     
     .animated-project-card {
         width: 100%;
-        height: 400px;
+        height: 300px;
         min-width: unset;
-        flex: unset !important;
-        margin-bottom: 1rem;
+        flex: none !important;
+        margin: 0;
+        position: relative;
+        border-radius: 20px;
+        cursor: pointer;
+        overflow: hidden;
     }
     
     .animated-project-card.active {
         height: 500px;
+        min-width: unset;
+    }
+    
+    .project-background {
+        border-radius: 20px;
     }
     
     .project-title-vertical {
         transform: translateX(-50%) rotate(0deg);
         bottom: 2rem;
-        font-size: 1.2rem;
+        left: 50%;
+        font-size: 1.3rem;
+        text-align: center;
+        white-space: normal;
+        max-width: 80%;
+        z-index: 2;
+    }
+    
+    .project-content-expanded {
+        padding: 1.5rem;
+        border-radius: 20px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.8) 100%);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .project-icon-container {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 1rem;
+    }
+    
+    .project-main-title {
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+    }
+    
+    .project-description-text {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+    }
+    
+    .project-tech-tags {
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .tech-tag-animated {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+    
+    .project-links-animated {
+        flex-direction: column;
+        gap: 0.8rem;
+        width: 100%;
+    }
+    
+    .project-link-animated {
+        width: 100%;
+        justify-content: center;
+        padding: 0.8rem 1.5rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+    .animated-project-card {
+        height: 280px;
+    }
+    
+    .animated-project-card.active {
+        height: 450px;
+    }
+    
+    .project-content-expanded {
+        padding: 1.2rem;
     }
     
     .project-main-title {
         font-size: 1.5rem;
     }
     
-    .project-content-expanded {
-        padding: 1.5rem;
+    .project-description-text {
+        font-size: 0.9rem;
     }
     
-    .project-links-animated {
-        flex-direction: column;
+    .project-title-vertical {
+        font-size: 1.1rem;
+        max-width: 90%;
+    }
+    
+    .project-icon-container {
+        width: 45px;
+        height: 45px;
+    }
+}
+
+/* Touch device improvements */
+@media (hover: none) and (pointer: coarse) {
+    .animated-project-card:hover {
+        transform: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .project-link-animated:hover {
+        transform: none;
+    }
+    
+    .tech-tag-animated:hover {
+        transform: none;
     }
 }
         /* GitHub Dashboard Styles */
@@ -4831,15 +5020,16 @@ document.addEventListener('DOMContentLoaded', function() {
     generateActivityGrid();
 });
 // Project data with background images/gradients
+// Enhanced Project data with better backgrounds and more variety
 const projectsData = [
     {
         id: 'portfolio-site',
         title: 'Personal Portfolio',
         subtitle: 'Web Development',
-        description: 'A responsive personal resume website built with HTML, CSS, and JavaScript, featuring a modern design, downloadable PDF resume, and dedicated sections for Experience, Projects, and Contact.',
+        description: 'A fully responsive personal resume website built with modern HTML5, CSS3, and vanilla JavaScript. Features include smooth animations, downloadable PDF resume, interactive sections, and optimized performance across all devices.',
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         icon: 'fas fa-globe',
-        tech: ['HTML', 'CSS', 'JavaScript', 'Responsive Design'],
+        tech: ['HTML5', 'CSS3', 'JavaScript', 'Responsive Design', 'Performance Optimization'],
         links: [
             { type: 'github', url: 'https://github.com/Ujjwal120605/CV', text: 'View Code' },
             { type: 'demo', url: 'https://cv-seven-puce.vercel.app/', text: 'Live Demo' }
@@ -4849,20 +5039,20 @@ const projectsData = [
         id: 'crop-mapping',
         title: 'Hyperspectral Crop Mapping',
         subtitle: 'Machine Learning',
-        description: 'Developed a deep learning model for classifying and mapping crop types using hyperspectral imagery, achieving enhanced accuracy with CNN architectures and spectral feature extraction techniques.',
+        description: 'Advanced deep learning project for precision agriculture using hyperspectral satellite imagery. Implemented CNN architectures for crop classification with spectral feature extraction, achieving high accuracy in automated crop health monitoring and yield prediction.',
         background: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
         icon: 'fas fa-seedling',
-        tech: ['Python', 'Machine Learning', 'CNN', 'Remote Sensing'],
+        tech: ['Python', 'TensorFlow', 'CNN', 'Remote Sensing', 'Image Processing'],
         links: []
     },
     {
         id: 'iffco-website',
         title: 'IFFCO Information Portal',
         subtitle: 'Full Stack Development',
-        description: 'Built a complete web application during internship at IFFCO featuring secure login system and interactive sections for About, Products, and Contact with modern UI/UX design.',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        description: 'Enterprise-level web application developed during internship at IFFCO. Features secure authentication system, dynamic content management, responsive design, and interactive sections for company information, products catalog, and contact management.',
+        background: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%)',
         icon: 'fas fa-building',
-        tech: ['HTML', 'CSS', 'JavaScript', 'JSON', 'UI/UX'],
+        tech: ['HTML5', 'CSS3', 'JavaScript', 'JSON', 'UI/UX Design', 'Authentication'],
         links: [
             { type: 'github', url: 'https://github.com/Ujjwal120605/iffco_project', text: 'View Code' },
             { type: 'demo', url: 'https://iffco-project.vercel.app/', text: 'Live Demo' }
@@ -4872,10 +5062,10 @@ const projectsData = [
         id: 'metaverse-site',
         title: 'Metaverse Website',
         subtitle: 'Modern Web Development',
-        description: 'A modern Next.js and Tailwind CSS project inspired by cutting-edge 3D web experiences. Demonstrates responsive design, smooth animations, and component-based architecture.',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        description: 'Cutting-edge Next.js application showcasing modern web development practices. Built with React hooks, Tailwind CSS for styling, and optimized for performance. Features immersive 3D-inspired design patterns and smooth user interactions.',
+        background: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
         icon: 'fas fa-vr-cardboard',
-        tech: ['Next.js', 'React', 'Tailwind CSS', 'JavaScript', 'Vercel'],
+        tech: ['Next.js', 'React', 'Tailwind CSS', 'JavaScript ES6+', 'Vercel', 'Performance'],
         links: [
             { type: 'github', url: 'https://github.com/Ujjwal120605/metaverse-website', text: 'View Code' },
             { type: 'demo', url: 'https://metaverse-website-mocha.vercel.app/', text: 'Live Demo' }
@@ -4883,69 +5073,108 @@ const projectsData = [
     },
     {
         id: 'noise-cancellation',
-        title: 'Noise Cancellation ML',
-        subtitle: 'Audio Processing',
-        description: 'Designed an ML-based pipeline for real-time background noise suppression in audio signals using deep learning models to distinguish between desired signals and noise.',
+        title: 'Cognitive Noise Cancellation',
+        subtitle: 'Audio Processing & ML',
+        description: 'Sophisticated machine learning pipeline for real-time audio enhancement. Uses advanced signal processing techniques and deep learning models to intelligently separate desired audio signals from background noise, improving audio clarity in various environments.',
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         icon: 'fas fa-volume-mute',
-        tech: ['Python', 'Machine Learning', 'Deep Learning', 'Audio Processing'],
+        tech: ['Python', 'Signal Processing', 'Deep Learning', 'Audio Analysis', 'Real-time Processing'],
         links: [
             { type: 'github', url: 'https://github.com/Ujjwal120605/CognitiveNoiseCancellation', text: 'View Code' }
         ]
     }
 ];
 
-// Initialize animated projects
-function initAnimatedProjects() {
-    const container = document.getElementById('projectsShowcase');
-    let activeProject = projectsData[0].id;
+// Enhanced project management class
+class ProjectManager {
+    constructor() {
+        this.container = document.getElementById('projectsShowcase');
+        this.activeProject = null;
+        this.isMobile = window.innerWidth <= 768;
+        this.init();
+        this.setupResizeListener();
+    }
     
-    // Generate project cards
-    projectsData.forEach((project, index) => {
-        const card = createAnimatedProjectCard(project, index === 0);
-        container.appendChild(card);
-    });
+    init() {
+        if (!this.container) return;
+        
+        this.container.innerHTML = '';
+        this.activeProject = projectsData[0].id;
+        
+        // Generate project cards
+        projectsData.forEach((project, index) => {
+            const card = this.createProjectCard(project, index === 0);
+            this.container.appendChild(card);
+        });
+        
+        this.setupEventListeners();
+    }
     
-    // Add click handlers
-    // Add click handlers
-document.querySelectorAll('.animated-project-card').forEach(card => {
-    card.addEventListener('click', (e) => {
-        const clickedId = card.getAttribute('data-project-id');
-        
-        if (clickedId !== activeProject) {
-            // Hide all expanded content and show all vertical titles
-            document.querySelectorAll('.animated-project-card').forEach(c => {
-                c.classList.remove('active');
-                c.querySelector('.project-title-vertical').style.display = 'block';
-                c.querySelector('.project-content-expanded').style.display = 'none';
-            });
-            
-            // Show clicked card's expanded content and hide its vertical title
-            card.classList.add('active');
-            card.querySelector('.project-title-vertical').style.display = 'none';
-            card.querySelector('.project-content-expanded').style.display = 'block';
-            
-            activeProject = clickedId;
-        }
-    });
-});
-}
-
-function createAnimatedProjectCard(project, isActive = false) {
-    const card = document.createElement('div');
-    card.className = `animated-project-card ${isActive ? 'active' : ''}`;
-    card.setAttribute('data-project-id', project.id);
+    setupResizeListener() {
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                const wasMobile = this.isMobile;
+                this.isMobile = window.innerWidth <= 768;
+                
+                // If mobile state changed, reinitialize
+                if (wasMobile !== this.isMobile) {
+                    this.init();
+                }
+            }, 250);
+        });
+    }
     
-    card.innerHTML = `
-        <div class="project-background" style="background: ${project.background}"></div>
+    createProjectCard(project, isActive = false) {
+        const card = document.createElement('div');
+        card.className = `animated-project-card ${isActive ? 'active' : ''}`;
+        card.setAttribute('data-project-id', project.id);
+        card.setAttribute('role', 'button');
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('aria-label', `View details for ${project.title} project`);
         
-        <!-- Vertical title (shown when inactive) -->
-        <h3 class="project-title-vertical" style="display: ${isActive ? 'none' : 'block'}">${project.title}</h3>
+        // Create project background
+        const background = document.createElement('div');
+        background.className = 'project-background';
+        background.style.background = project.background;
         
-        <!-- Expanded content (shown when active) -->
-        <div class="project-content-expanded" style="display: ${isActive ? 'block' : 'none'}">
+        // Create vertical title
+        const verticalTitle = document.createElement('h3');
+        verticalTitle.className = 'project-title-vertical';
+        verticalTitle.textContent = project.title;
+        
+        // Create expanded content
+        const expandedContent = document.createElement('div');
+        expandedContent.className = 'project-content-expanded';
+        expandedContent.innerHTML = this.createExpandedContent(project);
+        
+        // Append elements
+        card.appendChild(background);
+        card.appendChild(verticalTitle);
+        card.appendChild(expandedContent);
+        
+        return card;
+    }
+    
+    createExpandedContent(project) {
+        const linksHTML = project.links.length > 0 ? `
+            <div class="project-links-animated">
+                ${project.links.map(link => `
+                    <a href="${link.url}" target="_blank" rel="noopener noreferrer" 
+                       class="project-link-animated ${link.type === 'github' ? 'project-link-secondary' : 'project-link-primary'}"
+                       onclick="event.stopPropagation()"
+                       aria-label="${link.text} for ${project.title}">
+                        <i class="fas ${link.type === 'github' ? 'fa-code' : 'fa-external-link-alt'}" aria-hidden="true"></i>
+                        ${link.text}
+                    </a>
+                `).join('')}
+            </div>
+        ` : '';
+        
+        return `
             <div class="project-icon-container">
-                <i class="${project.icon}" style="color: #00bcd4; font-size: 1.5rem;"></i>
+                <i class="${project.icon}" style="color: #00bcd4; font-size: 1.5rem;" aria-hidden="true"></i>
             </div>
             
             <p class="project-subtitle">${project.subtitle}</p>
@@ -4956,26 +5185,169 @@ function createAnimatedProjectCard(project, isActive = false) {
                 ${project.tech.map(tech => `<span class="tech-tag-animated">${tech}</span>`).join('')}
             </div>
             
-            ${project.links.length > 0 ? `
-                <div class="project-links-animated">
-                    ${project.links.map(link => `
-                        <a href="${link.url}" target="_blank" class="project-link-animated ${link.type === 'github' ? 'project-link-secondary' : 'project-link-primary'}">
-                            <i class="fas ${link.type === 'github' ? 'fa-code' : 'fa-external-link-alt'}"></i>
-                            ${link.text}
-                        </a>
-                    `).join('')}
-                </div>
-            ` : ''}
-        </div>
-    `;
+            ${linksHTML}
+        `;
+    }
     
-    return card;
+    setupEventListeners() {
+        const cards = this.container.querySelectorAll('.animated-project-card');
+        
+        cards.forEach(card => {
+            // Remove any existing listeners
+            const newCard = card.cloneNode(true);
+            card.parentNode.replaceChild(newCard, card);
+        });
+        
+        // Re-select cards after cloning
+        const freshCards = this.container.querySelectorAll('.animated-project-card');
+        
+        freshCards.forEach(card => {
+            // Click listener
+            card.addEventListener('click', (e) => this.handleCardClick(e, card));
+            
+            // Keyboard support
+            card.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.handleCardClick(e, card);
+                }
+            });
+            
+            // Touch support for mobile
+            if (this.isMobile) {
+                card.addEventListener('touchstart', (e) => this.handleTouchStart(e, card), { passive: true });
+                card.addEventListener('touchend', () => this.handleTouchEnd(card), { passive: true });
+            }
+        });
+    }
+    
+    handleCardClick(e, card) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const clickedId = card.getAttribute('data-project-id');
+        
+        // Don't do anything if clicking on a link
+        if (e.target.closest('a')) {
+            return;
+        }
+        
+        // If mobile and card is already active, do nothing (content is visible)
+        if (this.isMobile && clickedId === this.activeProject) {
+            return;
+        }
+        
+        // If desktop and card is already active, close it
+        if (!this.isMobile && clickedId === this.activeProject) {
+            this.closeAllCards();
+            return;
+        }
+        
+        // Activate the clicked card
+        this.activateCard(clickedId);
+    }
+    
+    handleTouchStart(e, card) {
+        // Add touch feedback
+        card.style.transform = 'scale(0.98)';
+        card.style.transition = 'transform 0.1s ease';
+    }
+    
+    handleTouchEnd(card) {
+        // Remove touch feedback
+        setTimeout(() => {
+            card.style.transform = '';
+            card.style.transition = '';
+        }, 150);
+    }
+    
+    activateCard(projectId) {
+        const cards = this.container.querySelectorAll('.animated-project-card');
+        
+        cards.forEach(card => {
+            const cardId = card.getAttribute('data-project-id');
+            const isTargetCard = cardId === projectId;
+            
+            if (isTargetCard) {
+                card.classList.add('active');
+                card.setAttribute('aria-expanded', 'true');
+                this.activeProject = projectId;
+            } else {
+                card.classList.remove('active');
+                card.setAttribute('aria-expanded', 'false');
+            }
+        });
+        
+        // Scroll to active card on mobile
+        if (this.isMobile) {
+            const activeCard = this.container.querySelector(`[data-project-id="${projectId}"]`);
+            if (activeCard) {
+                setTimeout(() => {
+                    activeCard.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center',
+                        inline: 'center'
+                    });
+                }, 300);
+            }
+        }
+        
+        // Announce to screen readers
+        this.announceCardChange(projectId);
+    }
+    
+    closeAllCards() {
+        const cards = this.container.querySelectorAll('.animated-project-card');
+        cards.forEach(card => {
+            card.classList.remove('active');
+            card.setAttribute('aria-expanded', 'false');
+        });
+        this.activeProject = null;
+    }
+    
+    announceCardChange(projectId) {
+        const project = projectsData.find(p => p.id === projectId);
+        if (project) {
+            // Create a temporary element for screen reader announcement
+            const announcement = document.createElement('div');
+            announcement.setAttribute('aria-live', 'polite');
+            announcement.setAttribute('aria-atomic', 'true');
+            announcement.className = 'sr-only';
+            announcement.style.position = 'absolute';
+            announcement.style.left = '-10000px';
+            announcement.textContent = `${project.title} project details are now visible`;
+            
+            document.body.appendChild(announcement);
+            
+            setTimeout(() => {
+                document.body.removeChild(announcement);
+            }, 1000);
+        }
+    }
 }
+
+// Initialize project manager
+let projectManager;
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // ... your existing initialization code ...
-    initAnimatedProjects();
+    // Initialize projects with a slight delay to ensure DOM is ready
+    setTimeout(() => {
+        if (document.getElementById('projectsShowcase')) {
+            projectManager = new ProjectManager();
+        }
+    }, 100);
+});
+
+// Handle page visibility change to pause/resume animations
+document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+        // Page is hidden, pause animations
+        document.body.style.setProperty('--animation-play-state', 'paused');
+    } else {
+        // Page is visible, resume animations
+        document.body.style.setProperty('--animation-play-state', 'running');
+    }
 });
 
     </script>
