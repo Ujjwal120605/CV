@@ -7849,7 +7849,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 // Enhanced Mobile Stack Cards Manager
 // Enhanced Mobile Stack Cards Manager with Smooth Scroll Behavior
-class MobileSwipeStackManager {
+class EnhancedMobileSwipeManager {
     constructor() {
         this.isMobile = window.innerWidth <= 768;
         this.cards = [];
@@ -7863,11 +7863,15 @@ class MobileSwipeStackManager {
         this.cardWidth = 0;
         this.progressDots = [];
         this.autoPlayInterval = null;
-        this.isAutoPlaying = false;
-        this.swipeThreshold = 80;
-        this.velocityThreshold = 0.5;
+        this.isAutoPlaying = true;
+        this.swipeThreshold = 60;
+        this.velocityThreshold = 0.4;
         this.lastTouchTime = 0;
         this.touchVelocity = 0;
+        this.autoSlideSpeed = 6000; // 6 seconds per slide
+        this.pauseDuration = 3000; // 3 seconds pause after manual interaction
+        this.isUserInteracting = false;
+        this.transitionDuration = 800; // Smooth transition duration
         
         if (this.isMobile) {
             this.init();
@@ -7882,8 +7886,9 @@ class MobileSwipeStackManager {
         this.createSwipeContainer();
         this.setupTouchEvents();
         this.setupProgressIndicator();
-        this.setupAutoPlay();
+        this.setupAutoSlide();
         this.setupTouchOptimizations();
+        this.setupKeyboardSupport();
         
         this.isInitialized = true;
     }
@@ -7929,6 +7934,7 @@ class MobileSwipeStackManager {
         // Set initial positions
         setTimeout(() => {
             this.updateCardPositions(false);
+            this.addEnhancedStyles();
         }, 100);
     }
     
@@ -7938,7 +7944,7 @@ class MobileSwipeStackManager {
         card.setAttribute('data-index', index);
         card.setAttribute('data-project-id', project.id);
         
-        // Create animated background
+        // Create sophisticated background layers
         const bgGradient = document.createElement('div');
         bgGradient.className = 'card-bg-gradient';
         
@@ -7947,13 +7953,23 @@ class MobileSwipeStackManager {
         
         const bgOverlay = document.createElement('div');
         bgOverlay.className = 'card-bg-overlay';
-        bgOverlay.style.background = project.background || 'linear-gradient(135deg, rgba(0, 188, 212, 0.15), rgba(0, 188, 212, 0.05))';
+        
+        // Enhanced gradient backgrounds based on project type
+        const gradients = [
+            'linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.05))',
+            'linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.05))',
+            'linear-gradient(135deg, rgba(245, 101, 101, 0.1), rgba(239, 68, 68, 0.05))',
+            'linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.05))',
+            'linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(124, 58, 237, 0.05))'
+        ];
+        
+        bgOverlay.style.background = project.background || gradients[index % gradients.length];
         
         card.appendChild(bgGradient);
         card.appendChild(bgPattern);
         card.appendChild(bgOverlay);
         
-        // Create content
+        // Create content with enhanced styling
         const content = document.createElement('div');
         content.className = 'mobile-swipe-content';
         
@@ -7995,10 +8011,23 @@ class MobileSwipeStackManager {
         
         card.appendChild(content);
         
-        // Add magnetic effect elements
+        // Add enhanced magnetic effect
         const magneticField = document.createElement('div');
         magneticField.className = 'magnetic-field';
         card.appendChild(magneticField);
+        
+        // Add floating particles effect
+        const particlesContainer = document.createElement('div');
+        particlesContainer.className = 'particles-container';
+        for (let i = 0; i < 5; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'floating-particle';
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            particle.style.animationDelay = `${Math.random() * 3}s`;
+            particlesContainer.appendChild(particle);
+        }
+        card.appendChild(particlesContainer);
         
         return card;
     }
@@ -8047,7 +8076,7 @@ class MobileSwipeStackManager {
             }
         });
         
-        // Prevent context menu on long press
+        // Prevent context menu
         viewport.addEventListener('contextmenu', (e) => {
             if (this.isDragging) {
                 e.preventDefault();
@@ -8057,6 +8086,7 @@ class MobileSwipeStackManager {
     
     handleTouchStart(e) {
         this.isDragging = true;
+        this.isUserInteracting = true;
         this.startX = e.touches[0].clientX;
         this.startY = e.touches[0].clientY;
         this.currentX = this.startX;
@@ -8064,22 +8094,22 @@ class MobileSwipeStackManager {
         this.lastTouchTime = Date.now();
         this.touchVelocity = 0;
         
-        // Stop auto-play when user interacts
-        this.pauseAutoPlay();
+        // Pause auto-slide during interaction
+        this.pauseAutoSlide();
         
-        // Add dragging class
+        // Add interaction effects
         const track = document.getElementById('swipeTrack');
         if (track) {
             track.classList.add('dragging');
         }
         
         // Haptic feedback
-        this.triggerHaptic(10);
+        this.triggerHaptic(12);
         
         // Update card width for calculations
         const card = this.cards[0];
         if (card) {
-            this.cardWidth = card.offsetWidth + 20; // Include margin
+            this.cardWidth = card.offsetWidth + 40; // Include margin
         }
     }
     
@@ -8092,7 +8122,7 @@ class MobileSwipeStackManager {
         const deltaX = this.currentX - this.startX;
         const deltaY = this.currentY - this.startY;
         
-        // Calculate velocity
+        // Calculate velocity for smooth interactions
         const now = Date.now();
         const timeDiff = now - this.lastTouchTime;
         if (timeDiff > 0) {
@@ -8101,13 +8131,21 @@ class MobileSwipeStackManager {
         this.lastTouchTime = now;
         
         // Prevent vertical scroll if horizontal swipe is detected
-        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 15) {
             e.preventDefault();
         }
         
-        // Only handle horizontal swipes
+        // Handle horizontal swipes with enhanced resistance at boundaries
         if (Math.abs(deltaX) > Math.abs(deltaY)) {
-            this.updateCardPositions(true, deltaX);
+            let adjustedDelta = deltaX;
+            
+            // Add resistance at boundaries
+            if ((this.currentIndex === 0 && deltaX > 0) || 
+                (this.currentIndex === this.cards.length - 1 && deltaX < 0)) {
+                adjustedDelta = deltaX * 0.3; // Reduce movement at boundaries
+            }
+            
+            this.updateCardPositions(true, adjustedDelta);
         }
     }
     
@@ -8115,30 +8153,31 @@ class MobileSwipeStackManager {
         if (!this.isDragging) return;
         
         this.isDragging = false;
+        this.isUserInteracting = false;
         
         const deltaX = this.currentX - this.startX;
         const deltaY = this.currentY - this.startY;
         const absDeltaX = Math.abs(deltaX);
         const absDeltaY = Math.abs(deltaY);
         
-        // Remove dragging class
+        // Remove dragging effects
         const track = document.getElementById('swipeTrack');
         if (track) {
             track.classList.remove('dragging');
         }
         
-        // Determine if this was a swipe or tap
+        // Determine action based on swipe
         const isSwipe = absDeltaX > this.swipeThreshold || Math.abs(this.touchVelocity) > this.velocityThreshold;
         const isHorizontalSwipe = absDeltaX > absDeltaY;
         
         if (isSwipe && isHorizontalSwipe) {
-            // Handle swipe
+            // Handle directional swipe
             if (deltaX > 0) {
                 this.previousCard();
             } else {
                 this.nextCard();
             }
-        } else if (absDeltaX < 10 && absDeltaY < 10) {
+        } else if (absDeltaX < 15 && absDeltaY < 15) {
             // Handle tap
             this.handleCardTap();
         } else {
@@ -8146,24 +8185,17 @@ class MobileSwipeStackManager {
             this.updateCardPositions(false);
         }
         
-        // Resume auto-play after interaction
-        this.resumeAutoPlay();
+        // Resume auto-slide after interaction pause
+        this.resumeAutoSlideAfterPause();
     }
     
     handleCardTap() {
         const currentCard = this.cards[this.currentIndex];
         if (currentCard) {
-            // Create tap ripple effect
+            // Enhanced tap effects
             this.createTapRipple(currentCard);
-            
-            // Add tap highlight
-            currentCard.classList.add('tap-highlight');
-            setTimeout(() => {
-                currentCard.classList.remove('tap-highlight');
-            }, 300);
-            
-            // Trigger haptic feedback
-            this.triggerHaptic(20);
+            this.addTapHighlight(currentCard);
+            this.triggerHaptic(18);
         }
     }
     
@@ -8172,7 +8204,7 @@ class MobileSwipeStackManager {
         ripple.className = 'tap-ripple';
         
         const rect = card.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height) * 0.8;
+        const size = Math.max(rect.width, rect.height) * 0.9;
         
         ripple.style.cssText = `
             position: absolute;
@@ -8183,22 +8215,28 @@ class MobileSwipeStackManager {
             margin-left: ${-size/2}px;
             margin-top: ${-size/2}px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%);
             transform: scale(0);
-            animation: tapRipple 0.6s ease-out;
+            animation: tapRipple 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             pointer-events: none;
-            z-index: 10;
+            z-index: 15;
         `;
         
         this.ensureTapRippleAnimation();
-        
         card.appendChild(ripple);
         
         setTimeout(() => {
             if (ripple.parentNode) {
                 ripple.parentNode.removeChild(ripple);
             }
-        }, 600);
+        }, 800);
+    }
+    
+    addTapHighlight(card) {
+        card.classList.add('tap-highlight');
+        setTimeout(() => {
+            card.classList.remove('tap-highlight');
+        }, 400);
     }
     
     ensureTapRippleAnimation() {
@@ -8210,6 +8248,9 @@ class MobileSwipeStackManager {
                     0% {
                         transform: scale(0);
                         opacity: 1;
+                    }
+                    50% {
+                        opacity: 0.6;
                     }
                     100% {
                         transform: scale(1);
@@ -8225,67 +8266,78 @@ class MobileSwipeStackManager {
         const track = document.getElementById('swipeTrack');
         if (!track || this.cards.length === 0) return;
         
-        const totalCards = this.cards.length;
         const baseOffset = this.currentIndex * -this.cardWidth;
         const finalOffset = baseOffset + dragOffset;
         
-        // Apply transform to track
+        // Apply smooth transforms to track
         if (isDragging) {
             track.style.transform = `translateX(${finalOffset}px)`;
             track.style.transition = 'none';
         } else {
             track.style.transform = `translateX(${baseOffset}px)`;
-            track.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            track.style.transition = `transform ${this.transitionDuration}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
         }
         
-        // Update individual cards
+        // Enhanced individual card effects
         this.cards.forEach((card, index) => {
             const distance = index - this.currentIndex;
             const absDistance = Math.abs(distance);
             
-            // Calculate scale and opacity based on position
+            // Calculate enhanced visual properties
             let scale = 1;
             let opacity = 1;
             let zIndex = 10;
             let rotateY = 0;
+            let rotateZ = 0;
             let brightness = 1;
+            let blur = 0;
             
             if (absDistance > 0) {
-                scale = Math.max(0.85, 1 - (absDistance * 0.15));
-                opacity = Math.max(0.3, 1 - (absDistance * 0.3));
+                scale = Math.max(0.82, 1 - (absDistance * 0.18));
+                opacity = Math.max(0.4, 1 - (absDistance * 0.25));
                 zIndex = Math.max(1, 10 - absDistance);
-                rotateY = distance * 5; // Subtle 3D rotation
-                brightness = Math.max(0.7, 1 - (absDistance * 0.15));
+                rotateY = distance * 8; // Enhanced 3D rotation
+                rotateZ = distance * 2; // Subtle Z rotation
+                brightness = Math.max(0.75, 1 - (absDistance * 0.12));
+                blur = absDistance * 1.5;
             }
             
-            // Apply drag influence for smooth interaction
+            // Apply drag influence for fluid interaction
             if (isDragging) {
-                const dragInfluence = Math.max(0, 1 - absDistance * 0.5);
-                const dragScale = 1 + (Math.abs(dragOffset) / this.cardWidth) * 0.05 * dragInfluence;
+                const dragInfluence = Math.max(0, 1 - absDistance * 0.6);
+                const dragScale = 1 + (Math.abs(dragOffset) / this.cardWidth) * 0.08 * dragInfluence;
                 scale *= dragScale;
+                
+                // Add tilt effect during drag
+                const tiltAmount = (dragOffset / this.cardWidth) * 5;
+                rotateZ += tiltAmount * dragInfluence;
             }
             
-            // Set card styles
-            const transform = `scale(${scale}) rotateY(${rotateY}deg)`;
-            const filter = `brightness(${brightness})`;
+            // Apply enhanced transforms
+            const transform = `scale(${scale}) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`;
+            const filter = `brightness(${brightness}) blur(${blur}px)`;
             
             card.style.transform = transform;
             card.style.opacity = opacity;
             card.style.zIndex = zIndex;
             card.style.filter = filter;
             
-            // Add/remove active class
+            // Enhanced active states
             if (index === this.currentIndex) {
                 card.classList.add('active');
+                card.classList.remove('inactive');
             } else {
                 card.classList.remove('active');
+                card.classList.add('inactive');
             }
             
-            // Add/remove visible class for performance
+            // Performance optimization
             if (absDistance <= 2) {
                 card.classList.add('visible');
+                card.style.visibility = 'visible';
             } else {
                 card.classList.remove('visible');
+                card.style.visibility = 'hidden';
             }
         });
         
@@ -8298,9 +8350,13 @@ class MobileSwipeStackManager {
             this.currentIndex++;
             this.updateCardPositions();
             this.triggerHaptic(15);
+            this.addSlideEffect('left');
         } else {
-            // Bounce effect at the end
-            this.bounceAnimation('right');
+            // Loop back to first card
+            this.currentIndex = 0;
+            this.updateCardPositions();
+            this.triggerHaptic(15);
+            this.addSlideEffect('left');
         }
     }
     
@@ -8309,29 +8365,82 @@ class MobileSwipeStackManager {
             this.currentIndex--;
             this.updateCardPositions();
             this.triggerHaptic(15);
+            this.addSlideEffect('right');
         } else {
-            // Bounce effect at the beginning
-            this.bounceAnimation('left');
+            // Loop to last card
+            this.currentIndex = this.cards.length - 1;
+            this.updateCardPositions();
+            this.triggerHaptic(15);
+            this.addSlideEffect('right');
         }
     }
     
-    bounceAnimation(direction) {
-        const track = document.getElementById('swipeTrack');
-        if (!track) return;
+    addSlideEffect(direction) {
+        const container = document.getElementById('mobileSwipeContainer');
+        if (container) {
+            container.classList.add(`slide-${direction}`);
+            setTimeout(() => {
+                container.classList.remove(`slide-${direction}`);
+            }, 300);
+        }
+    }
+    
+    setupAutoSlide() {
+        this.startAutoSlide();
         
-        const bounceDistance = 30;
-        const bounceOffset = direction === 'left' ? bounceDistance : -bounceDistance;
-        const baseOffset = this.currentIndex * -this.cardWidth;
+        // Pause on visibility change
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                this.pauseAutoSlide();
+            } else if (!this.isUserInteracting) {
+                this.resumeAutoSlideAfterPause();
+            }
+        });
         
-        track.style.transition = 'transform 0.15s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
-        track.style.transform = `translateX(${baseOffset + bounceOffset}px)`;
+        // Pause on mouse enter (for desktop)
+        const container = document.getElementById('mobileSwipeContainer');
+        if (container) {
+            container.addEventListener('mouseenter', () => {
+                if (!this.isMobile) {
+                    this.pauseAutoSlide();
+                }
+            });
+            
+            container.addEventListener('mouseleave', () => {
+                if (!this.isMobile) {
+                    this.resumeAutoSlideAfterPause();
+                }
+            });
+        }
+    }
+    
+    startAutoSlide() {
+        if (this.cards.length <= 1) return;
         
-        setTimeout(() => {
-            track.style.transition = 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-            track.style.transform = `translateX(${baseOffset}px)`;
-        }, 150);
-        
-        this.triggerHaptic(25);
+        this.isAutoPlaying = true;
+        this.autoPlayInterval = setInterval(() => {
+            if (this.isAutoPlaying && !this.isDragging && !this.isUserInteracting) {
+                this.nextCard();
+            }
+        }, this.autoSlideSpeed);
+    }
+    
+    pauseAutoSlide() {
+        this.isAutoPlaying = false;
+        if (this.autoPlayInterval) {
+            clearInterval(this.autoPlayInterval);
+            this.autoPlayInterval = null;
+        }
+    }
+    
+    resumeAutoSlideAfterPause() {
+        if (!this.isAutoPlaying) {
+            setTimeout(() => {
+                if (!this.isDragging && !this.isUserInteracting) {
+                    this.startAutoSlide();
+                }
+            }, this.pauseDuration);
+        }
     }
     
     setupProgressIndicator() {
@@ -8347,12 +8456,31 @@ class MobileSwipeStackManager {
             dot.className = `progress-dot ${index === 0 ? 'active' : ''}`;
             dot.addEventListener('click', () => {
                 this.goToCard(index);
+                this.pauseAutoSlide();
+                this.resumeAutoSlideAfterPause();
             });
             
             progressContainer.appendChild(dot);
             this.progressDots.push(dot);
         });
         
+        // Add auto-slide indicator
+        const playPauseBtn = document.createElement('div');
+        playPauseBtn.className = 'auto-slide-indicator';
+        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        playPauseBtn.addEventListener('click', () => {
+            if (this.isAutoPlaying) {
+                this.pauseAutoSlide();
+                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                playPauseBtn.classList.add('paused');
+            } else {
+                this.startAutoSlide();
+                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                playPauseBtn.classList.remove('paused');
+            }
+        });
+        
+        progressContainer.appendChild(playPauseBtn);
         container.appendChild(progressContainer);
     }
     
@@ -8366,96 +8494,82 @@ class MobileSwipeStackManager {
         });
     }
     
-    setupAutoPlay() {
-        // Auto-play functionality with pause on interaction
-        this.startAutoPlay();
-        
-        // Pause on visibility change
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                this.pauseAutoPlay();
-            } else {
-                this.resumeAutoPlay();
-            }
-        });
-    }
-    
-    startAutoPlay() {
-        if (this.cards.length <= 1) return;
-        
-        this.isAutoPlaying = true;
-        this.autoPlayInterval = setInterval(() => {
-            if (this.isAutoPlaying && !this.isDragging) {
-                if (this.currentIndex >= this.cards.length - 1) {
-                    this.goToCard(0);
-                } else {
-                    this.nextCard();
-                }
-            }
-        }, 4000);
-    }
-    
-    pauseAutoPlay() {
-        this.isAutoPlaying = false;
-        if (this.autoPlayInterval) {
-            clearInterval(this.autoPlayInterval);
-            this.autoPlayInterval = null;
-        }
-    }
-    
-    resumeAutoPlay() {
-        if (!this.isAutoPlaying) {
-            setTimeout(() => {
-                this.startAutoPlay();
-            }, 2000);
-        }
-    }
-    
-    setupTouchOptimizations() {
-        // Prevent overscroll
-        document.addEventListener('touchmove', (e) => {
-            if (e.target.closest('.mobile-swipe-viewport')) {
-                if (this.isDragging) {
+    setupKeyboardSupport() {
+        document.addEventListener('keydown', (e) => {
+            if (!this.isMobile || !this.isInitialized) return;
+            
+            switch (e.key) {
+                case 'ArrowLeft':
                     e.preventDefault();
-                }
+                    this.previousCard();
+                    this.pauseAutoSlide();
+                    this.resumeAutoSlideAfterPause();
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    this.nextCard();
+                    this.pauseAutoSlide();
+                    this.resumeAutoSlideAfterPause();
+                    break;
+                case 'Space':
+                    e.preventDefault();
+                    if (this.isAutoPlaying) {
+                        this.pauseAutoSlide();
+                    } else {
+                        this.startAutoSlide();
+                    }
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    this.goToCard(0);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    this.goToCard(this.cards.length - 1);
+                    break;
             }
-        }, { passive: false });
-        
-        // Add touch device class
-        if ('ontouchstart' in window) {
-            document.body.classList.add('touch-device');
-        }
-        
-        // Handle orientation change
-        window.addEventListener('orientationchange', () => {
-            setTimeout(() => {
-                this.updateCardPositions();
-            }, 300);
         });
-        
-        // Ensure smooth scrolling styles
-        this.addSmoothScrollingStyles();
     }
     
-    addSmoothScrollingStyles() {
-        if (!document.querySelector('#swipe-smooth-styles')) {
+    addEnhancedStyles() {
+        if (!document.querySelector('#enhanced-swipe-styles')) {
             const style = document.createElement('style');
-            style.id = 'swipe-smooth-styles';
+            style.id = 'enhanced-swipe-styles';
             style.textContent = `
                 .mobile-swipe-container {
                     position: relative;
                     width: 100%;
                     height: 100vh;
                     overflow: hidden;
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #334155 100%);
                     display: flex;
                     align-items: center;
                     justify-content: center;
                 }
                 
+                .mobile-swipe-container.slide-left {
+                    animation: slideEffectLeft 0.3s ease-out;
+                }
+                
+                .mobile-swipe-container.slide-right {
+                    animation: slideEffectRight 0.3s ease-out;
+                }
+                
+                @keyframes slideEffectLeft {
+                    0% { background-position: 0% 50%; }
+                    50% { background-position: 20% 50%; }
+                    100% { background-position: 0% 50%; }
+                }
+                
+                @keyframes slideEffectRight {
+                    0% { background-position: 0% 50%; }
+                    50% { background-position: -20% 50%; }
+                    100% { background-position: 0% 50%; }
+                }
+                
                 .mobile-swipe-viewport {
                     width: 100%;
-                    height: 80vh;
+                    height: 85vh;
                     overflow: hidden;
                     position: relative;
                     display: flex;
@@ -8467,6 +8581,7 @@ class MobileSwipeStackManager {
                     align-items: center;
                     height: 100%;
                     will-change: transform;
+                    transform: translateZ(0);
                 }
                 
                 .mobile-swipe-track.dragging * {
@@ -8475,17 +8590,51 @@ class MobileSwipeStackManager {
                 
                 .mobile-swipe-card {
                     flex: none;
-                    width: calc(100vw - 40px);
-                    height: calc(80vh - 40px);
-                    margin: 0 10px;
-                    border-radius: 20px;
+                    width: calc(100vw - 50px);
+                    height: calc(75vh - 40px);
+                    max-width: 400px;
+                    max-height: 650px;
+                    margin: 0 25px;
+                    border-radius: 28px;
                     position: relative;
-                    background: rgba(255, 255, 255, 0.1);
-                    backdrop-filter: blur(10px);
-                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    background: linear-gradient(145deg, 
+                        rgba(30, 41, 59, 0.95), 
+                        rgba(15, 23, 42, 0.98)
+                    );
+                    backdrop-filter: blur(25px);
+                    border: 1px solid rgba(71, 85, 105, 0.4);
                     overflow: hidden;
                     will-change: transform, opacity;
-                    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                    box-shadow: 
+                        0 30px 60px rgba(0, 0, 0, 0.6),
+                        0 15px 35px rgba(0, 0, 0, 0.4),
+                        inset 0 1px 0 rgba(148, 163, 184, 0.1);
+                }
+                
+                .mobile-swipe-card::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    height: 3px;
+                    background: linear-gradient(90deg, 
+                        rgba(59, 130, 246, 0.8) 0%, 
+                        rgba(139, 92, 246, 0.8) 25%, 
+                        rgba(16, 185, 129, 0.8) 50%, 
+                        rgba(245, 101, 101, 0.8) 75%, 
+                        rgba(59, 130, 246, 0.8) 100%
+                    );
+                    background-size: 300% 100%;
+                    animation: gentleGradientFlow 8s ease-in-out infinite;
+                    border-radius: 28px 28px 0 0;
+                    opacity: 0.7;
+                }
+                
+                @keyframes gentleGradientFlow {
+                    0%, 100% { background-position: 0% 50%; }
+                    50% { background-position: 100% 50%; }
                 }
                 
                 .card-bg-gradient {
@@ -8494,7 +8643,11 @@ class MobileSwipeStackManager {
                     left: 0;
                     right: 0;
                     bottom: 0;
-                    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+                    background: linear-gradient(135deg, 
+                        rgba(59, 130, 246, 0.04) 0%, 
+                        transparent 50%, 
+                        rgba(139, 92, 246, 0.04) 100%
+                    );
                     z-index: 1;
                 }
                 
@@ -8505,8 +8658,8 @@ class MobileSwipeStackManager {
                     right: 0;
                     bottom: 0;
                     background-image: 
-                        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.05) 0%, transparent 50%);
+                        radial-gradient(circle at 25% 25%, rgba(148, 163, 184, 0.06) 0%, transparent 50%),
+                        radial-gradient(circle at 75% 75%, rgba(100, 116, 139, 0.04) 0%, transparent 50%);
                     z-index: 1;
                 }
                 
@@ -8519,10 +8672,41 @@ class MobileSwipeStackManager {
                     z-index: 1;
                 }
                 
+                .particles-container {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    pointer-events: none;
+                    z-index: 1;
+                }
+                
+                .floating-particle {
+                    position: absolute;
+                    width: 4px;
+                    height: 4px;
+                    background: rgba(59, 130, 246, 0.4);
+                    border-radius: 50%;
+                    animation: floatParticle 6s ease-in-out infinite;
+                    opacity: 0.6;
+                }
+                
+                @keyframes floatParticle {
+                    0%, 100% { 
+                        transform: translateY(0px) translateX(0px); 
+                        opacity: 0.3; 
+                    }
+                    50% { 
+                        transform: translateY(-20px) translateX(10px); 
+                        opacity: 0.8; 
+                    }
+                }
+                
                 .mobile-swipe-content {
                     position: relative;
                     z-index: 2;
-                    padding: 30px;
+                    padding: 32px;
                     height: 100%;
                     display: flex;
                     flex-direction: column;
@@ -8533,32 +8717,42 @@ class MobileSwipeStackManager {
                 .mobile-swipe-header {
                     display: flex;
                     align-items: center;
-                    margin-bottom: 20px;
+                    margin-bottom: 28px;
                 }
                 
                 .mobile-swipe-icon {
                     position: relative;
-                    width: 60px;
-                    height: 60px;
-                    background: rgba(255,255,255,0.15);
-                    border-radius: 15px;
+                    width: 70px;
+                    height: 70px;
+                    background: linear-gradient(135deg, 
+                        rgba(59, 130, 246, 0.15), 
+                        rgba(139, 92, 246, 0.1)
+                    );
+                    border-radius: 20px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    margin-right: 15px;
+                    margin-right: 20px;
+                    border: 1px solid rgba(71, 85, 105, 0.4);
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                    transition: all 0.4s ease;
                 }
                 
                 .icon-glow {
                     position: absolute;
-                    top: -5px;
-                    left: -5px;
-                    right: -5px;
-                    bottom: -5px;
-                    background: linear-gradient(45deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
-                    border-radius: 20px;
-                    filter: blur(10px);
+                    top: -4px;
+                    left: -4px;
+                    right: -4px;
+                    bottom: -4px;
+                    background: linear-gradient(45deg, 
+                        rgba(59, 130, 246, 0.3), 
+                        rgba(139, 92, 246, 0.2)
+                    );
+                    border-radius: 24px;
+                    filter: blur(12px);
                     opacity: 0;
-                    transition: opacity 0.3s ease;
+                    transition: opacity 0.4s ease;
+                    z-index: -1;
                 }
                 
                 .mobile-swipe-card.active .icon-glow {
@@ -8566,9 +8760,15 @@ class MobileSwipeStackManager {
                 }
                 
                 .mobile-swipe-icon i {
-                    font-size: 24px;
+                    font-size: 28px;
+                    color: #94a3b8;
                     position: relative;
                     z-index: 1;
+                    transition: color 0.3s ease;
+                }
+                
+                .mobile-swipe-card.active .mobile-swipe-icon i {
+                    color: #3b82f6;
                 }
                 
                 .mobile-swipe-info {
@@ -8577,47 +8777,69 @@ class MobileSwipeStackManager {
                 
                 .mobile-swipe-subtitle {
                     font-size: 14px;
-                    opacity: 0.8;
-                    margin: 0 0 5px 0;
+                    opacity: 0.85;
+                    margin: 0 0 8px 0;
                     text-transform: uppercase;
-                    letter-spacing: 1px;
+                    letter-spacing: 1.5px;
+                    color: #94a3b8;
+                    font-weight: 600;
                 }
                 
                 .mobile-swipe-title {
-                    font-size: 24px;
+                    font-size: 26px;
                     font-weight: 700;
                     margin: 0;
                     line-height: 1.2;
+                    color: #f1f5f9;
+                    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
                 }
                 
                 .mobile-swipe-description {
                     flex: 1;
                     font-size: 16px;
-                    line-height: 1.6;
-                    opacity: 0.9;
-                    margin: 20px 0;
+                    line-height: 1.65;
+                    color: #cbd5e1;
+                    margin: 28px 0;
+                    font-weight: 400;
                 }
                 
                 .mobile-swipe-tech {
                     display: flex;
                     flex-wrap: wrap;
-                    gap: 8px;
-                    margin: 20px 0;
+                    gap: 12px;
+                    margin: 28px 0;
                 }
                 
                 .mobile-swipe-tech-tag {
-                    background: rgba(255,255,255,0.2);
-                    padding: 6px 12px;
-                    border-radius: 20px;
-                    font-size: 12px;
+                    background: linear-gradient(135deg, 
+                        rgba(71, 85, 105, 0.5), 
+                        rgba(51, 65, 85, 0.6)
+                    );
+                    color: #e2e8f0;
+                    padding: 8px 16px;
+                    border-radius: 22px;
+                    font-size: 13px;
                     font-weight: 500;
-                    backdrop-filter: blur(5px);
+                    border: 1px solid rgba(100, 116, 139, 0.4);
+                    backdrop-filter: blur(15px);
+                    transition: all 0.3s ease;
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                }
+                
+                .mobile-swipe-tech-tag:hover {
+                    background: linear-gradient(135deg, 
+                        rgba(100, 116, 139, 0.6), 
+                        rgba(71, 85, 105, 0.7)
+                    );
+                    border-color: rgba(148, 163, 184, 0.5);
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
                 }
                 
                 .mobile-swipe-links {
                     display: flex;
-                    gap: 12px;
-                    margin-top: 20px;
+                    gap: 16px;
+                    margin-top: 28px;
                 }
                 
                 .mobile-swipe-link {
@@ -8625,34 +8847,97 @@ class MobileSwipeStackManager {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    gap: 8px;
-                    padding: 12px 20px;
-                    border-radius: 12px;
+                    gap: 12px;
+                    padding: 16px 22px;
+                    border-radius: 18px;
                     text-decoration: none;
-                    color: white;
                     font-weight: 600;
                     font-size: 14px;
-                    transition: all 0.3s ease;
-                    backdrop-filter: blur(5px);
+                    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                    position: relative;
+                    overflow: hidden;
+                    min-height: 54px;
+                    backdrop-filter: blur(15px);
+                    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+                }
+                
+                .mobile-swipe-link::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: -100%;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(90deg, 
+                        transparent, 
+                        rgba(255,255,255,0.15), 
+                        transparent
+                    );
+                    transition: left 0.7s;
+                }
+                
+                .mobile-swipe-link:active::before {
+                    left: 100%;
                 }
                 
                 .mobile-swipe-link.primary {
-                    background: rgba(255,255,255,0.25);
-                    border: 1px solid rgba(255,255,255,0.3);
+                    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+                    color: white;
+                    border: 1px solid rgba(59, 130, 246, 0.6);
+                }
+                
+                .mobile-swipe-link.primary:hover,
+                .mobile-swipe-link.primary:active {
+                    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+                    transform: translateY(-3px);
+                    box-shadow: 0 12px 35px rgba(59, 130, 246, 0.4);
+                }
+                
+                .mobile-swipe-link.primary i {
+                    color: rgba(255, 255, 255, 0.9);
                 }
                 
                 .mobile-swipe-link.secondary {
-                    background: rgba(255,255,255,0.1);
-                    border: 1px solid rgba(255,255,255,0.2);
+                    background: linear-gradient(135deg, 
+                        rgba(71, 85, 105, 0.7) 0%, 
+                        rgba(51, 65, 85, 0.8) 100%
+                    );
+                    color: #f1f5f9;
+                    border: 1.5px solid rgba(100, 116, 139, 0.6);
                 }
                 
-                .mobile-swipe-link:active {
+                .mobile-swipe-link.secondary:hover,
+                .mobile-swipe-link.secondary:active {
+                    background: linear-gradient(135deg, 
+                        rgba(100, 116, 139, 0.8) 0%, 
+                        rgba(71, 85, 105, 0.9) 100%
+                    );
+                    border-color: rgba(148, 163, 184, 0.7);
+                    transform: translateY(-3px);
+                    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+                }
+                
+                .mobile-swipe-link.secondary i {
+                    color: #94a3b8;
+                }
+                
+                .mobile-swipe-card.active {
+                    transform: scale(1.02);
+                    box-shadow: 
+                        0 35px 70px rgba(0, 0, 0, 0.7),
+                        0 20px 45px rgba(59, 130, 246, 0.1),
+                        inset 0 1px 0 rgba(148, 163, 184, 0.15);
+                    border-color: rgba(59, 130, 246, 0.4);
+                }
+                
+                .mobile-swipe-card.inactive {
                     transform: scale(0.95);
+                    opacity: 0.7;
                 }
                 
                 .mobile-swipe-card.tap-highlight {
-                    transform: scale(1.02);
-                    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                    transform: scale(1.04);
+                    box-shadow: 0 40px 80px rgba(59, 130, 246, 0.25);
                 }
                 
                 .tap-ripple {
@@ -8662,27 +8947,71 @@ class MobileSwipeStackManager {
                 
                 .swipe-progress {
                     position: absolute;
-                    bottom: 30px;
+                    bottom: 45px;
                     left: 50%;
                     transform: translateX(-50%);
                     display: flex;
-                    gap: 8px;
+                    align-items: center;
+                    gap: 16px;
                     z-index: 10;
+                    background: rgba(15, 23, 42, 0.8);
+                    backdrop-filter: blur(20px);
+                    padding: 12px 24px;
+                    border-radius: 50px;
+                    border: 1px solid rgba(71, 85, 105, 0.4);
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
                 }
                 
                 .progress-dot {
-                    width: 8px;
-                    height: 8px;
+                    width: 12px;
+                    height: 12px;
                     border-radius: 50%;
-                    background: rgba(255,255,255,0.4);
-                    transition: all 0.3s ease;
+                    background: rgba(100, 116, 139, 0.5);
+                    transition: all 0.4s ease;
                     cursor: pointer;
+                    border: 1px solid rgba(71, 85, 105, 0.4);
                 }
                 
                 .progress-dot.active {
-                    background: white;
+                    background: linear-gradient(135deg, #3b82f6, #2563eb);
+                    transform: scale(1.4);
+                    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+                    border-color: rgba(59, 130, 246, 0.6);
+                }
+                
+                .progress-dot:hover:not(.active) {
+                    background: rgba(148, 163, 184, 0.7);
                     transform: scale(1.2);
-                    box-shadow: 0 0 10px rgba(255,255,255,0.5);
+                }
+                
+                .auto-slide-indicator {
+                    width: 36px;
+                    height: 36px;
+                    border-radius: 50%;
+                    background: linear-gradient(135deg, #3b82f6, #2563eb);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    border: 2px solid rgba(59, 130, 246, 0.3);
+                    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+                }
+                
+                .auto-slide-indicator:hover {
+                    transform: scale(1.1);
+                    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+                }
+                
+                .auto-slide-indicator.paused {
+                    background: linear-gradient(135deg, #71, 85, 105), rgba(51, 65, 85));
+                    border-color: rgba(100, 116, 139, 0.5);
+                    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+                }
+                
+                .auto-slide-indicator i {
+                    font-size: 14px;
+                    color: white;
                 }
                 
                 .magnetic-field {
@@ -8692,10 +9021,13 @@ class MobileSwipeStackManager {
                     right: 0;
                     bottom: 0;
                     pointer-events: none;
-                    border-radius: 20px;
+                    border-radius: 28px;
                     opacity: 0;
-                    transition: opacity 0.3s ease;
-                    background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%);
+                    transition: opacity 0.5s ease;
+                    background: radial-gradient(circle at center, 
+                        rgba(59, 130, 246, 0.06) 0%, 
+                        transparent 70%
+                    );
                 }
                 
                 .mobile-swipe-card.active .magnetic-field {
@@ -8705,19 +9037,90 @@ class MobileSwipeStackManager {
                 @media (max-width: 480px) {
                     .mobile-swipe-card {
                         width: calc(100vw - 30px);
-                        margin: 0 7.5px;
+                        margin: 0 15px;
+                        height: calc(80vh - 30px);
                     }
                     
                     .mobile-swipe-content {
-                        padding: 25px;
+                        padding: 24px;
+                    }
+                    
+                    .mobile-swipe-header {
+                        margin-bottom: 20px;
+                    }
+                    
+                    .mobile-swipe-icon {
+                        width: 60px;
+                        height: 60px;
+                        margin-right: 15px;
+                    }
+                    
+                    .mobile-swipe-icon i {
+                        font-size: 24px;
                     }
                     
                     .mobile-swipe-title {
-                        font-size: 20px;
+                        font-size: 22px;
                     }
                     
                     .mobile-swipe-description {
-                        font-size: 14px;
+                        font-size: 15px;
+                        margin: 20px 0;
+                    }
+                    
+                    .mobile-swipe-links {
+                        flex-direction: column;
+                        gap: 12px;
+                        margin-top: 20px;
+                    }
+                    
+                    .mobile-swipe-link {
+                        padding: 14px 18px;
+                        font-size: 13px;
+                    }
+                    
+                    .swipe-progress {
+                        bottom: 30px;
+                        padding: 10px 20px;
+                        gap: 12px;
+                    }
+                    
+                    .progress-dot {
+                        width: 10px;
+                        height: 10px;
+                    }
+                    
+                    .auto-slide-indicator {
+                        width: 32px;
+                        height: 32px;
+                    }
+                    
+                    .auto-slide-indicator i {
+                        font-size: 12px;
+                    }
+                }
+                
+                @media (prefers-reduced-motion: reduce) {
+                    .mobile-swipe-card::before,
+                    .floating-particle {
+                        animation: none;
+                    }
+                    
+                    .mobile-swipe-card,
+                    .mobile-swipe-link {
+                        transition: none;
+                    }
+                }
+                
+                @media (prefers-contrast: high) {
+                    .mobile-swipe-card {
+                        border: 2px solid #3b82f6;
+                        background: rgba(15, 23, 42, 0.98);
+                    }
+                    
+                    .mobile-swipe-tech-tag {
+                        border: 2px solid #94a3b8;
+                        background: rgba(71, 85, 105, 0.9);
                     }
                 }
             `;
@@ -8725,8 +9128,73 @@ class MobileSwipeStackManager {
         }
     }
     
+    setupTouchOptimizations() {
+        // Enhanced touch handling
+        document.addEventListener('touchmove', (e) => {
+            if (e.target.closest('.mobile-swipe-viewport')) {
+                if (this.isDragging) {
+                    e.preventDefault();
+                }
+            }
+        }, { passive: false });
+        
+        // Add touch device optimizations
+        if ('ontouchstart' in window) {
+            document.body.classList.add('touch-device');
+            
+            // Add touch-specific styles
+            const touchStyle = document.createElement('style');
+            touchStyle.textContent = `
+                .touch-device .mobile-swipe-card:hover {
+                    transform: none;
+                }
+                
+                .touch-device .mobile-swipe-card.active {
+                    transform: scale(1.02);
+                }
+                
+                .touch-device .mobile-swipe-link:hover {
+                    transform: none;
+                }
+            `;
+            document.head.appendChild(touchStyle);
+        }
+        
+        // Handle orientation changes
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                this.updateCardPositions();
+            }, 300);
+        });
+        
+        // Performance optimizations
+        this.optimizeForPerformance();
+    }
+    
+    optimizeForPerformance() {
+        // Enable hardware acceleration
+        const track = document.getElementById('swipeTrack');
+        if (track) {
+            track.style.willChange = 'transform';
+            track.style.transform += ' translateZ(0)';
+        }
+        
+        // Optimize card visibility
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.willChange = 'transform, opacity';
+                } else {
+                    entry.target.style.willChange = 'auto';
+                }
+            });
+        });
+        
+        this.cards.forEach(card => observer.observe(card));
+    }
+    
     triggerHaptic(intensity = 10) {
-        if (navigator.vibrate) {
+        if (navigator.vibrate && 'ontouchstart' in window) {
             navigator.vibrate(intensity);
         }
     }
@@ -8752,11 +9220,10 @@ class MobileSwipeStackManager {
                 }
                 
                 if (this.isMobile && this.isInitialized) {
-                    // Recalculate positions after resize
                     setTimeout(() => {
                         const card = this.cards[0];
                         if (card) {
-                            this.cardWidth = card.offsetWidth + 20;
+                            this.cardWidth = card.offsetWidth + 50;
                         }
                         this.updateCardPositions();
                     }, 100);
@@ -8765,7 +9232,7 @@ class MobileSwipeStackManager {
         });
     }
     
-    // Public methods for external control
+    // Public API methods
     goToCard(index, animated = true) {
         if (index >= 0 && index < this.cards.length && index !== this.currentIndex) {
             this.currentIndex = index;
@@ -8782,95 +9249,23 @@ class MobileSwipeStackManager {
         };
     }
     
-    // Keyboard support for accessibility
-    setupKeyboardSupport() {
-        document.addEventListener('keydown', (e) => {
-            if (!this.isMobile || !this.isInitialized) return;
-            
-            switch (e.key) {
-                case 'ArrowLeft':
-                    e.preventDefault();
-                    this.previousCard();
-                    break;
-                case 'ArrowRight':
-                    e.preventDefault();
-                    this.nextCard();
-                    break;
-                case 'Home':
-                    e.preventDefault();
-                    this.goToCard(0);
-                    break;
-                case 'End':
-                    e.preventDefault();
-                    this.goToCard(this.cards.length - 1);
-                    break;
-            }
-        });
-    }
-    
-    // Performance optimizations
-    optimizeForPerformance() {
-        // Use transform3d for hardware acceleration
-        const track = document.getElementById('swipeTrack');
-        if (track) {
-            track.style.willChange = 'transform';
-            track.style.transform += ' translateZ(0)';
+    setAutoSlideSpeed(speed) {
+        this.autoSlideSpeed = speed;
+        if (this.isAutoPlaying) {
+            this.pauseAutoSlide();
+            this.startAutoSlide();
         }
-        
-        // Lazy load non-visible cards
-        this.cards.forEach((card, index) => {
-            if (Math.abs(index - this.currentIndex) > 2) {
-                card.style.visibility = 'hidden';
-            } else {
-                card.style.visibility = 'visible';
-            }
-        });
     }
     
-    // Advanced gesture recognition
-    recognizeSwipeGestures() {
-        let swipeStartTime = 0;
-        let swipeStartX = 0;
-        let swipeDirection = null;
-        
-        const viewport = document.getElementById('swipeViewport');
-        if (!viewport) return;
-        
-        viewport.addEventListener('touchstart', (e) => {
-            swipeStartTime = Date.now();
-            swipeStartX = e.touches[0].clientX;
-            swipeDirection = null;
-        }, { passive: true });
-        
-        viewport.addEventListener('touchend', (e) => {
-            const swipeEndTime = Date.now();
-            const swipeEndX = e.changedTouches[0].clientX;
-            const swipeDuration = swipeEndTime - swipeStartTime;
-            const swipeDistance = swipeEndX - swipeStartX;
-            const swipeVelocity = Math.abs(swipeDistance) / swipeDuration;
-            
-            // Fast swipe detection
-            if (swipeVelocity > 0.5 && Math.abs(swipeDistance) > 50) {
-                if (swipeDistance > 0) {
-                    this.previousCard();
-                } else {
-                    this.nextCard();
-                }
-                
-                // Enhanced haptic for fast swipes
-                this.triggerHaptic(30);
-            }
-        }, { passive: true });
-    }
-    
-    // Cleanup method
+    // Cleanup
     destroy() {
-        this.pauseAutoPlay();
+        this.pauseAutoSlide();
         
         this.cards = [];
         this.progressDots = [];
         this.isInitialized = false;
         this.isDragging = false;
+        this.isUserInteracting = false;
         
         const swipeContainer = document.getElementById('mobileSwipeContainer');
         if (swipeContainer) {
@@ -8878,78 +9273,87 @@ class MobileSwipeStackManager {
         }
         
         // Remove event listeners
-        window.removeEventListener('resize', this.setupResizeListener);
-        document.removeEventListener('visibilitychange', this.setupAutoPlay);
+        document.removeEventListener('visibilitychange', this.setupAutoSlide);
     }
 }
 
 // Global instance
-let mobileSwipeStackManager;
+let enhancedMobileSwipeManager;
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
-    // Wait for project data to be available
     setTimeout(() => {
         if (typeof projectsData !== 'undefined') {
-            mobileSwipeStackManager = new MobileSwipeStackManager();
+            enhancedMobileSwipeManager = new EnhancedMobileSwipeManager();
         } else {
-            // Create sample data for testing
+            // Enhanced sample data for demonstration
             window.projectsData = [
                 {
                     id: 1,
                     title: "AI-Powered Dashboard",
                     subtitle: "Machine Learning",
-                    description: "An intelligent dashboard that uses machine learning algorithms to predict user behavior and optimize workflows in real-time.",
+                    description: "An intelligent dashboard that leverages advanced machine learning algorithms to predict user behavior and optimize workflows in real-time with stunning visualizations.",
                     icon: "fas fa-brain",
-                    background: "linear-gradient(135deg, rgba(138, 43, 226, 0.15), rgba(75, 0, 130, 0.05))",
-                    tech: ["React", "TensorFlow", "Python", "Node.js"],
+                    background: "linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.05))",
+                    tech: ["React", "TensorFlow", "Python", "Node.js", "D3.js"],
                     links: [
                         { text: "View Live", url: "#", type: "live" },
-                        { text: "Code", url: "#", type: "github" }
+                        { text: "Source Code", url: "#", type: "github" }
                     ]
                 },
                 {
                     id: 2,
                     title: "Blockchain Wallet",
-                    subtitle: "Cryptocurrency",
-                    description: "A secure cryptocurrency wallet with advanced features like multi-signature support and hardware wallet integration.",
+                    subtitle: "Web3 & DeFi",
+                    description: "A secure and feature-rich cryptocurrency wallet with multi-signature support, hardware wallet integration, and seamless DeFi protocol interactions.",
                     icon: "fas fa-coins",
-                    background: "linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 140, 0, 0.05))",
-                    tech: ["Solidity", "Web3", "React", "MetaMask"],
+                    background: "linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.05))",
+                    tech: ["Solidity", "Web3.js", "React", "MetaMask", "Hardhat"],
                     links: [
                         { text: "View Live", url: "#", type: "live" },
-                        { text: "Code", url: "#", type: "github" }
+                        { text: "Source Code", url: "#", type: "github" }
                     ]
                 },
                 {
                     id: 3,
-                    title: "AR Shopping App",
+                    title: "AR Shopping Experience",
                     subtitle: "Augmented Reality",
-                    description: "An innovative shopping experience that lets users visualize products in their own space using augmented reality technology.",
+                    description: "Revolutionary shopping platform that uses AR technology to let customers visualize products in their real environment before making a purchase.",
                     icon: "fas fa-shopping-bag",
-                    background: "linear-gradient(135deg, rgba(255, 20, 147, 0.15), rgba(199, 21, 133, 0.05))",
-                    tech: ["ARKit", "Swift", "CoreML", "SceneKit"],
+                    background: "linear-gradient(135deg, rgba(245, 101, 101, 0.1), rgba(239, 68, 68, 0.05))",
+                    tech: ["ARKit", "Swift", "CoreML", "SceneKit", "RealityKit"],
                     links: [
                         { text: "View Live", url: "#", type: "live" },
-                        { text: "Code", url: "#", type: "github" }
+                        { text: "Source Code", url: "#", type: "github" }
+                    ]
+                },
+                {
+                    id: 4,
+                    title: "Real-time Collaboration Suite",
+                    subtitle: "Team Productivity",
+                    description: "Advanced collaboration platform with real-time editing, video calls, screen sharing, and AI-powered meeting summaries for modern teams.",
+                    icon: "fas fa-users",
+                    background: "linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.05))",
+                    tech: ["Next.js", "WebRTC", "Socket.io", "PostgreSQL", "Redis"],
+                    links: [
+                        { text: "View Live", url: "#", type: "live" },
+                        { text: "Source Code", url: "#", type: "github" }
                     ]
                 }
             ];
-            mobileSwipeStackManager = new MobileSwipeStackManager();
+            enhancedMobileSwipeManager = new EnhancedMobileSwipeManager();
         }
     }, 500);
 });
 
-// Handle page visibility changes for performance
+// Handle page visibility for performance
 document.addEventListener('visibilitychange', function() {
-    if (mobileSwipeStackManager && mobileSwipeStackManager.isMobile) {
+    if (enhancedMobileSwipeManager && enhancedMobileSwipeManager.isMobile) {
         if (document.hidden) {
-            // Pause animations and auto-play when tab is not visible
-            mobileSwipeStackManager.pauseAutoPlay();
+            enhancedMobileSwipeManager.pauseAutoSlide();
             document.body.style.setProperty('--animation-play-state', 'paused');
-        } else {
-            // Resume animations and auto-play
-            mobileSwipeStackManager.resumeAutoPlay();
+        } else if (!enhancedMobileSwipeManager.isUserInteracting) {
+            enhancedMobileSwipeManager.resumeAutoSlideAfterPause();
             document.body.style.setProperty('--animation-play-state', 'running');
         }
     }
@@ -8957,7 +9361,7 @@ document.addEventListener('visibilitychange', function() {
 
 // Export for external use
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = MobileSwipeStackManager;
+    module.exports = EnhancedMobileSwipeManager;
 }
 
     </script>
