@@ -7735,19 +7735,25 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 // Enhanced Mobile Stack Cards Manager
 // Enhanced Mobile Stack Cards Manager with Smooth Scroll Behavior
-class MobileStackManager {
+class MobileSwipeStackManager {
     constructor() {
         this.isMobile = window.innerWidth <= 768;
         this.cards = [];
-        this.observer = null;
-        this.progressDots = [];
-        this.currentActiveIndex = 0;
+        this.currentIndex = 0;
         this.isInitialized = false;
-        this.scrollTimeout = null;
-        this.isScrolling = false;
-        this.lastScrollTop = 0;
-        this.velocityTracker = [];
-        this.maxVelocitySamples = 5;
+        this.isDragging = false;
+        this.startX = 0;
+        this.startY = 0;
+        this.currentX = 0;
+        this.currentY = 0;
+        this.cardWidth = 0;
+        this.progressDots = [];
+        this.autoPlayInterval = null;
+        this.isAutoPlaying = false;
+        this.swipeThreshold = 80;
+        this.velocityThreshold = 0.5;
+        this.lastTouchTime = 0;
+        this.touchVelocity = 0;
         
         if (this.isMobile) {
             this.init();
@@ -7759,91 +7765,115 @@ class MobileStackManager {
     init() {
         if (this.isInitialized) return;
         
-        this.createStackContainer();
-        this.setupIntersectionObserver();
-        this.setupSmoothScrolling();
+        this.createSwipeContainer();
+        this.setupTouchEvents();
         this.setupProgressIndicator();
+        this.setupAutoPlay();
         this.setupTouchOptimizations();
-        this.setupSnapScrolling();
         
         this.isInitialized = true;
     }
     
-    createStackContainer() {
+    createSwipeContainer() {
         const projectsSection = document.getElementById('projects');
         if (!projectsSection) return;
         
         const showcase = document.getElementById('projectsShowcase');
         if (!showcase) return;
         
-        // Create main stack container
-        const stackContainer = document.createElement('div');
-        stackContainer.className = 'mobile-stack-container';
-        stackContainer.id = 'mobileStackContainer';
+        // Create main swipe container
+        const swipeContainer = document.createElement('div');
+        swipeContainer.className = 'mobile-swipe-container';
+        swipeContainer.id = 'mobileSwipeContainer';
         
-        // Create scrollable viewport
+        // Create viewport wrapper
         const viewport = document.createElement('div');
-        viewport.className = 'mobile-stack-viewport';
-        viewport.id = 'stackViewport';
+        viewport.className = 'mobile-swipe-viewport';
+        viewport.id = 'swipeViewport';
+        
+        // Create cards track
+        const track = document.createElement('div');
+        track.className = 'mobile-swipe-track';
+        track.id = 'swipeTrack';
         
         // Create cards from project data
-        projectsData.forEach((project, index) => {
-            const card = this.createStackCard(project, index);
-            viewport.appendChild(card);
-            this.cards.push(card);
-        });
+        if (typeof projectsData !== 'undefined') {
+            projectsData.forEach((project, index) => {
+                const card = this.createSwipeCard(project, index);
+                track.appendChild(card);
+                this.cards.push(card);
+            });
+        }
         
-        stackContainer.appendChild(viewport);
+        viewport.appendChild(track);
+        swipeContainer.appendChild(viewport);
         
         // Insert after showcase (hidden on mobile)
         showcase.style.display = 'none';
-        showcase.parentNode.insertBefore(stackContainer, showcase.nextSibling);
+        showcase.parentNode.insertBefore(swipeContainer, showcase.nextSibling);
+        
+        // Set initial positions
+        setTimeout(() => {
+            this.updateCardPositions(false);
+        }, 100);
     }
     
-    createStackCard(project, index) {
+    createSwipeCard(project, index) {
         const card = document.createElement('div');
-        card.className = 'mobile-stack-card';
+        card.className = 'mobile-swipe-card';
         card.setAttribute('data-index', index);
         card.setAttribute('data-project-id', project.id);
         
-        // Create gradient background overlay
+        // Create animated background
+        const bgGradient = document.createElement('div');
+        bgGradient.className = 'card-bg-gradient';
+        
+        const bgPattern = document.createElement('div');
+        bgPattern.className = 'card-bg-pattern';
+        
         const bgOverlay = document.createElement('div');
-        bgOverlay.className = 'mobile-stack-bg';
+        bgOverlay.className = 'card-bg-overlay';
         bgOverlay.style.background = project.background || 'linear-gradient(135deg, rgba(0, 188, 212, 0.15), rgba(0, 188, 212, 0.05))';
+        
+        card.appendChild(bgGradient);
+        card.appendChild(bgPattern);
         card.appendChild(bgOverlay);
         
+        // Create content
+        const content = document.createElement('div');
+        content.className = 'mobile-swipe-content';
+        
         const linksHTML = project.links?.length > 0 ? `
-            <div class="mobile-stack-links">
+            <div class="mobile-swipe-links">
                 ${project.links.map(link => `
                     <a href="${link.url}" target="_blank" rel="noopener noreferrer"
-                       class="mobile-stack-link ${link.type === 'github' ? 'secondary' : 'primary'}"
+                       class="mobile-swipe-link ${link.type === 'github' ? 'secondary' : 'primary'}"
                        onclick="event.stopPropagation()">
                         <i class="fas ${link.type === 'github' ? 'fa-code' : 'fa-external-link-alt'}"></i>
-                        ${link.text}
+                        <span>${link.text}</span>
                     </a>
                 `).join('')}
             </div>
         ` : '';
         
-        const content = document.createElement('div');
-        content.className = 'mobile-stack-content';
         content.innerHTML = `
-            <div class="mobile-stack-header">
-                <div class="mobile-stack-icon">
+            <div class="mobile-swipe-header">
+                <div class="mobile-swipe-icon">
+                    <div class="icon-glow"></div>
                     <i class="${project.icon}"></i>
                 </div>
-                <div class="mobile-stack-info">
-                    <p class="mobile-stack-subtitle">${project.subtitle}</p>
-                    <h3 class="mobile-stack-title">${project.title}</h3>
+                <div class="mobile-swipe-info">
+                    <p class="mobile-swipe-subtitle">${project.subtitle}</p>
+                    <h3 class="mobile-swipe-title">${project.title}</h3>
                 </div>
             </div>
             
-            <div class="mobile-stack-description">
+            <div class="mobile-swipe-description">
                 ${project.description}
             </div>
             
-            <div class="mobile-stack-tech">
-                ${project.tech?.map(tech => `<span class="mobile-stack-tech-tag">${tech}</span>`).join('') || ''}
+            <div class="mobile-swipe-tech">
+                ${project.tech?.map(tech => `<span class="mobile-swipe-tech-tag">${tech}</span>`).join('') || ''}
             </div>
             
             ${linksHTML}
@@ -7851,154 +7881,202 @@ class MobileStackManager {
         
         card.appendChild(content);
         
-        // Add enhanced touch events
-        this.addCardTouchEvents(card, index);
+        // Add magnetic effect elements
+        const magneticField = document.createElement('div');
+        magneticField.className = 'magnetic-field';
+        card.appendChild(magneticField);
         
         return card;
     }
     
-    addCardTouchEvents(card, index) {
-        let touchStartTime = 0;
-        let touchStartY = 0;
-        let touchStartX = 0;
-        let isLongPress = false;
-        let longPressTimer = null;
+    setupTouchEvents() {
+        const viewport = document.getElementById('swipeViewport');
+        if (!viewport) return;
         
-        card.addEventListener('touchstart', (e) => {
-            touchStartTime = Date.now();
-            touchStartY = e.touches[0].clientY;
-            touchStartX = e.touches[0].clientX;
-            isLongPress = false;
-            
-            // Clear any existing timer
-            if (longPressTimer) {
-                clearTimeout(longPressTimer);
-            }
-            
-            // Add immediate pressed state
-            card.classList.add('touch-active');
-            
-            // Long press detection
-            longPressTimer = setTimeout(() => {
-                if (Date.now() - touchStartTime >= 500) {
-                    isLongPress = true;
-                    this.handleLongPress(card, index, e.touches[0]);
-                }
-            }, 500);
-            
-            // Haptic feedback if available
-            if (navigator.vibrate) {
-                navigator.vibrate(10);
-            }
+        // Touch start
+        viewport.addEventListener('touchstart', (e) => {
+            this.handleTouchStart(e);
         }, { passive: true });
         
-        card.addEventListener('touchmove', (e) => {
-            const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
-            const deltaX = Math.abs(e.touches[0].clientX - touchStartX);
-            
-            // If significant movement, cancel long press
-            if (deltaY > 15 || deltaX > 15) {
-                isLongPress = false;
-                if (longPressTimer) {
-                    clearTimeout(longPressTimer);
-                    longPressTimer = null;
-                }
-                card.classList.remove('touch-active');
-            }
+        // Touch move
+        viewport.addEventListener('touchmove', (e) => {
+            this.handleTouchMove(e);
+        }, { passive: false });
+        
+        // Touch end
+        viewport.addEventListener('touchend', (e) => {
+            this.handleTouchEnd(e);
         }, { passive: true });
         
-        card.addEventListener('touchend', (e) => {
-            // Clear timer and reset state
-            if (longPressTimer) {
-                clearTimeout(longPressTimer);
-                longPressTimer = null;
-            }
-            
-            card.classList.remove('touch-active');
-            
-            const touchDuration = Date.now() - touchStartTime;
-            const deltaY = Math.abs(e.changedTouches[0].clientY - touchStartY);
-            const deltaX = Math.abs(e.changedTouches[0].clientX - touchStartX);
-            
-            // Handle tap (not long press, minimal movement)
-            if (touchDuration < 500 && deltaY < 15 && deltaX < 15 && !isLongPress) {
-                this.handleCardTap(card, index, e.changedTouches[0]);
-            }
-        }, { passive: true });
+        // Mouse events for desktop testing
+        viewport.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            this.handleTouchStart({
+                touches: [{ clientX: e.clientX, clientY: e.clientY }]
+            });
+        });
         
-        card.addEventListener('touchcancel', () => {
-            if (longPressTimer) {
-                clearTimeout(longPressTimer);
-                longPressTimer = null;
+        viewport.addEventListener('mousemove', (e) => {
+            if (this.isDragging) {
+                e.preventDefault();
+                this.handleTouchMove({
+                    touches: [{ clientX: e.clientX, clientY: e.clientY }]
+                });
             }
-            card.classList.remove('touch-active');
-        }, { passive: true });
+        });
+        
+        viewport.addEventListener('mouseup', (e) => {
+            if (this.isDragging) {
+                this.handleTouchEnd({
+                    changedTouches: [{ clientX: e.clientX, clientY: e.clientY }]
+                });
+            }
+        });
+        
+        // Prevent context menu on long press
+        viewport.addEventListener('contextmenu', (e) => {
+            if (this.isDragging) {
+                e.preventDefault();
+            }
+        });
     }
     
-    handleCardTap(card, index, touch) {
-        // Create ripple effect
-        this.createRippleEffect(card, touch);
+    handleTouchStart(e) {
+        this.isDragging = true;
+        this.startX = e.touches[0].clientX;
+        this.startY = e.touches[0].clientY;
+        this.currentX = this.startX;
+        this.currentY = this.startY;
+        this.lastTouchTime = Date.now();
+        this.touchVelocity = 0;
         
-        // Smooth scroll to center the card
-        this.scrollToCard(index);
+        // Stop auto-play when user interacts
+        this.pauseAutoPlay();
         
-        // Add temporary highlight
-        card.classList.add('tap-highlight');
-        setTimeout(() => {
-            card.classList.remove('tap-highlight');
-        }, 1500);
-        
-        // Update progress indicator
-        this.updateProgressIndicator(index);
-    }
-    
-    handleLongPress(card, index, touch) {
-        // Enhanced haptic feedback
-        if (navigator.vibrate) {
-            navigator.vibrate([30, 50, 30]);
+        // Add dragging class
+        const track = document.getElementById('swipeTrack');
+        if (track) {
+            track.classList.add('dragging');
         }
         
-        // Create special long press ripple
-        this.createRippleEffect(card, touch, true);
+        // Haptic feedback
+        this.triggerHaptic(10);
         
-        // Add long press highlight
-        card.classList.add('long-press-highlight');
-        setTimeout(() => {
-            card.classList.remove('long-press-highlight');
-        }, 2000);
-        
-        // Scroll to card and center it perfectly
-        this.scrollToCard(index, 'center');
+        // Update card width for calculations
+        const card = this.cards[0];
+        if (card) {
+            this.cardWidth = card.offsetWidth + 20; // Include margin
+        }
     }
     
-    createRippleEffect(card, touch, isLongPress = false) {
+    handleTouchMove(e) {
+        if (!this.isDragging) return;
+        
+        this.currentX = e.touches[0].clientX;
+        this.currentY = e.touches[0].clientY;
+        
+        const deltaX = this.currentX - this.startX;
+        const deltaY = this.currentY - this.startY;
+        
+        // Calculate velocity
+        const now = Date.now();
+        const timeDiff = now - this.lastTouchTime;
+        if (timeDiff > 0) {
+            this.touchVelocity = deltaX / timeDiff;
+        }
+        this.lastTouchTime = now;
+        
+        // Prevent vertical scroll if horizontal swipe is detected
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+            e.preventDefault();
+        }
+        
+        // Only handle horizontal swipes
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            this.updateCardPositions(true, deltaX);
+        }
+    }
+    
+    handleTouchEnd(e) {
+        if (!this.isDragging) return;
+        
+        this.isDragging = false;
+        
+        const deltaX = this.currentX - this.startX;
+        const deltaY = this.currentY - this.startY;
+        const absDeltaX = Math.abs(deltaX);
+        const absDeltaY = Math.abs(deltaY);
+        
+        // Remove dragging class
+        const track = document.getElementById('swipeTrack');
+        if (track) {
+            track.classList.remove('dragging');
+        }
+        
+        // Determine if this was a swipe or tap
+        const isSwipe = absDeltaX > this.swipeThreshold || Math.abs(this.touchVelocity) > this.velocityThreshold;
+        const isHorizontalSwipe = absDeltaX > absDeltaY;
+        
+        if (isSwipe && isHorizontalSwipe) {
+            // Handle swipe
+            if (deltaX > 0) {
+                this.previousCard();
+            } else {
+                this.nextCard();
+            }
+        } else if (absDeltaX < 10 && absDeltaY < 10) {
+            // Handle tap
+            this.handleCardTap();
+        } else {
+            // Return to current position
+            this.updateCardPositions(false);
+        }
+        
+        // Resume auto-play after interaction
+        this.resumeAutoPlay();
+    }
+    
+    handleCardTap() {
+        const currentCard = this.cards[this.currentIndex];
+        if (currentCard) {
+            // Create tap ripple effect
+            this.createTapRipple(currentCard);
+            
+            // Add tap highlight
+            currentCard.classList.add('tap-highlight');
+            setTimeout(() => {
+                currentCard.classList.remove('tap-highlight');
+            }, 300);
+            
+            // Trigger haptic feedback
+            this.triggerHaptic(20);
+        }
+    }
+    
+    createTapRipple(card) {
         const ripple = document.createElement('div');
+        ripple.className = 'tap-ripple';
+        
         const rect = card.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height) * 0.8;
         
-        const x = touch.clientX - rect.left;
-        const y = touch.clientY - rect.top;
-        
-        const size = Math.max(rect.width, rect.height) * (isLongPress ? 1.5 : 1.2);
-        const duration = isLongPress ? 1200 : 800;
-        const color = isLongPress ? 'rgba(255, 107, 107, 0.4)' : 'rgba(0, 188, 212, 0.4)';
-        
-        ripple.className = 'mobile-ripple-effect';
         ripple.style.cssText = `
             position: absolute;
-            border-radius: 50%;
-            background: radial-gradient(circle, ${color} 0%, transparent 70%);
-            transform: scale(0);
-            animation: ripple-animation ${duration}ms ease-out;
-            left: ${x - size/2}px;
-            top: ${y - size/2}px;
+            left: 50%;
+            top: 50%;
             width: ${size}px;
             height: ${size}px;
+            margin-left: ${-size/2}px;
+            margin-top: ${-size/2}px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            transform: scale(0);
+            animation: tapRipple 0.6s ease-out;
             pointer-events: none;
             z-index: 10;
         `;
         
-        // Ensure ripple animation exists
-        this.ensureRippleAnimation();
+        this.ensureTapRippleAnimation();
         
         card.appendChild(ripple);
         
@@ -8006,21 +8084,18 @@ class MobileStackManager {
             if (ripple.parentNode) {
                 ripple.parentNode.removeChild(ripple);
             }
-        }, duration);
+        }, 600);
     }
     
-    ensureRippleAnimation() {
-        if (!document.querySelector('#mobile-ripple-keyframes')) {
+    ensureTapRippleAnimation() {
+        if (!document.querySelector('#tap-ripple-keyframes')) {
             const style = document.createElement('style');
-            style.id = 'mobile-ripple-keyframes';
+            style.id = 'tap-ripple-keyframes';
             style.textContent = `
-                @keyframes ripple-animation {
+                @keyframes tapRipple {
                     0% {
                         transform: scale(0);
                         opacity: 1;
-                    }
-                    50% {
-                        opacity: 0.6;
                     }
                     100% {
                         transform: scale(1);
@@ -8032,271 +8107,132 @@ class MobileStackManager {
         }
     }
     
-    setupIntersectionObserver() {
-        const viewport = document.getElementById('stackViewport');
-        if (!viewport) return;
+    updateCardPositions(isDragging = false, dragOffset = 0) {
+        const track = document.getElementById('swipeTrack');
+        if (!track || this.cards.length === 0) return;
         
-        const options = {
-            root: viewport,
-            rootMargin: '-10% 0px -10% 0px',
-            threshold: [0.2, 0.5, 0.8]
-        };
+        const totalCards = this.cards.length;
+        const baseOffset = this.currentIndex * -this.cardWidth;
+        const finalOffset = baseOffset + dragOffset;
         
-        this.observer = new IntersectionObserver((entries) => {
-            let mostVisibleCard = null;
-            let maxIntersectionRatio = 0;
+        // Apply transform to track
+        if (isDragging) {
+            track.style.transform = `translateX(${finalOffset}px)`;
+            track.style.transition = 'none';
+        } else {
+            track.style.transform = `translateX(${baseOffset}px)`;
+            track.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        }
+        
+        // Update individual cards
+        this.cards.forEach((card, index) => {
+            const distance = index - this.currentIndex;
+            const absDistance = Math.abs(distance);
             
-            entries.forEach(entry => {
-                const index = parseInt(entry.target.getAttribute('data-index'));
-                
-                if (entry.isIntersecting) {
-                    // Add in-view class for cards that are visible
-                    if (entry.intersectionRatio >= 0.2) {
-                        entry.target.classList.add('in-view');
-                    }
-                    
-                    // Find the most visible card
-                    if (entry.intersectionRatio > maxIntersectionRatio) {
-                        maxIntersectionRatio = entry.intersectionRatio;
-                        mostVisibleCard = { element: entry.target, index };
-                    }
-                } else {
-                    entry.target.classList.remove('in-view');
-                }
-            });
+            // Calculate scale and opacity based on position
+            let scale = 1;
+            let opacity = 1;
+            let zIndex = 10;
+            let rotateY = 0;
+            let brightness = 1;
             
-            // Update active card to the most visible one
-            if (mostVisibleCard && mostVisibleCard.index !== this.currentActiveIndex) {
-                this.updateActiveCard(mostVisibleCard.index);
+            if (absDistance > 0) {
+                scale = Math.max(0.85, 1 - (absDistance * 0.15));
+                opacity = Math.max(0.3, 1 - (absDistance * 0.3));
+                zIndex = Math.max(1, 10 - absDistance);
+                rotateY = distance * 5; // Subtle 3D rotation
+                brightness = Math.max(0.7, 1 - (absDistance * 0.15));
             }
-        }, options);
-        
-        this.cards.forEach(card => {
-            this.observer.observe(card);
-        });
-    }
-    
-    updateActiveCard(index) {
-        // Update current active index
-        const previousIndex = this.currentActiveIndex;
-        this.currentActiveIndex = index;
-        
-        // Update visual states
-        this.cards.forEach((card, i) => {
-            if (i === index) {
-                card.classList.add('active-card');
+            
+            // Apply drag influence for smooth interaction
+            if (isDragging) {
+                const dragInfluence = Math.max(0, 1 - absDistance * 0.5);
+                const dragScale = 1 + (Math.abs(dragOffset) / this.cardWidth) * 0.05 * dragInfluence;
+                scale *= dragScale;
+            }
+            
+            // Set card styles
+            const transform = `scale(${scale}) rotateY(${rotateY}deg)`;
+            const filter = `brightness(${brightness})`;
+            
+            card.style.transform = transform;
+            card.style.opacity = opacity;
+            card.style.zIndex = zIndex;
+            card.style.filter = filter;
+            
+            // Add/remove active class
+            if (index === this.currentIndex) {
+                card.classList.add('active');
             } else {
-                card.classList.remove('active-card');
+                card.classList.remove('active');
+            }
+            
+            // Add/remove visible class for performance
+            if (absDistance <= 2) {
+                card.classList.add('visible');
+            } else {
+                card.classList.remove('visible');
             }
         });
         
         // Update progress indicator
-        this.updateProgressIndicator(index);
-        
-        // Add stacking effect based on scroll position
-        this.updateStackingEffect();
+        this.updateProgressIndicator();
     }
     
-    updateStackingEffect() {
-        const viewport = document.getElementById('stackViewport');
-        if (!viewport) return;
-        
-        const scrollTop = viewport.scrollTop;
-        const viewportHeight = viewport.clientHeight;
-        
-        this.cards.forEach((card, index) => {
-            const cardRect = card.getBoundingClientRect();
-            const viewportRect = viewport.getBoundingClientRect();
-            
-            // Calculate card position relative to viewport
-            const cardTop = cardRect.top - viewportRect.top;
-            const cardCenter = cardTop + cardRect.height / 2;
-            const viewportCenter = viewportHeight / 2;
-            
-            // Calculate distance from center
-            const distanceFromCenter = Math.abs(cardCenter - viewportCenter);
-            const maxDistance = viewportHeight / 2;
-            const normalizedDistance = Math.min(distanceFromCenter / maxDistance, 1);
-            
-            // Apply stacking transforms
-            const scale = 1 - (normalizedDistance * 0.1); // Slight scale reduction
-            const translateY = normalizedDistance * 20; // Slight vertical offset
-            const opacity = 1 - (normalizedDistance * 0.3); // Fade effect
-            const blur = normalizedDistance * 2; // Subtle blur
-            
-            // Apply transforms with smooth transitions
-            card.style.transform = `scale(${scale}) translateY(${translateY}px)`;
-            card.style.opacity = Math.max(opacity, 0.4);
-            card.style.filter = `blur(${blur}px)`;
-            
-            // Z-index based on distance from center
-            card.style.zIndex = Math.round(100 - (normalizedDistance * 50));
-        });
-    }
-    
-    setupSmoothScrolling() {
-        const viewport = document.getElementById('stackViewport');
-        if (!viewport) return;
-        
-        let isUserScrolling = false;
-        let scrollEndTimer = null;
-        
-        viewport.addEventListener('scroll', (e) => {
-            // Track velocity for momentum
-            this.trackScrollVelocity(viewport.scrollTop);
-            
-            // Update stacking effect in real-time
-            this.updateStackingEffect();
-            
-            // Set scrolling flag
-            isUserScrolling = true;
-            
-            // Clear previous timer
-            if (scrollEndTimer) {
-                clearTimeout(scrollEndTimer);
-            }
-            
-            // Set timer for scroll end detection
-            scrollEndTimer = setTimeout(() => {
-                isUserScrolling = false;
-                this.handleScrollEnd();
-            }, 150);
-            
-        }, { passive: true });
-        
-        // Handle scroll momentum and snapping
-        viewport.addEventListener('touchend', () => {
-            setTimeout(() => {
-                if (!isUserScrolling) {
-                    this.handleMomentumScrollEnd();
-                }
-            }, 100);
-        }, { passive: true });
-    }
-    
-    trackScrollVelocity(currentScrollTop) {
-        const now = Date.now();
-        const velocity = currentScrollTop - this.lastScrollTop;
-        
-        this.velocityTracker.push({
-            velocity,
-            timestamp: now
-        });
-        
-        // Keep only recent samples
-        if (this.velocityTracker.length > this.maxVelocitySamples) {
-            this.velocityTracker.shift();
-        }
-        
-        this.lastScrollTop = currentScrollTop;
-    }
-    
-    handleScrollEnd() {
-        // Snap to nearest card if not already centered
-        this.snapToNearestCard();
-    }
-    
-    handleMomentumScrollEnd() {
-        // Calculate average velocity
-        const recentVelocity = this.calculateAverageVelocity();
-        
-        // If high velocity, let momentum continue
-        if (Math.abs(recentVelocity) > 10) {
-            setTimeout(() => {
-                this.snapToNearestCard();
-            }, 300);
+    nextCard() {
+        if (this.currentIndex < this.cards.length - 1) {
+            this.currentIndex++;
+            this.updateCardPositions();
+            this.triggerHaptic(15);
         } else {
-            this.snapToNearestCard();
+            // Bounce effect at the end
+            this.bounceAnimation('right');
         }
     }
     
-    calculateAverageVelocity() {
-        if (this.velocityTracker.length === 0) return 0;
-        
-        const totalVelocity = this.velocityTracker.reduce((sum, item) => sum + item.velocity, 0);
-        return totalVelocity / this.velocityTracker.length;
-    }
-    
-    snapToNearestCard() {
-        const viewport = document.getElementById('stackViewport');
-        if (!viewport) return;
-        
-        const viewportRect = viewport.getBoundingClientRect();
-        const viewportCenter = viewportRect.height / 2;
-        
-        let closestCard = null;
-        let minDistance = Infinity;
-        
-        this.cards.forEach((card, index) => {
-            const cardRect = card.getBoundingClientRect();
-            const cardCenter = cardRect.top - viewportRect.top + cardRect.height / 2;
-            const distance = Math.abs(cardCenter - viewportCenter);
-            
-            if (distance < minDistance) {
-                minDistance = distance;
-                closestCard = { card, index };
-            }
-        });
-        
-        if (closestCard && minDistance > 20) {
-            this.scrollToCard(closestCard.index, 'center', 'smooth');
+    previousCard() {
+        if (this.currentIndex > 0) {
+            this.currentIndex--;
+            this.updateCardPositions();
+            this.triggerHaptic(15);
+        } else {
+            // Bounce effect at the beginning
+            this.bounceAnimation('left');
         }
     }
     
-    scrollToCard(index, position = 'center', behavior = 'smooth') {
-        const viewport = document.getElementById('stackViewport');
-        const card = this.cards[index];
+    bounceAnimation(direction) {
+        const track = document.getElementById('swipeTrack');
+        if (!track) return;
         
-        if (!viewport || !card) return;
+        const bounceDistance = 30;
+        const bounceOffset = direction === 'left' ? bounceDistance : -bounceDistance;
+        const baseOffset = this.currentIndex * -this.cardWidth;
         
-        const cardRect = card.getBoundingClientRect();
-        const viewportRect = viewport.getBoundingClientRect();
+        track.style.transition = 'transform 0.15s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+        track.style.transform = `translateX(${baseOffset + bounceOffset}px)`;
         
-        let scrollTop;
+        setTimeout(() => {
+            track.style.transition = 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            track.style.transform = `translateX(${baseOffset}px)`;
+        }, 150);
         
-        switch (position) {
-            case 'top':
-                scrollTop = viewport.scrollTop + (cardRect.top - viewportRect.top);
-                break;
-            case 'center':
-            default:
-                scrollTop = viewport.scrollTop + (cardRect.top - viewportRect.top) - (viewportRect.height / 2) + (cardRect.height / 2);
-                break;
-        }
-        
-        viewport.scrollTo({
-            top: scrollTop,
-            behavior: behavior
-        });
-    }
-    
-    setupSnapScrolling() {
-        const viewport = document.getElementById('stackViewport');
-        if (!viewport) return;
-        
-        // CSS scroll snap (modern browsers)
-        viewport.style.scrollSnapType = 'y mandatory';
-        
-        this.cards.forEach(card => {
-            card.style.scrollSnapAlign = 'center';
-            card.style.scrollSnapStop = 'always';
-        });
+        this.triggerHaptic(25);
     }
     
     setupProgressIndicator() {
-        const container = document.getElementById('mobileStackContainer');
-        if (!container) return;
+        const container = document.getElementById('mobileSwipeContainer');
+        if (!container || this.cards.length <= 1) return;
         
         const progressContainer = document.createElement('div');
-        progressContainer.className = 'stack-progress';
-        progressContainer.id = 'stackProgress';
+        progressContainer.className = 'swipe-progress';
+        progressContainer.id = 'swipeProgress';
         
         this.cards.forEach((_, index) => {
             const dot = document.createElement('div');
             dot.className = `progress-dot ${index === 0 ? 'active' : ''}`;
             dot.addEventListener('click', () => {
-                this.scrollToCard(index, 'center', 'smooth');
-                this.updateProgressIndicator(index);
+                this.goToCard(index);
             });
             
             progressContainer.appendChild(dot);
@@ -8306,9 +8242,9 @@ class MobileStackManager {
         container.appendChild(progressContainer);
     }
     
-    updateProgressIndicator(activeIndex) {
+    updateProgressIndicator() {
         this.progressDots.forEach((dot, index) => {
-            if (index === activeIndex) {
+            if (index === this.currentIndex) {
                 dot.classList.add('active');
             } else {
                 dot.classList.remove('active');
@@ -8316,27 +8252,369 @@ class MobileStackManager {
         });
     }
     
+    setupAutoPlay() {
+        // Auto-play functionality with pause on interaction
+        this.startAutoPlay();
+        
+        // Pause on visibility change
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                this.pauseAutoPlay();
+            } else {
+                this.resumeAutoPlay();
+            }
+        });
+    }
+    
+    startAutoPlay() {
+        if (this.cards.length <= 1) return;
+        
+        this.isAutoPlaying = true;
+        this.autoPlayInterval = setInterval(() => {
+            if (this.isAutoPlaying && !this.isDragging) {
+                if (this.currentIndex >= this.cards.length - 1) {
+                    this.goToCard(0);
+                } else {
+                    this.nextCard();
+                }
+            }
+        }, 4000);
+    }
+    
+    pauseAutoPlay() {
+        this.isAutoPlaying = false;
+        if (this.autoPlayInterval) {
+            clearInterval(this.autoPlayInterval);
+            this.autoPlayInterval = null;
+        }
+    }
+    
+    resumeAutoPlay() {
+        if (!this.isAutoPlaying) {
+            setTimeout(() => {
+                this.startAutoPlay();
+            }, 2000);
+        }
+    }
+    
     setupTouchOptimizations() {
-        // Prevent overscroll bounce on iOS
+        // Prevent overscroll
         document.addEventListener('touchmove', (e) => {
-            if (e.target.closest('.mobile-stack-viewport')) {
-                // Allow scrolling within viewport
-                return;
+            if (e.target.closest('.mobile-swipe-viewport')) {
+                if (this.isDragging) {
+                    e.preventDefault();
+                }
             }
         }, { passive: false });
         
-        // Optimize for touch devices
+        // Add touch device class
         if ('ontouchstart' in window) {
             document.body.classList.add('touch-device');
         }
         
-        // Handle device orientation changes
+        // Handle orientation change
         window.addEventListener('orientationchange', () => {
             setTimeout(() => {
-                this.updateStackingEffect();
-                this.snapToNearestCard();
+                this.updateCardPositions();
             }, 300);
         });
+        
+        // Ensure smooth scrolling styles
+        this.addSmoothScrollingStyles();
+    }
+    
+    addSmoothScrollingStyles() {
+        if (!document.querySelector('#swipe-smooth-styles')) {
+            const style = document.createElement('style');
+            style.id = 'swipe-smooth-styles';
+            style.textContent = `
+                .mobile-swipe-container {
+                    position: relative;
+                    width: 100%;
+                    height: 100vh;
+                    overflow: hidden;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                
+                .mobile-swipe-viewport {
+                    width: 100%;
+                    height: 80vh;
+                    overflow: hidden;
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                }
+                
+                .mobile-swipe-track {
+                    display: flex;
+                    align-items: center;
+                    height: 100%;
+                    will-change: transform;
+                }
+                
+                .mobile-swipe-track.dragging * {
+                    pointer-events: none;
+                }
+                
+                .mobile-swipe-card {
+                    flex: none;
+                    width: calc(100vw - 40px);
+                    height: calc(80vh - 40px);
+                    margin: 0 10px;
+                    border-radius: 20px;
+                    position: relative;
+                    background: rgba(255, 255, 255, 0.1);
+                    backdrop-filter: blur(10px);
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    overflow: hidden;
+                    will-change: transform, opacity;
+                    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                }
+                
+                .card-bg-gradient {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+                    z-index: 1;
+                }
+                
+                .card-bg-pattern {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background-image: 
+                        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.05) 0%, transparent 50%);
+                    z-index: 1;
+                }
+                
+                .card-bg-overlay {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    z-index: 1;
+                }
+                
+                .mobile-swipe-content {
+                    position: relative;
+                    z-index: 2;
+                    padding: 30px;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    color: white;
+                }
+                
+                .mobile-swipe-header {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 20px;
+                }
+                
+                .mobile-swipe-icon {
+                    position: relative;
+                    width: 60px;
+                    height: 60px;
+                    background: rgba(255,255,255,0.15);
+                    border-radius: 15px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-right: 15px;
+                }
+                
+                .icon-glow {
+                    position: absolute;
+                    top: -5px;
+                    left: -5px;
+                    right: -5px;
+                    bottom: -5px;
+                    background: linear-gradient(45deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
+                    border-radius: 20px;
+                    filter: blur(10px);
+                    opacity: 0;
+                    transition: opacity 0.3s ease;
+                }
+                
+                .mobile-swipe-card.active .icon-glow {
+                    opacity: 1;
+                }
+                
+                .mobile-swipe-icon i {
+                    font-size: 24px;
+                    position: relative;
+                    z-index: 1;
+                }
+                
+                .mobile-swipe-info {
+                    flex: 1;
+                }
+                
+                .mobile-swipe-subtitle {
+                    font-size: 14px;
+                    opacity: 0.8;
+                    margin: 0 0 5px 0;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                }
+                
+                .mobile-swipe-title {
+                    font-size: 24px;
+                    font-weight: 700;
+                    margin: 0;
+                    line-height: 1.2;
+                }
+                
+                .mobile-swipe-description {
+                    flex: 1;
+                    font-size: 16px;
+                    line-height: 1.6;
+                    opacity: 0.9;
+                    margin: 20px 0;
+                }
+                
+                .mobile-swipe-tech {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 8px;
+                    margin: 20px 0;
+                }
+                
+                .mobile-swipe-tech-tag {
+                    background: rgba(255,255,255,0.2);
+                    padding: 6px 12px;
+                    border-radius: 20px;
+                    font-size: 12px;
+                    font-weight: 500;
+                    backdrop-filter: blur(5px);
+                }
+                
+                .mobile-swipe-links {
+                    display: flex;
+                    gap: 12px;
+                    margin-top: 20px;
+                }
+                
+                .mobile-swipe-link {
+                    flex: 1;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    padding: 12px 20px;
+                    border-radius: 12px;
+                    text-decoration: none;
+                    color: white;
+                    font-weight: 600;
+                    font-size: 14px;
+                    transition: all 0.3s ease;
+                    backdrop-filter: blur(5px);
+                }
+                
+                .mobile-swipe-link.primary {
+                    background: rgba(255,255,255,0.25);
+                    border: 1px solid rgba(255,255,255,0.3);
+                }
+                
+                .mobile-swipe-link.secondary {
+                    background: rgba(255,255,255,0.1);
+                    border: 1px solid rgba(255,255,255,0.2);
+                }
+                
+                .mobile-swipe-link:active {
+                    transform: scale(0.95);
+                }
+                
+                .mobile-swipe-card.tap-highlight {
+                    transform: scale(1.02);
+                    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                }
+                
+                .tap-ripple {
+                    position: absolute;
+                    pointer-events: none;
+                }
+                
+                .swipe-progress {
+                    position: absolute;
+                    bottom: 30px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    display: flex;
+                    gap: 8px;
+                    z-index: 10;
+                }
+                
+                .progress-dot {
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    background: rgba(255,255,255,0.4);
+                    transition: all 0.3s ease;
+                    cursor: pointer;
+                }
+                
+                .progress-dot.active {
+                    background: white;
+                    transform: scale(1.2);
+                    box-shadow: 0 0 10px rgba(255,255,255,0.5);
+                }
+                
+                .magnetic-field {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    pointer-events: none;
+                    border-radius: 20px;
+                    opacity: 0;
+                    transition: opacity 0.3s ease;
+                    background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%);
+                }
+                
+                .mobile-swipe-card.active .magnetic-field {
+                    opacity: 1;
+                }
+                
+                @media (max-width: 480px) {
+                    .mobile-swipe-card {
+                        width: calc(100vw - 30px);
+                        margin: 0 7.5px;
+                    }
+                    
+                    .mobile-swipe-content {
+                        padding: 25px;
+                    }
+                    
+                    .mobile-swipe-title {
+                        font-size: 20px;
+                    }
+                    
+                    .mobile-swipe-description {
+                        font-size: 14px;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    }
+    
+    triggerHaptic(intensity = 10) {
+        if (navigator.vibrate) {
+            navigator.vibrate(intensity);
+        }
     }
     
     setupResizeListener() {
@@ -8351,20 +8629,22 @@ class MobileStackManager {
                     if (this.isMobile && !this.isInitialized) {
                         this.init();
                     } else if (!this.isMobile && this.isInitialized) {
-                        // Show desktop version
                         const showcase = document.getElementById('projectsShowcase');
-                        const stackContainer = document.getElementById('mobileStackContainer');
+                        const swipeContainer = document.getElementById('mobileSwipeContainer');
                         
                         if (showcase) showcase.style.display = '';
-                        if (stackContainer) stackContainer.style.display = 'none';
+                        if (swipeContainer) swipeContainer.style.display = 'none';
                     }
                 }
                 
                 if (this.isMobile && this.isInitialized) {
                     // Recalculate positions after resize
                     setTimeout(() => {
-                        this.updateStackingEffect();
-                        this.snapToNearestCard();
+                        const card = this.cards[0];
+                        if (card) {
+                            this.cardWidth = card.offsetWidth + 20;
+                        }
+                        this.updateCardPositions();
                     }, 100);
                 }
             }, 300);
@@ -8372,76 +8652,198 @@ class MobileStackManager {
     }
     
     // Public methods for external control
-    nextCard() {
-        const nextIndex = Math.min(this.currentActiveIndex + 1, this.cards.length - 1);
-        if (nextIndex !== this.currentActiveIndex) {
-            this.scrollToCard(nextIndex, 'center', 'smooth');
+    goToCard(index, animated = true) {
+        if (index >= 0 && index < this.cards.length && index !== this.currentIndex) {
+            this.currentIndex = index;
+            this.updateCardPositions(!animated);
+            this.triggerHaptic(15);
         }
     }
     
-    previousCard() {
-        const prevIndex = Math.max(this.currentActiveIndex - 1, 0);
-        if (prevIndex !== this.currentActiveIndex) {
-            this.scrollToCard(prevIndex, 'center', 'smooth');
-        }
+    getCurrentCard() {
+        return {
+            index: this.currentIndex,
+            card: this.cards[this.currentIndex],
+            total: this.cards.length
+        };
     }
     
-    goToCard(index) {
-        if (index >= 0 && index < this.cards.length) {
-            this.scrollToCard(index, 'center', 'smooth');
+    // Keyboard support for accessibility
+    setupKeyboardSupport() {
+        document.addEventListener('keydown', (e) => {
+            if (!this.isMobile || !this.isInitialized) return;
+            
+            switch (e.key) {
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    this.previousCard();
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    this.nextCard();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    this.goToCard(0);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    this.goToCard(this.cards.length - 1);
+                    break;
+            }
+        });
+    }
+    
+    // Performance optimizations
+    optimizeForPerformance() {
+        // Use transform3d for hardware acceleration
+        const track = document.getElementById('swipeTrack');
+        if (track) {
+            track.style.willChange = 'transform';
+            track.style.transform += ' translateZ(0)';
         }
+        
+        // Lazy load non-visible cards
+        this.cards.forEach((card, index) => {
+            if (Math.abs(index - this.currentIndex) > 2) {
+                card.style.visibility = 'hidden';
+            } else {
+                card.style.visibility = 'visible';
+            }
+        });
+    }
+    
+    // Advanced gesture recognition
+    recognizeSwipeGestures() {
+        let swipeStartTime = 0;
+        let swipeStartX = 0;
+        let swipeDirection = null;
+        
+        const viewport = document.getElementById('swipeViewport');
+        if (!viewport) return;
+        
+        viewport.addEventListener('touchstart', (e) => {
+            swipeStartTime = Date.now();
+            swipeStartX = e.touches[0].clientX;
+            swipeDirection = null;
+        }, { passive: true });
+        
+        viewport.addEventListener('touchend', (e) => {
+            const swipeEndTime = Date.now();
+            const swipeEndX = e.changedTouches[0].clientX;
+            const swipeDuration = swipeEndTime - swipeStartTime;
+            const swipeDistance = swipeEndX - swipeStartX;
+            const swipeVelocity = Math.abs(swipeDistance) / swipeDuration;
+            
+            // Fast swipe detection
+            if (swipeVelocity > 0.5 && Math.abs(swipeDistance) > 50) {
+                if (swipeDistance > 0) {
+                    this.previousCard();
+                } else {
+                    this.nextCard();
+                }
+                
+                // Enhanced haptic for fast swipes
+                this.triggerHaptic(30);
+            }
+        }, { passive: true });
     }
     
     // Cleanup method
     destroy() {
-        if (this.observer) {
-            this.observer.disconnect();
-        }
+        this.pauseAutoPlay();
         
         this.cards = [];
         this.progressDots = [];
         this.isInitialized = false;
+        this.isDragging = false;
         
-        const stackContainer = document.getElementById('mobileStackContainer');
-        if (stackContainer) {
-            stackContainer.remove();
+        const swipeContainer = document.getElementById('mobileSwipeContainer');
+        if (swipeContainer) {
+            swipeContainer.remove();
         }
+        
+        // Remove event listeners
+        window.removeEventListener('resize', this.setupResizeListener);
+        document.removeEventListener('visibilitychange', this.setupAutoPlay);
     }
 }
 
 // Global instance
-let mobileStackManager;
+let mobileSwipeStackManager;
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
     // Wait for project data to be available
     setTimeout(() => {
         if (typeof projectsData !== 'undefined') {
-            mobileStackManager = new MobileStackManager();
+            mobileSwipeStackManager = new MobileSwipeStackManager();
+        } else {
+            // Create sample data for testing
+            window.projectsData = [
+                {
+                    id: 1,
+                    title: "AI-Powered Dashboard",
+                    subtitle: "Machine Learning",
+                    description: "An intelligent dashboard that uses machine learning algorithms to predict user behavior and optimize workflows in real-time.",
+                    icon: "fas fa-brain",
+                    background: "linear-gradient(135deg, rgba(138, 43, 226, 0.15), rgba(75, 0, 130, 0.05))",
+                    tech: ["React", "TensorFlow", "Python", "Node.js"],
+                    links: [
+                        { text: "View Live", url: "#", type: "live" },
+                        { text: "Code", url: "#", type: "github" }
+                    ]
+                },
+                {
+                    id: 2,
+                    title: "Blockchain Wallet",
+                    subtitle: "Cryptocurrency",
+                    description: "A secure cryptocurrency wallet with advanced features like multi-signature support and hardware wallet integration.",
+                    icon: "fas fa-coins",
+                    background: "linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 140, 0, 0.05))",
+                    tech: ["Solidity", "Web3", "React", "MetaMask"],
+                    links: [
+                        { text: "View Live", url: "#", type: "live" },
+                        { text: "Code", url: "#", type: "github" }
+                    ]
+                },
+                {
+                    id: 3,
+                    title: "AR Shopping App",
+                    subtitle: "Augmented Reality",
+                    description: "An innovative shopping experience that lets users visualize products in their own space using augmented reality technology.",
+                    icon: "fas fa-shopping-bag",
+                    background: "linear-gradient(135deg, rgba(255, 20, 147, 0.15), rgba(199, 21, 133, 0.05))",
+                    tech: ["ARKit", "Swift", "CoreML", "SceneKit"],
+                    links: [
+                        { text: "View Live", url: "#", type: "live" },
+                        { text: "Code", url: "#", type: "github" }
+                    ]
+                }
+            ];
+            mobileSwipeStackManager = new MobileSwipeStackManager();
         }
     }, 500);
 });
 
 // Handle page visibility changes for performance
 document.addEventListener('visibilitychange', function() {
-    if (mobileStackManager && mobileStackManager.isMobile) {
+    if (mobileSwipeStackManager && mobileSwipeStackManager.isMobile) {
         if (document.hidden) {
-            // Pause animations when tab is not visible
+            // Pause animations and auto-play when tab is not visible
+            mobileSwipeStackManager.pauseAutoPlay();
             document.body.style.setProperty('--animation-play-state', 'paused');
         } else {
-            // Resume animations
+            // Resume animations and auto-play
+            mobileSwipeStackManager.resumeAutoPlay();
             document.body.style.setProperty('--animation-play-state', 'running');
-            // Recalculate positions
-            setTimeout(() => {
-                mobileStackManager.updateStackingEffect();
-            }, 100);
         }
     }
 });
 
 // Export for external use
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = MobileStackManager;
+    module.exports = MobileSwipeStackManager;
 }
 
     </script>
