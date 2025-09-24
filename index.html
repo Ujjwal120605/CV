@@ -428,6 +428,7 @@
 /* Enhanced Animated Projects Section */
 /* Enhanced Animated Projects Section */
 /* Enhanced Animated Projects Section */
+/* Enhanced Animated Projects Section with Stack Cards for Mobile */
 .projects-showcase {
     display: flex;
     gap: 1rem;
@@ -441,6 +442,7 @@
     background: rgba(255, 255, 255, 0.02);
 }
 
+/* Desktop cards - keep existing */
 .animated-project-card {
     position: relative;
     display: flex;
@@ -465,6 +467,271 @@
 .animated-project-card:not(.active) {
     min-width: 200px;
     flex: 0.8;
+}
+
+/* Mobile Stack Cards - NEW */
+.mobile-stack-container {
+    display: none;
+    position: relative;
+    height: 600px;
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto;
+    perspective: 1000px;
+}
+
+.mobile-stack-card {
+    position: absolute;
+    width: 100%;
+    height: 500px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    border: 1px solid rgba(0, 188, 212, 0.2);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-style: preserve-3d;
+    overflow: hidden;
+}
+
+/* Stack positioning */
+.mobile-stack-card:nth-child(1) {
+    z-index: 5;
+    transform: translateY(0px) scale(1) rotateX(0deg);
+}
+
+.mobile-stack-card:nth-child(2) {
+    z-index: 4;
+    transform: translateY(20px) scale(0.95) rotateX(5deg);
+}
+
+.mobile-stack-card:nth-child(3) {
+    z-index: 3;
+    transform: translateY(40px) scale(0.9) rotateX(10deg);
+}
+
+.mobile-stack-card:nth-child(4) {
+    z-index: 2;
+    transform: translateY(60px) scale(0.85) rotateX(15deg);
+}
+
+.mobile-stack-card:nth-child(5) {
+    z-index: 1;
+    transform: translateY(80px) scale(0.8) rotateX(20deg);
+}
+
+/* Active state for mobile */
+.mobile-stack-card.active {
+    z-index: 10;
+    transform: translateY(-20px) scale(1.05) rotateX(-5deg);
+    box-shadow: 0 30px 60px rgba(0, 188, 212, 0.4);
+}
+
+/* Swipe animations */
+.mobile-stack-card.swiping-left {
+    transform: translateX(-100%) rotate(-10deg);
+    opacity: 0;
+}
+
+.mobile-stack-card.swiping-right {
+    transform: translateX(100%) rotate(10deg);
+    opacity: 0;
+}
+
+.mobile-stack-card.coming-up {
+    animation: comeUp 0.6s ease forwards;
+}
+
+@keyframes comeUp {
+    from {
+        transform: translateY(100px) scale(0.75) rotateX(25deg);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0px) scale(1) rotateX(0deg);
+        opacity: 1;
+    }
+}
+
+/* Mobile card content */
+.mobile-stack-content {
+    padding: 2rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 2;
+}
+
+.mobile-stack-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.mobile-stack-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 15px;
+    background: rgba(0, 188, 212, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #00bcd4;
+    flex-shrink: 0;
+}
+
+.mobile-stack-info h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.mobile-stack-subtitle {
+    font-size: 0.9rem;
+    color: #00bcd4;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+.mobile-stack-description {
+    flex-grow: 1;
+    color: #ddd;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.mobile-stack-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.mobile-stack-tech-tag {
+    background: rgba(0, 188, 212, 0.2);
+    color: #00e5ff;
+    padding: 0.4rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border: 1px solid rgba(0, 188, 212, 0.3);
+}
+
+.mobile-stack-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.mobile-stack-link {
+    flex: 1;
+    padding: 1rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.mobile-stack-link.primary {
+    background: linear-gradient(135deg, #00bcd4, #00acc1);
+    color: white;
+}
+
+.mobile-stack-link.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Stack navigation */
+.stack-navigation {
+    display: none;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.stack-nav-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(0, 188, 212, 0.2);
+    border: 2px solid rgba(0, 188, 212, 0.3);
+    color: #00bcd4;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stack-nav-btn:hover:not(:disabled) {
+    background: rgba(0, 188, 212, 0.4);
+    transform: scale(1.1);
+}
+
+.stack-nav-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Stack indicators */
+.stack-indicators {
+    display: none;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+.stack-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.stack-dot.active {
+    background: #00bcd4;
+    transform: scale(1.2);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .projects-showcase {
+        display: none;
+    }
+    
+    .mobile-stack-container {
+        display: block;
+    }
+    
+    .stack-navigation {
+        display: flex;
+    }
+    
+    .stack-indicators {
+        display: flex;
+    }
+}
+
+/* Touch optimizations */
+@media (hover: none) and (pointer: coarse) {
+    .mobile-stack-card {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+    }
 }
 
 .animated-project-card:hover {
@@ -3800,6 +4067,8 @@ body.light-theme .voice-message.user {
             </div>
         </div>
     </section>
+    <!-- LeetCode Dashboard Section -->
+
 
     <section class="section" id="skills-section">
         <h2>Skills</h2>
@@ -6251,6 +6520,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Project data with background images/gradients
 // Enhanced Project data with better backgrounds and more variety
 // Enhanced Project data
+// Enhanced project data for stack cards
 const projectsData = [
     {
         id: 'portfolio-site',
@@ -7376,14 +7646,13 @@ window.addEventListener('beforeunload', function() {
         console.log('Cleaning up certificate enhancer');
     }
 });
-// Location Configuration - REPLACE WITH YOUR API KEY
-const LOCATION_CONFIG = {
-    GOOGLE_MAPS_API_KEY: 'AIzaSyDj3vBEBcAhci7NXMYUnEzPZiCcYgEyYhU',
-};
+
 
 // Location Manager
-// Location Configuration - REPLACE WITH YOUR API KEY
-
+const LOCATION_CONFIG = {
+    GOOGLE_MAPS_API_KEY: 'AIzaSyBTEtKWn_vsK5eY_9F_qp4vR5zuBbmiGLU',
+    MAPS_EMBED_API_KEY: 'AIzaSyDj3vBEBcAhci7NXMYUnEzPZiCcYgEyYhU'
+};
 
 // Location Manager
 class LocationManager {
@@ -7506,7 +7775,16 @@ class LocationManager {
     }
 
     getFallbackLocation(lat, lng) {
-        if (lat >= 12.8 && lat <= 13.1 && lng >= 77.4 && lng <= 77.8) {
+        // RVCE coordinates: approximately 12.9237° N, 77.4987° E
+        if (lat >= 12.92 && lat <= 12.93 && lng >= 77.49 && lng <= 77.51) {
+            return {
+                city: 'RVCE Campus',
+                state: 'Karnataka',
+                country: 'India',
+                formatted_address: 'RV College of Engineering, Bangalore, Karnataka, India',
+                coordinates: { lat, lng }
+            };
+        } else if (lat >= 12.8 && lat <= 13.1 && lng >= 77.4 && lng <= 77.8) {
             return {
                 city: 'Bangalore',
                 state: 'Karnataka',
@@ -7560,9 +7838,10 @@ class LocationManager {
         const mapFrame = document.getElementById('locationMap');
         const mapOverlay = document.getElementById('mapOverlay');
         
-        if (LOCATION_CONFIG.GOOGLE_MAPS_API_KEY !== 'AIzaSyDj3vBEBcAhci7NXMYUnEzPZiCcYgEyYhU') {
+        // Use the Maps Embed API key for embedding maps
+        if (LOCATION_CONFIG.MAPS_EMBED_API_KEY) {
             const query = encodeURIComponent(`${locationData.city}, ${locationData.state}, ${locationData.country}`);
-            const embedUrl = `https://www.google.com/maps/embed/v1/place?key=${LOCATION_CONFIG.GOOGLE_MAPS_API_KEY}&q=${query}&zoom=11&maptype=roadmap`;
+            const embedUrl = `https://www.google.com/maps/embed/v1/place?key=${LOCATION_CONFIG.MAPS_EMBED_API_KEY}&q=${query}&zoom=15&maptype=roadmap`;
             
             mapFrame.src = embedUrl;
         }
@@ -7586,8 +7865,9 @@ class LocationManager {
         const mapFrame = document.getElementById('locationMap');
         const mapOverlay = document.getElementById('mapOverlay');
         
-        mapFrame.src = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d248849.886539092!2d77.49085452148434!3d12.953945614655863!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1670c9b44e6d%3A0xf8dfc3e8517e4fe0!2sBengaluru%2C%20Karnataka!5e0!3m2!1sen!2sin!4v1703847234567!5m2!1sen!2sin";
-        mapOverlay.innerHTML = '📍 Study Location: Bangalore';
+        // Default to RVCE instead of Bangalore when cleared
+        mapFrame.src = `https://www.google.com/maps/embed/v1/place?key=${LOCATION_CONFIG.MAPS_EMBED_API_KEY}&q=RV+College+of+Engineering+Bangalore&zoom=15&maptype=roadmap`;
+        mapOverlay.innerHTML = '📍 Study Location: RVCE';
     }
 }
 
@@ -7611,6 +7891,318 @@ function clearLocation() {
 // Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', function() {
     locationManager = new LocationManager();
+});
+// Enhanced Mobile Stack Cards Manager
+class MobileStackManager {
+    constructor() {
+        this.isMobile = window.innerWidth <= 768;
+        this.currentIndex = 0;
+        this.cards = [];
+        this.isAnimating = false;
+        this.touchStartX = 0;
+        this.touchStartY = 0;
+        this.touchEndX = 0;
+        this.touchEndY = 0;
+        this.minSwipeDistance = 50;
+        
+        if (this.isMobile) {
+            this.init();
+        }
+        
+        this.setupResizeListener();
+    }
+    
+    init() {
+        this.createStackContainer();
+        this.setupTouchEvents();
+        this.setupKeyboardNavigation();
+    }
+    
+    createStackContainer() {
+        const projectsSection = document.getElementById('projects');
+        if (!projectsSection) return;
+        
+        const showcase = document.getElementById('projectsShowcase');
+        if (!showcase) return;
+        
+        // Create stack container
+        const stackContainer = document.createElement('div');
+        stackContainer.className = 'mobile-stack-container';
+        stackContainer.id = 'mobileStackContainer';
+        
+        // Create navigation
+        const navigation = document.createElement('div');
+        navigation.className = 'stack-navigation';
+        navigation.innerHTML = `
+            <button class="stack-nav-btn" id="stackPrevBtn" onclick="mobileStack.previousCard()">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="stack-nav-btn" id="stackNextBtn" onclick="mobileStack.nextCard()">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        `;
+        
+        // Create indicators
+        const indicators = document.createElement('div');
+        indicators.className = 'stack-indicators';
+        indicators.id = 'stackIndicators';
+        
+        // Create cards from project data
+        projectsData.forEach((project, index) => {
+            const card = this.createStackCard(project, index);
+            stackContainer.appendChild(card);
+            this.cards.push(card);
+            
+            // Create indicator dot
+            const dot = document.createElement('div');
+            dot.className = `stack-dot ${index === 0 ? 'active' : ''}`;
+            dot.onclick = () => this.goToCard(index);
+            indicators.appendChild(dot);
+        });
+        
+        // Insert after showcase
+        showcase.parentNode.insertBefore(stackContainer, showcase.nextSibling);
+        showcase.parentNode.insertBefore(navigation, stackContainer.nextSibling);
+        showcase.parentNode.insertBefore(indicators, navigation.nextSibling);
+        
+        this.updateNavigation();
+    }
+    
+    createStackCard(project, index) {
+        const card = document.createElement('div');
+        card.className = 'mobile-stack-card';
+        card.setAttribute('data-index', index);
+        
+        const linksHTML = project.links?.length > 0 ? `
+            <div class="mobile-stack-links">
+                ${project.links.map(link => `
+                    <a href="${link.url}" target="_blank" class="mobile-stack-link ${link.type === 'github' ? 'secondary' : 'primary'}"
+                       onclick="event.stopPropagation()">
+                        <i class="fas ${link.type === 'github' ? 'fa-code' : 'fa-external-link-alt'}"></i>
+                        ${link.text}
+                    </a>
+                `).join('')}
+            </div>
+        ` : '';
+        
+        card.innerHTML = `
+            <div class="mobile-stack-content">
+                <div class="mobile-stack-header">
+                    <div class="mobile-stack-icon">
+                        <i class="${project.icon}"></i>
+                    </div>
+                    <div class="mobile-stack-info">
+                        <p class="mobile-stack-subtitle">${project.subtitle}</p>
+                        <h3>${project.title}</h3>
+                    </div>
+                </div>
+                
+                <div class="mobile-stack-description">
+                    ${project.description}
+                </div>
+                
+                <div class="mobile-stack-tech">
+                    ${project.tech?.map(tech => `<span class="mobile-stack-tech-tag">${tech}</span>`).join('') || ''}
+                </div>
+                
+                ${linksHTML}
+            </div>
+        `;
+        
+        // Set background
+        card.style.background = project.background || 'linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))';
+        
+        return card;
+    }
+    
+    setupTouchEvents() {
+        const container = document.getElementById('mobileStackContainer');
+        if (!container) return;
+        
+        container.addEventListener('touchstart', (e) => {
+            this.touchStartX = e.touches[0].clientX;
+            this.touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+        
+        container.addEventListener('touchmove', (e) => {
+            if (this.isAnimating) return;
+            
+            const currentCard = this.cards[this.currentIndex];
+            const deltaX = e.touches[0].clientX - this.touchStartX;
+            const deltaY = e.touches[0].clientY - this.touchStartY;
+            
+            // Only handle horizontal swipes
+            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+                e.preventDefault();
+                
+                // Apply real-time transform
+                const rotation = deltaX * 0.1;
+                const opacity = 1 - Math.abs(deltaX) / 300;
+                
+                currentCard.style.transform = `translateX(${deltaX}px) rotate(${rotation}deg)`;
+                currentCard.style.opacity = Math.max(opacity, 0.3);
+            }
+        }, { passive: false });
+        
+        container.addEventListener('touchend', (e) => {
+            this.touchEndX = e.changedTouches[0].clientX;
+            this.touchEndY = e.changedTouches[0].clientY;
+            this.handleSwipe();
+        }, { passive: true });
+    }
+    
+    handleSwipe() {
+        const deltaX = this.touchStartX - this.touchEndX;
+        const deltaY = this.touchStartY - this.touchEndY;
+        
+        // Reset current card transform
+        const currentCard = this.cards[this.currentIndex];
+        currentCard.style.transform = '';
+        currentCard.style.opacity = '';
+        
+        // Check if swipe is significant and primarily horizontal
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > this.minSwipeDistance) {
+            if (deltaX > 0 && this.currentIndex < this.cards.length - 1) {
+                // Swipe left - next card
+                this.nextCard();
+            } else if (deltaX < 0 && this.currentIndex > 0) {
+                // Swipe right - previous card
+                this.previousCard();
+            }
+        }
+    }
+    
+    nextCard() {
+        if (this.isAnimating || this.currentIndex >= this.cards.length - 1) return;
+        
+        this.animateToCard(this.currentIndex + 1, 'next');
+    }
+    
+    previousCard() {
+        if (this.isAnimating || this.currentIndex <= 0) return;
+        
+        this.animateToCard(this.currentIndex - 1, 'prev');
+    }
+    
+    goToCard(index) {
+        if (this.isAnimating || index === this.currentIndex) return;
+        
+        const direction = index > this.currentIndex ? 'next' : 'prev';
+        this.animateToCard(index, direction);
+    }
+    
+    animateToCard(newIndex, direction) {
+        this.isAnimating = true;
+        
+        const currentCard = this.cards[this.currentIndex];
+        const newCard = this.cards[newIndex];
+        
+        // Add animation classes
+        currentCard.classList.add(`swiping-${direction === 'next' ? 'left' : 'right'}`);
+        
+        // Animate stack repositioning
+        this.cards.forEach((card, index) => {
+            const relativePos = index - newIndex;
+            let transform = '';
+            let zIndex = 1;
+            
+            if (relativePos === 0) {
+                transform = 'translateY(0px) scale(1) rotateX(0deg)';
+                zIndex = 5;
+            } else if (relativePos === 1) {
+                transform = 'translateY(20px) scale(0.95) rotateX(5deg)';
+                zIndex = 4;
+            } else if (relativePos === 2) {
+                transform = 'translateY(40px) scale(0.9) rotateX(10deg)';
+                zIndex = 3;
+            } else if (relativePos === 3) {
+                transform = 'translateY(60px) scale(0.85) rotateX(15deg)';
+                zIndex = 2;
+            } else {
+                transform = 'translateY(80px) scale(0.8) rotateX(20deg)';
+                zIndex = 1;
+            }
+            
+            card.style.transform = transform;
+            card.style.zIndex = zIndex;
+            
+            if (relativePos > 0) {
+                card.classList.add('coming-up');
+            }
+        });
+        
+        setTimeout(() => {
+            // Clean up animation classes
+            currentCard.classList.remove('swiping-left', 'swiping-right');
+            this.cards.forEach(card => {
+                card.classList.remove('coming-up');
+            });
+            
+            this.currentIndex = newIndex;
+            this.updateIndicators();
+            this.updateNavigation();
+            this.isAnimating = false;
+        }, 600);
+    }
+    
+    updateIndicators() {
+        const indicators = document.querySelectorAll('.stack-dot');
+        indicators.forEach((dot, index) => {
+            dot.classList.toggle('active', index === this.currentIndex);
+        });
+    }
+    
+    updateNavigation() {
+        const prevBtn = document.getElementById('stackPrevBtn');
+        const nextBtn = document.getElementById('stackNextBtn');
+        
+        if (prevBtn) prevBtn.disabled = this.currentIndex === 0;
+        if (nextBtn) nextBtn.disabled = this.currentIndex === this.cards.length - 1;
+    }
+    
+    setupKeyboardNavigation() {
+        document.addEventListener('keydown', (e) => {
+            const container = document.getElementById('mobileStackContainer');
+            if (!container || !container.offsetParent) return; // Only if visible
+            
+            switch(e.key) {
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    this.previousCard();
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    this.nextCard();
+                    break;
+            }
+        });
+    }
+    
+    setupResizeListener() {
+        window.addEventListener('resize', () => {
+            const wasMobile = this.isMobile;
+            this.isMobile = window.innerWidth <= 768;
+            
+            if (wasMobile !== this.isMobile) {
+                if (this.isMobile && this.cards.length === 0) {
+                    this.init();
+                }
+            }
+        });
+    }
+}
+
+// Global stack manager
+let mobileStack;
+
+// Initialize stack manager
+document.addEventListener('DOMContentLoaded', function() {
+    // Wait for project data to be available
+    setTimeout(() => {
+        if (typeof projectsData !== 'undefined') {
+            mobileStack = new MobileStackManager();
+        }
+    }, 500);
 });
 
     </script>
