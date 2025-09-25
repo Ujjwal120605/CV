@@ -8502,42 +8502,33 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 // Enhanced Mobile Stack Cards Manager
 // Enhanced Mobile Stack Cards Manager with Smooth Scroll Behavior
-class EnhancedMobileSwipeManager {
+
+
+// Global instance
+let enhancedMobileSwipeManager;
+function downloadFile(filePath) {
+  const link = document.createElement("a");
+  link.href = filePath;
+  link.download = filePath.split('/').pop(); 
+  link.click();
+}
+// Mobile Projects Ticker - TV News Style Animation
+// Improved Mobile Projects Ticker with Enhanced TV News Animation
+class ImprovedMobileProjectsTicker {
     constructor() {
         this.isMobile = window.innerWidth <= 768;
+        this.container = null;
+        this.ticker = null;
+        this.viewport = null;
         this.cards = [];
-        this.currentIndex = 0;
+        this.isPlaying = true;
+        this.speed = 1.2; // Increased speed for better visibility
+        this.currentOffset = 0;
+        this.totalWidth = 0;
+        this.singleSetWidth = 0;
+        this.animationId = null;
+        this.isPaused = false;
         this.isInitialized = false;
-        this.isDragging = false;
-        this.startX = 0;
-        this.startY = 0;
-        this.currentX = 0;
-        this.currentY = 0;
-        this.cardWidth = 0;
-        this.progressDots = [];
-        this.autoPlayInterval = null;
-        this.progressAnimationId = null;
-        this.isAutoPlaying = true;
-        this.swipeThreshold = 60;
-        this.velocityThreshold = 0.4;
-        this.lastTouchTime = 0;
-        this.touchVelocity = 0;
-        
-        // Enhanced auto-slide properties for smooth movement
-        this.autoSlideSpeed = 5000; // 5 seconds per slide for good viewing time
-        this.pauseDuration = 2500; // 2.5 seconds pause after manual interaction
-        this.isUserInteracting = false;
-        this.transitionDuration = 1200; // Slower, more elegant transitions
-        this.progressBarWidth = 0;
-        this.progressStartTime = 0;
-        this.lastInteractionTime = 0;
-        this.autoSlideEasing = 'cubic-bezier(0.23, 1, 0.320, 1)'; // More elegant easing
-        
-        // Visual flow enhancements
-        this.streamlineOffset = 0;
-        this.streamlineSpeed = 0.3; // Pixels per frame for subtle background movement
-        this.momentumDecay = 0.92;
-        this.isStreamlineActive = true;
         
         if (this.isMobile) {
             this.init();
@@ -8549,1865 +8540,14 @@ class EnhancedMobileSwipeManager {
     init() {
         if (this.isInitialized) return;
         
-        this.createSwipeContainer();
-        this.setupTouchEvents();
-        this.setupProgressIndicator();
-        this.setupAutoSlide();
-        this.setupTouchOptimizations();
-        this.setupKeyboardSupport();
-        this.initializeStreamlineEffect();
-        
-        this.isInitialized = true;
-    }
-    
-    createSwipeContainer() {
-        const projectsSection = document.getElementById('projects');
-        if (!projectsSection) return;
-        
-        const showcase = document.getElementById('projectsShowcase');
-        if (!showcase) return;
-        
-        // Create main swipe container with enhanced structure
-        const swipeContainer = document.createElement('div');
-        swipeContainer.className = 'mobile-swipe-container';
-        swipeContainer.id = 'mobileSwipeContainer';
-        
-        // Add streamline background
-        const streamlineBackground = document.createElement('div');
-        streamlineBackground.className = 'streamline-background';
-        streamlineBackground.id = 'streamlineBackground';
-        swipeContainer.appendChild(streamlineBackground);
-        
-        // Create viewport wrapper
-        const viewport = document.createElement('div');
-        viewport.className = 'mobile-swipe-viewport';
-        viewport.id = 'swipeViewport';
-        
-        // Create cards track
-        const track = document.createElement('div');
-        track.className = 'mobile-swipe-track';
-        track.id = 'swipeTrack';
-        
-        // Create cards from project data
-        if (typeof projectsData !== 'undefined') {
-            projectsData.forEach((project, index) => {
-                const card = this.createSwipeCard(project, index);
-                track.appendChild(card);
-                this.cards.push(card);
-            });
-        }
-        
-        viewport.appendChild(track);
-        swipeContainer.appendChild(viewport);
-        
-        // Insert after showcase (hidden on mobile)
-        showcase.style.display = 'none';
-        showcase.parentNode.insertBefore(swipeContainer, showcase.nextSibling);
-        
-        // Set initial positions with delay for smooth entry
-        setTimeout(() => {
-            this.updateCardPositions(false);
-            this.addEnhancedStyles();
-            this.startInitialAnimation();
-        }, 100);
-    }
-    
-    createSwipeCard(project, index) {
-        const card = document.createElement('div');
-        card.className = 'mobile-swipe-card';
-        card.setAttribute('data-index', index);
-        card.setAttribute('data-project-id', project.id);
-        
-        // Enhanced background layers with flow effects
-        const bgGradient = document.createElement('div');
-        bgGradient.className = 'card-bg-gradient';
-        
-        const bgPattern = document.createElement('div');
-        bgPattern.className = 'card-bg-pattern';
-        
-        const bgOverlay = document.createElement('div');
-        bgOverlay.className = 'card-bg-overlay';
-        
-        const flowLayer = document.createElement('div');
-        flowLayer.className = 'card-flow-layer';
-        
-        // More sophisticated gradient backgrounds
-        const gradients = [
-            'linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(29, 78, 216, 0.08))',
-            'linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(109, 40, 217, 0.08))',
-            'linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.08))',
-            'linear-gradient(135deg, rgba(245, 101, 101, 0.15), rgba(220, 38, 38, 0.08))',
-            'linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(217, 119, 6, 0.08))',
-            'linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(124, 58, 237, 0.08))',
-            'linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(8, 145, 178, 0.08))',
-            'linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(190, 24, 93, 0.08))'
-        ];
-        
-        bgOverlay.style.background = project.background || gradients[index % gradients.length];
-        
-        card.appendChild(bgGradient);
-        card.appendChild(bgPattern);
-        card.appendChild(flowLayer);
-        card.appendChild(bgOverlay);
-        
-        // Create content with enhanced styling
-        const content = document.createElement('div');
-        content.className = 'mobile-swipe-content';
-        
-        const linksHTML = project.links?.length > 0 ? `
-            <div class="mobile-swipe-links">
-                ${project.links.map(link => `
-                    <a href="${link.url}" target="_blank" rel="noopener noreferrer"
-                       class="mobile-swipe-link ${link.type === 'github' ? 'secondary' : 'primary'}"
-                       onclick="event.stopPropagation()">
-                        <i class="fas ${link.type === 'github' ? 'fa-code' : 'fa-external-link-alt'}"></i>
-                        <span>${link.text}</span>
-                    </a>
-                `).join('')}
-            </div>
-        ` : '';
-        
-        content.innerHTML = `
-            <div class="mobile-swipe-header">
-                <div class="mobile-swipe-icon">
-                    <div class="icon-glow"></div>
-                    <div class="icon-pulse"></div>
-                    <i class="${project.icon}"></i>
-                </div>
-                <div class="mobile-swipe-info">
-                    <p class="mobile-swipe-subtitle">${project.subtitle}</p>
-                    <h3 class="mobile-swipe-title">${project.title}</h3>
-                </div>
-            </div>
-            
-            <div class="mobile-swipe-description">
-                ${project.description}
-            </div>
-            
-            <div class="mobile-swipe-tech">
-                ${project.tech?.map(tech => `<span class="mobile-swipe-tech-tag">${tech}</span>`).join('') || ''}
-            </div>
-            
-            ${linksHTML}
-        `;
-        
-        card.appendChild(content);
-        
-        // Enhanced floating particles with directional flow
-        const particlesContainer = document.createElement('div');
-        particlesContainer.className = 'particles-container';
-        for (let i = 0; i < 8; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'floating-particle';
-            particle.style.left = `${Math.random() * 120 - 10}%`;
-            particle.style.top = `${Math.random() * 100}%`;
-            particle.style.animationDelay = `${Math.random() * 6}s`;
-            particle.style.animationDuration = `${6 + Math.random() * 4}s`;
-            particlesContainer.appendChild(particle);
-        }
-        card.appendChild(particlesContainer);
-        
-        return card;
-    }
-    
-    initializeStreamlineEffect() {
-        const animateStreamline = () => {
-            if (!this.isStreamlineActive) return;
-            
-            this.streamlineOffset += this.streamlineSpeed;
-            
-            const background = document.getElementById('streamlineBackground');
-            if (background) {
-                background.style.transform = `translateX(${-this.streamlineOffset}px)`;
-                
-                // Reset offset to prevent overflow
-                if (this.streamlineOffset > 1000) {
-                    this.streamlineOffset = 0;
-                }
-            }
-            
-            // Update particle positions for flow effect
-            const particles = document.querySelectorAll('.floating-particle');
-            particles.forEach((particle, index) => {
-                const currentLeft = parseFloat(particle.style.left);
-                if (currentLeft > 110) {
-                    particle.style.left = '-10%';
-                }
-            });
-            
-            requestAnimationFrame(animateStreamline);
-        };
-        
-        requestAnimationFrame(animateStreamline);
-    }
-    
-    setupTouchEvents() {
-        const viewport = document.getElementById('swipeViewport');
-        if (!viewport) return;
-        
-        // Enhanced touch handling with better responsiveness
-        viewport.addEventListener('touchstart', (e) => {
-            this.handleTouchStart(e);
-        }, { passive: true });
-        
-        viewport.addEventListener('touchmove', (e) => {
-            this.handleTouchMove(e);
-        }, { passive: false });
-        
-        viewport.addEventListener('touchend', (e) => {
-            this.handleTouchEnd(e);
-        }, { passive: true });
-        
-        // Mouse events for desktop testing
-        viewport.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            this.handleTouchStart({
-                touches: [{ clientX: e.clientX, clientY: e.clientY }]
-            });
-        });
-        
-        viewport.addEventListener('mousemove', (e) => {
-            if (this.isDragging) {
-                e.preventDefault();
-                this.handleTouchMove({
-                    touches: [{ clientX: e.clientX, clientY: e.clientY }]
-                });
-            }
-        });
-        
-        viewport.addEventListener('mouseup', (e) => {
-            if (this.isDragging) {
-                this.handleTouchEnd({
-                    changedTouches: [{ clientX: e.clientX, clientY: e.clientY }]
-                });
-            }
-        });
-        
-        viewport.addEventListener('contextmenu', (e) => {
-            if (this.isDragging) {
-                e.preventDefault();
-            }
-        });
-    }
-    
-    handleTouchStart(e) {
-        this.isDragging = true;
-        this.isUserInteracting = true;
-        this.lastInteractionTime = Date.now();
-        
-        this.startX = e.touches[0].clientX;
-        this.startY = e.touches[0].clientY;
-        this.currentX = this.startX;
-        this.currentY = this.startY;
-        this.lastTouchTime = Date.now();
-        this.touchVelocity = 0;
-        
-        // Pause auto-slide and progress animation
-        this.pauseAutoSlide();
-        this.pauseProgressAnimation();
-        
-        // Add interaction effects
-        const track = document.getElementById('swipeTrack');
-        if (track) {
-            track.classList.add('dragging');
-        }
-        
-        // Enhanced haptic feedback
-        this.triggerHaptic(15);
-        
-        // Update card width for calculations
-        const card = this.cards[0];
-        if (card) {
-            this.cardWidth = card.offsetWidth + 50;
-        }
-        
-        // Add touch interaction visual feedback
-        this.addTouchFeedback();
-    }
-    
-    handleTouchMove(e) {
-        if (!this.isDragging) return;
-        
-        this.currentX = e.touches[0].clientX;
-        this.currentY = e.touches[0].clientY;
-        
-        const deltaX = this.currentX - this.startX;
-        const deltaY = this.currentY - this.startY;
-        
-        // Enhanced velocity calculation
-        const now = Date.now();
-        const timeDiff = now - this.lastTouchTime;
-        if (timeDiff > 0) {
-            this.touchVelocity = deltaX / timeDiff;
-        }
-        this.lastTouchTime = now;
-        
-        // Prevent vertical scroll with better detection
-        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
-            e.preventDefault();
-        }
-        
-        // Enhanced horizontal swipe handling
-        if (Math.abs(deltaX) > Math.abs(deltaY)) {
-            let adjustedDelta = deltaX;
-            
-            // Smoother resistance at boundaries
-            if ((this.currentIndex === 0 && deltaX > 0) || 
-                (this.currentIndex === this.cards.length - 1 && deltaX < 0)) {
-                adjustedDelta = deltaX * Math.pow(0.4, Math.abs(deltaX) / this.cardWidth);
-            }
-            
-            this.updateCardPositions(true, adjustedDelta);
-            this.updateStreamlineSpeed(deltaX);
-        }
-    }
-    
-    handleTouchEnd(e) {
-        if (!this.isDragging) return;
-        
-        this.isDragging = false;
-        this.isUserInteracting = false;
-        
-        const deltaX = this.currentX - this.startX;
-        const deltaY = this.currentY - this.startY;
-        const absDeltaX = Math.abs(deltaX);
-        const absDeltaY = Math.abs(deltaY);
-        
-        // Remove dragging effects
-        const track = document.getElementById('swipeTrack');
-        if (track) {
-            track.classList.remove('dragging');
-        }
-        
-        // Enhanced swipe detection
-        const isSwipe = absDeltaX > this.swipeThreshold || Math.abs(this.touchVelocity) > this.velocityThreshold;
-        const isHorizontalSwipe = absDeltaX > absDeltaY;
-        
-        if (isSwipe && isHorizontalSwipe) {
-            // Handle directional swipe with momentum
-            if (deltaX > 0) {
-                this.previousCard(true);
-            } else {
-                this.nextCard(true);
-            }
-        } else if (absDeltaX < 15 && absDeltaY < 15) {
-            this.handleCardTap();
-        } else {
-            // Return to current position with spring animation
-            this.updateCardPositions(false);
-        }
-        
-        // Reset streamline speed
-        this.resetStreamlineSpeed();
-        
-        // Resume auto-slide after enhanced pause
-        this.resumeAutoSlideAfterPause();
-    }
-    
-    handleCardTap() {
-        const currentCard = this.cards[this.currentIndex];
-        if (currentCard) {
-            this.createEnhancedTapRipple(currentCard);
-            this.addTapHighlight(currentCard);
-            this.triggerHaptic(20);
-        }
-    }
-    
-    createEnhancedTapRipple(card) {
-        const ripple = document.createElement('div');
-        ripple.className = 'enhanced-tap-ripple';
-        
-        const rect = card.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height) * 1.2;
-        
-        ripple.style.cssText = `
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            width: ${size}px;
-            height: ${size}px;
-            margin-left: ${-size/2}px;
-            margin-top: ${-size/2}px;
-            border-radius: 50%;
-            background: radial-gradient(circle, 
-                rgba(59, 130, 246, 0.4) 0%, 
-                rgba(59, 130, 246, 0.2) 30%,
-                rgba(59, 130, 246, 0.1) 60%,
-                transparent 100%
-            );
-            transform: scale(0);
-            animation: enhancedTapRipple 1.2s cubic-bezier(0.23, 1, 0.320, 1);
-            pointer-events: none;
-            z-index: 15;
-        `;
-        
-        this.ensureEnhancedRippleAnimation();
-        card.appendChild(ripple);
-        
-        setTimeout(() => {
-            if (ripple.parentNode) {
-                ripple.parentNode.removeChild(ripple);
-            }
-        }, 1200);
-    }
-    
-    addTapHighlight(card) {
-        card.classList.add('enhanced-tap-highlight');
-        setTimeout(() => {
-            card.classList.remove('enhanced-tap-highlight');
-        }, 600);
-    }
-    
-    ensureEnhancedRippleAnimation() {
-        if (!document.querySelector('#enhanced-ripple-keyframes')) {
-            const style = document.createElement('style');
-            style.id = 'enhanced-ripple-keyframes';
-            style.textContent = `
-                @keyframes enhancedTapRipple {
-                    0% {
-                        transform: scale(0);
-                        opacity: 1;
-                    }
-                    30% {
-                        transform: scale(0.6);
-                        opacity: 0.8;
-                    }
-                    70% {
-                        transform: scale(1);
-                        opacity: 0.4;
-                    }
-                    100% {
-                        transform: scale(1.2);
-                        opacity: 0;
-                    }
-                }
-            `;
-            document.head.appendChild(style);
-        }
-    }
-    
-    updateCardPositions(isDragging = false, dragOffset = 0) {
-        const track = document.getElementById('swipeTrack');
-        if (!track || this.cards.length === 0) return;
-        
-        const baseOffset = this.currentIndex * -this.cardWidth;
-        const finalOffset = baseOffset + dragOffset;
-        
-        // Enhanced smooth transforms
-        if (isDragging) {
-            track.style.transform = `translateX(${finalOffset}px)`;
-            track.style.transition = 'none';
-        } else {
-            track.style.transform = `translateX(${baseOffset}px)`;
-            track.style.transition = `transform ${this.transitionDuration}ms ${this.autoSlideEasing}`;
-        }
-        
-        // Enhanced card effects with better flow
-        this.cards.forEach((card, index) => {
-            const distance = index - this.currentIndex;
-            const absDistance = Math.abs(distance);
-            
-            // Enhanced visual properties
-            let scale = 1;
-            let opacity = 1;
-            let zIndex = 10;
-            let rotateY = 0;
-            let rotateZ = 0;
-            let brightness = 1;
-            let blur = 0;
-            let translateY = 0;
-            
-            if (absDistance > 0) {
-                scale = Math.max(0.75, 1 - (absDistance * 0.15));
-                opacity = Math.max(0.3, 1 - (absDistance * 0.3));
-                zIndex = Math.max(1, 10 - absDistance);
-                rotateY = distance * 12;
-                rotateZ = distance * 3;
-                brightness = Math.max(0.6, 1 - (absDistance * 0.2));
-                blur = absDistance * 2;
-                translateY = absDistance * 8;
-            }
-            
-            // Enhanced drag influence
-            if (isDragging) {
-                const dragInfluence = Math.max(0, 1 - absDistance * 0.5);
-                const dragScale = 1 + (Math.abs(dragOffset) / this.cardWidth) * 0.1 * dragInfluence;
-                scale *= dragScale;
-                
-                const tiltAmount = (dragOffset / this.cardWidth) * 8;
-                rotateZ += tiltAmount * dragInfluence;
-                
-                // Add subtle bounce effect
-                translateY += Math.sin(dragOffset / this.cardWidth * Math.PI) * 5 * dragInfluence;
-            }
-            
-            // Apply enhanced transforms
-            const transform = `
-                scale(${scale}) 
-                rotateY(${rotateY}deg) 
-                rotateZ(${rotateZ}deg) 
-                translateY(${translateY}px)
-                translateZ(${absDistance === 0 ? 50 : -absDistance * 20}px)
-            `;
-            const filter = `brightness(${brightness}) blur(${blur}px)`;
-            
-            card.style.transform = transform;
-            card.style.opacity = opacity;
-            card.style.zIndex = zIndex;
-            card.style.filter = filter;
-            
-            // Enhanced state management
-            if (index === this.currentIndex) {
-                card.classList.add('active');
-                card.classList.remove('inactive');
-            } else {
-                card.classList.remove('active');
-                card.classList.add('inactive');
-            }
-            
-            // Optimize visibility and performance
-            if (absDistance <= 2) {
-                card.classList.add('visible');
-                card.style.visibility = 'visible';
-                card.style.willChange = 'transform, opacity';
-            } else {
-                card.classList.remove('visible');
-                card.style.visibility = 'hidden';
-                card.style.willChange = 'auto';
-            }
-        });
-        
-        this.updateProgressIndicator();
-    }
-    
-    nextCard(userInitiated = false) {
-        const wasLastCard = this.currentIndex === this.cards.length - 1;
-        
-        if (this.currentIndex < this.cards.length - 1) {
-            this.currentIndex++;
-        } else {
-            this.currentIndex = 0; // Loop to first
-        }
-        
-        this.updateCardPositions();
-        this.triggerHaptic(userInitiated ? 18 : 12);
-        this.addFlowEffect('left', wasLastCard);
-        
-        if (userInitiated) {
-            this.resetProgressAnimation();
-        }
-    }
-    
-    previousCard(userInitiated = false) {
-        const wasFirstCard = this.currentIndex === 0;
-        
-        if (this.currentIndex > 0) {
-            this.currentIndex--;
-        } else {
-            this.currentIndex = this.cards.length - 1; // Loop to last
-        }
-        
-        this.updateCardPositions();
-        this.triggerHaptic(userInitiated ? 18 : 12);
-        this.addFlowEffect('right', wasFirstCard);
-        
-        if (userInitiated) {
-            this.resetProgressAnimation();
-        }
-    }
-    
-    addFlowEffect(direction, isLoop = false) {
-        const container = document.getElementById('mobileSwipeContainer');
-        if (container) {
-            const effectClass = isLoop ? `loop-${direction}` : `flow-${direction}`;
-            container.classList.add(effectClass);
-            
-            setTimeout(() => {
-                container.classList.remove(effectClass);
-            }, 600);
-        }
-    }
-    
-    setupAutoSlide() {
-        this.startAutoSlide();
-        
-        // Enhanced visibility handling
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                this.pauseAutoSlide();
-                this.pauseProgressAnimation();
-                this.isStreamlineActive = false;
-            } else if (!this.isUserInteracting) {
-                this.resumeAutoSlideAfterPause();
-                this.isStreamlineActive = true;
-            }
-        });
-        
-        // Mouse interaction for desktop
-        const container = document.getElementById('mobileSwipeContainer');
-        if (container) {
-            container.addEventListener('mouseenter', () => {
-                if (!this.isMobile) {
-                    this.pauseAutoSlide();
-                    this.pauseProgressAnimation();
-                }
-            });
-            
-            container.addEventListener('mouseleave', () => {
-                if (!this.isMobile && !this.isUserInteracting) {
-                    this.resumeAutoSlideAfterPause();
-                }
-            });
-        }
-    }
-    
-    startAutoSlide() {
-        if (this.cards.length <= 1) return;
-        
-        this.isAutoPlaying = true;
-        this.startProgressAnimation();
-        
-        this.autoPlayInterval = setInterval(() => {
-            if (this.isAutoPlaying && !this.isDragging && !this.isUserInteracting) {
-                this.nextCard();
-            }
-        }, this.autoSlideSpeed);
-    }
-    
-    startProgressAnimation() {
-        const progressBar = document.querySelector('.auto-progress-bar');
-        if (!progressBar) return;
-        
-        this.progressStartTime = Date.now();
-        
-        const animateProgress = () => {
-            if (!this.isAutoPlaying || this.isDragging || this.isUserInteracting) return;
-            
-            const elapsed = Date.now() - this.progressStartTime;
-            const progress = Math.min(elapsed / this.autoSlideSpeed, 1);
-            
-            progressBar.style.transform = `scaleX(${progress})`;
-            
-            if (progress < 1) {
-                this.progressAnimationId = requestAnimationFrame(animateProgress);
-            }
-        };
-        
-        this.progressAnimationId = requestAnimationFrame(animateProgress);
-    }
-    
-    pauseProgressAnimation() {
-        if (this.progressAnimationId) {
-            cancelAnimationFrame(this.progressAnimationId);
-            this.progressAnimationId = null;
-        }
-    }
-    
-    resetProgressAnimation() {
-        const progressBar = document.querySelector('.auto-progress-bar');
-        if (progressBar) {
-            progressBar.style.transform = 'scaleX(0)';
-        }
-        
-        if (this.isAutoPlaying) {
-            this.startProgressAnimation();
-        }
-    }
-    
-    pauseAutoSlide() {
-        this.isAutoPlaying = false;
-        this.pauseProgressAnimation();
-        
-        if (this.autoPlayInterval) {
-            clearInterval(this.autoPlayInterval);
-            this.autoPlayInterval = null;
-        }
-    }
-    
-    resumeAutoSlideAfterPause() {
-        const timeSinceInteraction = Date.now() - this.lastInteractionTime;
-        const remainingPause = Math.max(0, this.pauseDuration - timeSinceInteraction);
-        
-        setTimeout(() => {
-            if (!this.isDragging && !this.isUserInteracting) {
-                this.startAutoSlide();
-            }
-        }, remainingPause);
-    }
-    
-    updateStreamlineSpeed(deltaX) {
-        // Adjust streamline speed based on swipe direction and velocity
-        const influence = Math.abs(deltaX) / this.cardWidth;
-        this.streamlineSpeed = 0.3 + (influence * 2);
-        
-        if (deltaX < 0) {
-            this.streamlineSpeed *= 1.5; // Faster when swiping left (natural direction)
-        }
-    }
-    
-    resetStreamlineSpeed() {
-        // Gradually return to normal speed
-        const resetSpeed = () => {
-            if (this.streamlineSpeed > 0.3) {
-                this.streamlineSpeed *= 0.95;
-                if (this.streamlineSpeed > 0.31) {
-                    requestAnimationFrame(resetSpeed);
-                } else {
-                    this.streamlineSpeed = 0.3;
-                }
-            }
-        };
-        requestAnimationFrame(resetSpeed);
-    }
-    
-    addTouchFeedback() {
-        const container = document.getElementById('mobileSwipeContainer');
-        if (container) {
-            container.classList.add('touch-active');
-            setTimeout(() => {
-                container.classList.remove('touch-active');
-            }, 200);
-        }
-    }
-    
-    startInitialAnimation() {
-        // Staggered entrance animation for cards
-        this.cards.forEach((card, index) => {
-            card.style.transform = `translateY(100px) scale(0.8)`;
-            card.style.opacity = '0';
-            
-            setTimeout(() => {
-                card.style.transition = 'all 0.8s cubic-bezier(0.23, 1, 0.320, 1)';
-                card.style.transform = '';
-                card.style.opacity = '';
-                
-                setTimeout(() => {
-                    card.style.transition = '';
-                }, 800);
-            }, index * 150);
-        });
-    }
-    
-    setupProgressIndicator() {
-        const container = document.getElementById('mobileSwipeContainer');
-        if (!container || this.cards.length <= 1) return;
-        
-        const progressContainer = document.createElement('div');
-        progressContainer.className = 'enhanced-swipe-progress';
-        progressContainer.id = 'swipeProgress';
-        
-        // Create progress dots
-        const dotsContainer = document.createElement('div');
-        dotsContainer.className = 'progress-dots-container';
-        
-        this.cards.forEach((_, index) => {
-            const dot = document.createElement('div');
-            dot.className = `enhanced-progress-dot ${index === 0 ? 'active' : ''}`;
-            dot.addEventListener('click', () => {
-                this.goToCard(index);
-                this.pauseAutoSlide();
-                this.resetProgressAnimation();
-                this.resumeAutoSlideAfterPause();
-            });
-            
-            dotsContainer.appendChild(dot);
-            this.progressDots.push(dot);
-        });
-        
-        progressContainer.appendChild(dotsContainer);
-        
-        // Enhanced auto-slide control
-        const controlsContainer = document.createElement('div');
-        controlsContainer.className = 'auto-slide-controls';
-        
-        const playPauseBtn = document.createElement('div');
-        playPauseBtn.className = 'enhanced-auto-slide-indicator';
-        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-        
-        // Add progress bar for visual feedback
-        const progressBar = document.createElement('div');
-        progressBar.className = 'auto-progress-bar';
-        playPauseBtn.appendChild(progressBar);
-        
-        playPauseBtn.addEventListener('click', () => {
-            if (this.isAutoPlaying) {
-                this.pauseAutoSlide();
-                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
-                playPauseBtn.classList.add('paused');
-            } else {
-                this.startAutoSlide();
-                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-                playPauseBtn.classList.remove('paused');
-                // Re-add progress bar
-                const newProgressBar = document.createElement('div');
-                newProgressBar.className = 'auto-progress-bar';
-                playPauseBtn.appendChild(newProgressBar);
-            }
-        });
-        
-        controlsContainer.appendChild(playPauseBtn);
-        progressContainer.appendChild(controlsContainer);
-        container.appendChild(progressContainer);
-    }
-    
-    updateProgressIndicator() {
-        this.progressDots.forEach((dot, index) => {
-            if (index === this.currentIndex) {
-                dot.classList.add('active');
-                dot.classList.remove('upcoming');
-            } else if (index === (this.currentIndex + 1) % this.cards.length) {
-                dot.classList.add('upcoming');
-                dot.classList.remove('active');
-            } else {
-                dot.classList.remove('active', 'upcoming');
-            }
-        });
-    }
-    
-    setupKeyboardSupport() {
-        document.addEventListener('keydown', (e) => {
-            if (!this.isMobile || !this.isInitialized) return;
-            
-            switch (e.key) {
-                case 'ArrowLeft':
-                    e.preventDefault();
-                    this.previousCard(true);
-                    this.pauseAutoSlide();
-                    this.resumeAutoSlideAfterPause();
-                    break;
-                case 'ArrowRight':
-                    e.preventDefault();
-                    this.nextCard(true);
-                    this.pauseAutoSlide();
-                    this.resumeAutoSlideAfterPause();
-                    break;
-                case 'Space':
-                    e.preventDefault();
-                    if (this.isAutoPlaying) {
-                        this.pauseAutoSlide();
-                    } else {
-                        this.startAutoSlide();
-                    }
-                    break;
-                case 'Home':
-                    e.preventDefault();
-                    this.goToCard(0);
-                    break;
-                case 'End':
-                    e.preventDefault();
-                    this.goToCard(this.cards.length - 1);
-                    break;
-            }
-        });
-    }
-    
-    addEnhancedStyles() {
-        if (!document.querySelector('#enhanced-swipe-styles')) {
-            const style = document.createElement('style');
-            style.id = 'enhanced-swipe-styles';
-            style.textContent = `
-                .mobile-swipe-container {
-                    position: relative;
-                    width: 100%;
-                    height: 100vh;
-                    overflow: hidden;
-                    background: linear-gradient(135deg, #0f172a 0%, #1e293b 30%, #334155 100%);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-                
-                .streamline-background {
-                    position: absolute;
-                    top: 0;
-                    left: -100%;
-                    width: 300%;
-                    height: 100%;
-                    background: 
-                        linear-gradient(90deg, transparent 0%, rgba(59, 130, 246, 0.03) 25%, transparent 50%, rgba(139, 92, 246, 0.03) 75%, transparent 100%),
-                        repeating-linear-gradient(90deg, 
-                            transparent, 
-                            transparent 100px, 
-                            rgba(148, 163, 184, 0.01) 102px, 
-                            rgba(148, 163, 184, 0.01) 104px
-                        );
-                    z-index: 0;
-                    animation: streamlineFlow 20s linear infinite;
-                }
-                
-                @keyframes streamlineFlow {
-                    0% { transform: translateX(0); }
-                    100% { transform: translateX(33.333%); }
-                }
-                
-                .mobile-swipe-container.flow-left {
-                    animation: flowEffectLeft 0.6s ease-out;
-                }
-                
-                .mobile-swipe-container.flow-right {
-                    animation: flowEffectRight 0.6s ease-out;
-                }
-                
-                .mobile-swipe-container.loop-left {
-                    animation: loopEffectLeft 0.8s cubic-bezier(0.23, 1, 0.320, 1);
-                }
-                
-                .mobile-swipe-container.loop-right {
-                    animation: loopEffectRight 0.8s cubic-bezier(0.23, 1, 0.320, 1);
-                }
-                
-                @keyframes flowEffectLeft {
-                    0% { background-position: 0% 50%; }
-                    50% { background-position: 15% 50%; }
-                    100% { background-position: 0% 50%; }
-                }
-                
-                @keyframes flowEffectRight {
-                    0% { background-position: 0% 50%; }
-                    50% { background-position: -15% 50%; }
-                    100% { background-position: 0% 50%; }
-                }
-                
-                @keyframes loopEffectLeft {
-                    0% { background-position: 0% 50%; }
-                    30% { background-position: 25% 50%; }
-                    70% { background-position: 15% 50%; }
-                    100% { background-position: 0% 50%; }
-                }
-                
-                @keyframes loopEffectRight {
-                    0% { background-position: 0% 50%; }
-                    30% { background-position: -25% 50%; }
-                    70% { background-position: -15% 50%; }
-                    100% { background-position: 0% 50%; }
-                }
-                
-                .mobile-swipe-container.touch-active {
-                    background: linear-gradient(135deg, #1e293b 0%, #334155 30%, #475569 100%);
-                    transition: background 0.2s ease;
-                }
-                
-                .mobile-swipe-viewport {
-                    width: 100%;
-                    height: 85vh;
-                    overflow: hidden;
-                    position: relative;
-                    display: flex;
-                    align-items: center;
-                    z-index: 1;
-                    perspective: 2000px;
-                }
-                
-                .mobile-swipe-track {
-                    display: flex;
-                    align-items: center;
-                    height: 100%;
-                    will-change: transform;
-                    transform-style: preserve-3d;
-                }
-                
-                .mobile-swipe-track.dragging * {
-                    pointer-events: none;
-                }
-                
-                .mobile-swipe-card {
-                    flex: none;
-                    width: calc(100vw - 60px);
-                    height: calc(78vh - 40px);
-                    max-width: 420px;
-                    max-height: 680px;
-                    margin: 0 30px;
-                    border-radius: 32px;
-                    position: relative;
-                    background: linear-gradient(145deg, 
-                        rgba(51, 65, 85, 0.95), 
-                        rgba(30, 41, 59, 0.98)
-                    );
-                    backdrop-filter: blur(30px);
-                    border: 1px solid rgba(100, 116, 139, 0.3);
-                    overflow: hidden;
-                    will-change: transform, opacity;
-                    transition: all 1.2s cubic-bezier(0.23, 1, 0.320, 1);
-                    box-shadow: 
-                        0 32px 64px rgba(0, 0, 0, 0.8),
-                        0 16px 40px rgba(0, 0, 0, 0.6),
-                        inset 0 1px 0 rgba(148, 163, 184, 0.1);
-                    transform-style: preserve-3d;
-                }
-                
-                .mobile-swipe-card::before {
-                    content: '';
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    height: 3px;
-                    background: linear-gradient(90deg, 
-                        rgba(59, 130, 246, 0.6) 0%, 
-                        rgba(139, 92, 246, 0.7) 25%, 
-                        rgba(16, 185, 129, 0.6) 50%, 
-                        rgba(245, 101, 101, 0.7) 75%, 
-                        rgba(59, 130, 246, 0.6) 100%
-                    );
-                    background-size: 300% 100%;
-                    animation: cardGradientFlow 8s ease-in-out infinite;
-                    border-radius: 32px 32px 0 0;
-                    opacity: 0.7;
-                }
-                
-                @keyframes cardGradientFlow {
-                    0%, 100% { background-position: 0% 50%; }
-                    50% { background-position: 100% 50%; }
-                }
-                
-                .card-bg-gradient {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    bottom: 0;
-                    background: linear-gradient(135deg, 
-                        rgba(100, 116, 139, 0.05) 0%, 
-                        transparent 50%, 
-                        rgba(148, 163, 184, 0.05) 100%
-                    );
-                    z-index: 1;
-                }
-                
-                .card-bg-pattern {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    bottom: 0;
-                    background-image: 
-                        radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.06) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
-                        radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.04) 0%, transparent 70%);
-                    z-index: 1;
-                }
-                
-                .card-flow-layer {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    bottom: 0;
-                    background: 
-                        linear-gradient(90deg, 
-                            transparent 0%, 
-                            rgba(59, 130, 246, 0.02) 30%, 
-                            transparent 70%, 
-                            rgba(139, 92, 246, 0.02) 100%
-                        );
-                    background-size: 200% 100%;
-                    animation: flowLayerMovement 12s linear infinite;
-                    z-index: 1;
-                }
-                
-                @keyframes flowLayerMovement {
-                    0% { background-position: -200% 0; }
-                    100% { background-position: 200% 0; }
-                }
-                
-                .card-bg-overlay {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    bottom: 0;
-                    z-index: 1;
-                }
-                
-                .particles-container {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    bottom: 0;
-                    pointer-events: none;
-                    z-index: 1;
-                }
-                
-                .floating-particle {
-                    position: absolute;
-                    width: 4px;
-                    height: 4px;
-                    background: radial-gradient(circle, rgba(59, 130, 246, 0.6) 0%, rgba(139, 92, 246, 0.4) 50%, transparent 100%);
-                    border-radius: 50%;
-                    animation: floatParticleFlow 10s linear infinite;
-                    opacity: 0.6;
-                }
-                
-                @keyframes floatParticleFlow {
-                    0% { 
-                        transform: translateX(-20px) translateY(10px) scale(0.5); 
-                        opacity: 0; 
-                    }
-                    10% {
-                        opacity: 0.6;
-                    }
-                    90% {
-                        opacity: 0.4;
-                    }
-                    100% { 
-                        transform: translateX(120vw) translateY(-15px) scale(1); 
-                        opacity: 0; 
-                    }
-                }
-                
-                .mobile-swipe-content {
-                    position: relative;
-                    z-index: 2;
-                    padding: 36px;
-                    height: 100%;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: space-between;
-                    color: white;
-                }
-                
-                .mobile-swipe-header {
-                    display: flex;
-                    align-items: center;
-                    margin-bottom: 32px;
-                }
-                
-                .mobile-swipe-icon {
-                    position: relative;
-                    width: 80px;
-                    height: 80px;
-                    background: linear-gradient(135deg, 
-                        rgba(100, 116, 139, 0.25), 
-                        rgba(51, 65, 85, 0.2)
-                    );
-                    border-radius: 24px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    margin-right: 24px;
-                    border: 1px solid rgba(148, 163, 184, 0.25);
-                    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
-                    transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
-                    overflow: hidden;
-                }
-                
-                .icon-glow {
-                    position: absolute;
-                    top: -6px;
-                    left: -6px;
-                    right: -6px;
-                    bottom: -6px;
-                    background: linear-gradient(45deg, 
-                        rgba(59, 130, 246, 0.3), 
-                        rgba(139, 92, 246, 0.2)
-                    );
-                    border-radius: 30px;
-                    filter: blur(15px);
-                    opacity: 0;
-                    transition: opacity 0.6s ease;
-                    z-index: -1;
-                }
-                
-                .icon-pulse {
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    width: 120%;
-                    height: 120%;
-                    background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
-                    border-radius: 50%;
-                    transform: translate(-50%, -50%) scale(0);
-                    animation: iconPulse 3s ease-in-out infinite;
-                    z-index: -1;
-                }
-                
-                @keyframes iconPulse {
-                    0%, 100% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-                    50% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
-                }
-                
-                .mobile-swipe-card.active .icon-glow {
-                    opacity: 1;
-                }
-                
-                .mobile-swipe-icon i {
-                    font-size: 32px;
-                    color: #cbd5e0;
-                    position: relative;
-                    z-index: 1;
-                    transition: all 0.4s ease;
-                }
-                
-                .mobile-swipe-card.active .mobile-swipe-icon i {
-                    color: #f1f5f9;
-                    text-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
-                }
-                
-                .mobile-swipe-info {
-                    flex: 1;
-                }
-                
-                .mobile-swipe-subtitle {
-                    font-size: 15px;
-                    opacity: 0.9;
-                    margin: 0 0 10px 0;
-                    text-transform: uppercase;
-                    letter-spacing: 2px;
-                    color: #94a3b8;
-                    font-weight: 600;
-                }
-                
-                .mobile-swipe-title {
-                    font-size: 28px;
-                    font-weight: 800;
-                    margin: 0;
-                    line-height: 1.2;
-                    color: #f8fafc;
-                    text-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
-                    background: linear-gradient(135deg, #f8fafc 0%, #cbd5e1 100%);
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
-                    background-clip: text;
-                }
-                
-                .mobile-swipe-description {
-                    flex: 1;
-                    font-size: 17px;
-                    line-height: 1.7;
-                    color: #cbd5e1;
-                    margin: 32px 0;
-                    font-weight: 400;
-                }
-                
-                .mobile-swipe-tech {
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: 14px;
-                    margin: 32px 0;
-                }
-                
-                .mobile-swipe-tech-tag {
-                    background: linear-gradient(135deg, 
-                        rgba(100, 116, 139, 0.7), 
-                        rgba(51, 65, 85, 0.8)
-                    );
-                    color: #f1f5f9;
-                    padding: 10px 18px;
-                    border-radius: 25px;
-                    font-size: 14px;
-                    font-weight: 600;
-                    border: 1px solid rgba(148, 163, 184, 0.3);
-                    backdrop-filter: blur(20px);
-                    transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
-                    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-                    position: relative;
-                    overflow: hidden;
-                }
-                
-                .mobile-swipe-tech-tag::before {
-                    content: '';
-                    position: absolute;
-                    top: 0;
-                    left: -100%;
-                    width: 100%;
-                    height: 100%;
-                    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-                    transition: left 0.6s;
-                }
-                
-                .mobile-swipe-card.active .mobile-swipe-tech-tag:hover::before {
-                    left: 100%;
-                }
-                
-                .mobile-swipe-tech-tag:hover {
-                    background: linear-gradient(135deg, 
-                        rgba(148, 163, 184, 0.8), 
-                        rgba(100, 116, 139, 0.9)
-                    );
-                    border-color: rgba(203, 213, 225, 0.4);
-                    transform: translateY(-3px) scale(1.05);
-                    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-                }
-                
-                .mobile-swipe-links {
-                    display: flex;
-                    gap: 18px;
-                    margin-top: 32px;
-                }
-                
-                .mobile-swipe-link {
-                    flex: 1;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 14px;
-                    padding: 18px 26px;
-                    border-radius: 22px;
-                    text-decoration: none;
-                    font-weight: 700;
-                    font-size: 15px;
-                    transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
-                    position: relative;
-                    overflow: hidden;
-                    min-height: 58px;
-                    backdrop-filter: blur(20px);
-                    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
-                }
-                
-                .mobile-swipe-link::before {
-                    content: '';
-                    position: absolute;
-                    top: 0;
-                    left: -100%;
-                    width: 100%;
-                    height: 100%;
-                    background: linear-gradient(90deg, 
-                        transparent, 
-                        rgba(255,255,255,0.2), 
-                        transparent
-                    );
-                    transition: left 0.8s cubic-bezier(0.23, 1, 0.320, 1);
-                }
-                
-                .mobile-swipe-link:active::before {
-                    left: 100%;
-                }
-                
-                .mobile-swipe-link.primary {
-                    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%);
-                    color: white;
-                    border: 1px solid rgba(59, 130, 246, 0.7);
-                }
-                
-                .mobile-swipe-link.primary:hover,
-                .mobile-swipe-link.primary:active {
-                    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 50%, #1e40af 100%);
-                    transform: translateY(-4px) scale(1.02);
-                    box-shadow: 0 16px 48px rgba(59, 130, 246, 0.5);
-                }
-                
-                .mobile-swipe-link.secondary {
-                    background: linear-gradient(135deg, 
-                        rgba(100, 116, 139, 0.8) 0%, 
-                        rgba(71, 85, 105, 0.9) 100%
-                    );
-                    color: #f8fafc;
-                    border: 1.5px solid rgba(148, 163, 184, 0.6);
-                }
-                
-                .mobile-swipe-link.secondary:hover,
-                .mobile-swipe-link.secondary:active {
-                    background: linear-gradient(135deg, 
-                        rgba(148, 163, 184, 0.9) 0%, 
-                        rgba(100, 116, 139, 1) 100%
-                    );
-                    border-color: rgba(203, 213, 225, 0.8);
-                    transform: translateY(-4px) scale(1.02);
-                    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
-                }
-                
-                .mobile-swipe-card.active {
-                    transform: scale(1.03) translateZ(60px);
-                    box-shadow: 
-                        0 40px 80px rgba(0, 0, 0, 0.8),
-                        0 24px 60px rgba(59, 130, 246, 0.15),
-                        inset 0 1px 0 rgba(203, 213, 225, 0.2);
-                    border-color: rgba(59, 130, 246, 0.5);
-                }
-                
-                .mobile-swipe-card.inactive {
-                    transform: scale(0.88) translateZ(-40px);
-                    opacity: 0.6;
-                }
-                
-                .mobile-swipe-card.enhanced-tap-highlight {
-                    transform: scale(1.05) translateZ(80px);
-                    box-shadow: 0 48px 96px rgba(59, 130, 246, 0.3);
-                }
-                
-                .enhanced-swipe-progress {
-                    position: absolute;
-                    bottom: 50px;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    display: flex;
-                    align-items: center;
-                    gap: 20px;
-                    z-index: 10;
-                    background: rgba(15, 23, 42, 0.9);
-                    backdrop-filter: blur(25px);
-                    padding: 16px 32px;
-                    border-radius: 60px;
-                    border: 1px solid rgba(100, 116, 139, 0.3);
-                    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
-                }
-                
-                .progress-dots-container {
-                    display: flex;
-                    align-items: center;
-                    gap: 18px;
-                }
-                
-                .enhanced-progress-dot {
-                    width: 14px;
-                    height: 14px;
-                    border-radius: 50%;
-                    background: rgba(100, 116, 139, 0.6);
-                    transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
-                    cursor: pointer;
-                    border: 2px solid rgba(71, 85, 105, 0.5);
-                    position: relative;
-                }
-                
-                .enhanced-progress-dot::before {
-                    content: '';
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    width: 0;
-                    height: 0;
-                    background: inherit;
-                    border-radius: 50%;
-                    transform: translate(-50%, -50%);
-                    transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
-                }
-                
-                .enhanced-progress-dot.active {
-                    background: linear-gradient(135deg, #3b82f6, #2563eb);
-                    transform: scale(1.5);
-                    box-shadow: 0 0 30px rgba(59, 130, 246, 0.6);
-                    border-color: rgba(59, 130, 246, 0.8);
-                }
-                
-                .enhanced-progress-dot.active::before {
-                    width: 120%;
-                    height: 120%;
-                    opacity: 0.3;
-                }
-                
-                .enhanced-progress-dot.upcoming {
-                    background: rgba(139, 92, 246, 0.7);
-                    transform: scale(1.2);
-                    border-color: rgba(139, 92, 246, 0.6);
-                    box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
-                }
-                
-                .enhanced-progress-dot:hover:not(.active) {
-                    background: rgba(203, 213, 225, 0.8);
-                    transform: scale(1.3);
-                    box-shadow: 0 0 16px rgba(203, 213, 225, 0.5);
-                }
-                
-                .auto-slide-controls {
-                    display: flex;
-                    align-items: center;
-                }
-                
-                .enhanced-auto-slide-indicator {
-                    width: 48px;
-                    height: 48px;
-                    border-radius: 50%;
-                    background: linear-gradient(135deg, #3b82f6, #2563eb);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    cursor: pointer;
-                    transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
-                    border: 3px solid rgba(59, 130, 246, 0.4);
-                    box-shadow: 0 8px 32px rgba(59, 130, 246, 0.4);
-                    position: relative;
-                    overflow: hidden;
-                }
-                
-                .auto-progress-bar {
-                    position: absolute;
-                    bottom: 0;
-                    left: 0;
-                    height: 4px;
-                    background: rgba(255, 255, 255, 0.3);
-                    transform-origin: left;
-                    transform: scaleX(0);
-                    transition: transform 0.1s linear;
-                    border-radius: 0 0 50px 50px;
-                }
-                
-                .enhanced-auto-slide-indicator:hover {
-                    transform: scale(1.15);
-                    box-shadow: 0 12px 40px rgba(59, 130, 246, 0.5);
-                    border-color: rgba(59, 130, 246, 0.6);
-                }
-                
-                .enhanced-auto-slide-indicator.paused {
-                    background: linear-gradient(135deg, #71, 85, 105), rgba(51, 65, 85));
-                    border-color: rgba(100, 116, 139, 0.6);
-                    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-                }
-                
-                .enhanced-auto-slide-indicator i {
-                    font-size: 18px;
-                    color: white;
-                    z-index: 1;
-                }
-                
-                @media (max-width: 480px) {
-                    .mobile-swipe-card {
-                        width: calc(100vw - 40px);
-                        margin: 0 20px;
-                        height: calc(82vh - 30px);
-                    }
-                    
-                    .mobile-swipe-content {
-                        padding: 28px;
-                    }
-                    
-                    .mobile-swipe-header {
-                        margin-bottom: 24px;
-                    }
-                    
-                    .mobile-swipe-icon {
-                        width: 70px;
-                        height: 70px;
-                        margin-right: 18px;
-                    }
-                    
-                    .mobile-swipe-icon i {
-                        font-size: 28px;
-                    }
-                    
-                    .mobile-swipe-title {
-                        font-size: 24px;
-                    }
-                    
-                    .mobile-swipe-description {
-                        font-size: 16px;
-                        margin: 24px 0;
-                    }
-                    
-                    .mobile-swipe-links {
-                        flex-direction: column;
-                        gap: 14px;
-                        margin-top: 24px;
-                    }
-                    
-                    .mobile-swipe-link {
-                        padding: 16px 20px;
-                        font-size: 14px;
-                    }
-                    
-                    .enhanced-swipe-progress {
-                        bottom: 35px;
-                        padding: 14px 24px;
-                        gap: 16px;
-                    }
-                    
-                    .enhanced-progress-dot {
-                        width: 12px;
-                        height: 12px;
-                    }
-                    
-                    .enhanced-auto-slide-indicator {
-                        width: 42px;
-                        height: 42px;
-                    }
-                    
-                    .enhanced-auto-slide-indicator i {
-                        font-size: 16px;
-                    }
-                }
-                
-                @media (prefers-reduced-motion: reduce) {
-                    .mobile-swipe-card::before,
-                    .floating-particle,
-                    .streamline-background,
-                    .card-flow-layer,
-                    .icon-pulse {
-                        animation: none;
-                    }
-                    
-                    .mobile-swipe-card,
-                    .mobile-swipe-link,
-                    .enhanced-progress-dot {
-                        transition: transform 0.2s ease, opacity 0.2s ease;
-                    }
-                }
-                
-                @media (prefers-contrast: high) {
-                    .mobile-swipe-card {
-                        border: 3px solid #3b82f6;
-                        background: rgba(15, 23, 42, 0.98);
-                    }
-                    
-                    .mobile-swipe-tech-tag {
-                        border: 2px solid #cbd5e1;
-                        background: rgba(71, 85, 105, 0.95);
-                    }
-                    
-                    .enhanced-progress-dot {
-                        border-width: 3px;
-                    }
-                }
-            `;
-            document.head.appendChild(style);
-        }
-    }
-    
-    setupTouchOptimizations() {
-        // Enhanced touch handling with better performance
-        document.addEventListener('touchmove', (e) => {
-            if (e.target.closest('.mobile-swipe-viewport')) {
-                if (this.isDragging) {
-                    e.preventDefault();
-                }
-            }
-        }, { passive: false });
-        
-        // Add touch device optimizations
-        if ('ontouchstart' in window) {
-            document.body.classList.add('touch-device');
-            
-            const touchStyle = document.createElement('style');
-            touchStyle.textContent = `
-                .touch-device .mobile-swipe-card:hover {
-                    transform: none !important;
-                }
-                
-                .touch-device .mobile-swipe-card.active {
-                    transform: scale(1.03) translateZ(60px) !important;
-                }
-                
-                .touch-device .mobile-swipe-link:hover {
-                    transform: none !important;
-                }
-                
-                .touch-device .enhanced-progress-dot:hover:not(.active) {
-                    transform: scale(1.2) !important;
-                }
-            `;
-            document.head.appendChild(touchStyle);
-        }
-        
-        // Handle orientation changes with better responsiveness
-        window.addEventListener('orientationchange', () => {
-            setTimeout(() => {
-                this.updateCardWidth();
-                this.updateCardPositions();
-                this.resetProgressAnimation();
-            }, 300);
-        });
-        
-        // Enhanced performance optimizations
-        this.optimizeForPerformance();
-    }
-    
-    optimizeForPerformance() {
-        // Enable hardware acceleration for all moving elements
-        const track = document.getElementById('swipeTrack');
-        const background = document.getElementById('streamlineBackground');
-        
-        if (track) {
-            track.style.willChange = 'transform';
-            track.style.backfaceVisibility = 'hidden';
-        }
-        
-        if (background) {
-            background.style.willChange = 'transform';
-            background.style.backfaceVisibility = 'hidden';
-        }
-        
-        // Optimize card visibility with intersection observer
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const card = entry.target;
-                if (entry.isIntersecting) {
-                    card.style.willChange = 'transform, opacity, filter';
-                } else {
-                    card.style.willChange = 'auto';
-                }
-            });
-        }, {
-            rootMargin: '50px'
-        });
-        
-        this.cards.forEach(card => observer.observe(card));
-        
-        // Throttle resize events
-        let resizeTimer;
-        const originalResize = this.setupResizeListener;
-        this.setupResizeListener = function() {
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => {
-                    this.handleResize();
-                }, 150);
-            });
-        };
-    }
-    
-    updateCardWidth() {
-        const card = this.cards[0];
-        if (card) {
-            this.cardWidth = card.offsetWidth + 60; // Updated margin
-        }
-    }
-    
-    handleResize() {
-        const wasMobile = this.isMobile;
-        this.isMobile = window.innerWidth <= 768;
-        
-        if (wasMobile !== this.isMobile) {
-            if (this.isMobile && !this.isInitialized) {
-                this.init();
-            } else if (!this.isMobile && this.isInitialized) {
-                const showcase = document.getElementById('projectsShowcase');
-                const swipeContainer = document.getElementById('mobileSwipeContainer');
-                
-                if (showcase) showcase.style.display = '';
-                if (swipeContainer) swipeContainer.style.display = 'none';
-            }
-        }
-        
-        if (this.isMobile && this.isInitialized) {
-            setTimeout(() => {
-                this.updateCardWidth();
-                this.updateCardPositions();
-            }, 100);
-        }
-    }
-    
-    triggerHaptic(intensity = 10) {
-        if (navigator.vibrate && 'ontouchstart' in window) {
-            navigator.vibrate([intensity]);
-        }
-    }
-    
-    setupResizeListener() {
-        this.setupResizeListener();
-    }
-    
-    // Enhanced public API methods
-    goToCard(index, animated = true) {
-        if (index >= 0 && index < this.cards.length && index !== this.currentIndex) {
-            const oldIndex = this.currentIndex;
-            this.currentIndex = index;
-            this.updateCardPositions(!animated);
-            this.triggerHaptic(18);
-            this.resetProgressAnimation();
-            
-            // Add directional flow effect
-            const direction = index > oldIndex ? 'left' : 'right';
-            this.addFlowEffect(direction);
-        }
-    }
-    
-    getCurrentCard() {
-        return {
-            index: this.currentIndex,
-            card: this.cards[this.currentIndex],
-            total: this.cards.length,
-            isAutoPlaying: this.isAutoPlaying,
-            progress: this.getProgress()
-        };
-    }
-    
-    getProgress() {
-        if (!this.isAutoPlaying || !this.progressStartTime) return 0;
-        
-        const elapsed = Date.now() - this.progressStartTime;
-        return Math.min(elapsed / this.autoSlideSpeed, 1);
-    }
-    
-    setAutoSlideSpeed(speed) {
-        this.autoSlideSpeed = Math.max(2000, Math.min(15000, speed)); // Limit between 2-15 seconds
-        if (this.isAutoPlaying) {
-            this.pauseAutoSlide();
-            this.startAutoSlide();
-        }
-    }
-    
-    toggleAutoSlide() {
-        if (this.isAutoPlaying) {
-            this.pauseAutoSlide();
-            return false;
-        } else {
-            this.startAutoSlide();
-            return true;
-        }
-    }
-    
-    // Enhanced cleanup
-    destroy() {
-        this.pauseAutoSlide();
-        this.pauseProgressAnimation();
-        this.isStreamlineActive = false;
-        
-        // Clear all intervals and animation frames
-        if (this.autoPlayInterval) {
-            clearInterval(this.autoPlayInterval);
-        }
-        if (this.progressAnimationId) {
-            cancelAnimationFrame(this.progressAnimationId);
-        }
-        
-        // Reset state
-        this.cards = [];
-        this.progressDots = [];
-        this.isInitialized = false;
-        this.isDragging = false;
-        this.isUserInteracting = false;
-        
-        // Remove DOM elements
-        const swipeContainer = document.getElementById('mobileSwipeContainer');
-        if (swipeContainer) {
-            swipeContainer.remove();
-        }
-        
-        // Remove event listeners
-        document.removeEventListener('visibilitychange', this.setupAutoSlide);
-        
-        // Remove styles
-        const styles = document.querySelector('#enhanced-swipe-styles');
-        if (styles) {
-            styles.remove();
-        }
-    }
-}
-
-// Global instance
-let enhancedMobileSwipeManager;
-function downloadFile(filePath) {
-  const link = document.createElement("a");
-  link.href = filePath;
-  link.download = filePath.split('/').pop(); 
-  link.click();
-}
-// Mobile Projects Ticker - TV News Style Animation
-class MobileProjectsTicker {
-    constructor() {
-        this.isMobile = window.innerWidth <= 768;
-        this.container = null;
-        this.ticker = null;
-        this.cards = [];
-        this.isPlaying = true;
-        this.speed = 0.8; // pixels per frame
-        this.currentOffset = 0;
-        this.totalWidth = 0;
-        this.animationId = null;
-        this.pauseOnHover = true;
-        this.isPaused = false;
-        
-        if (this.isMobile) {
-            this.init();
-        }
-        
-        this.setupResizeListener();
-    }
-    
-    init() {
         this.createTickerContainer();
         this.createProjectCards();
         this.setupEventListeners();
+        this.calculateDimensions();
         this.startAnimation();
+        this.addRequiredStyles();
+        
+        this.isInitialized = true;
     }
     
     createTickerContainer() {
@@ -10419,63 +8559,79 @@ class MobileProjectsTicker {
         // Hide desktop showcase on mobile
         showcase.style.display = 'none';
         
+        // Remove existing ticker if present
+        const existingTicker = document.getElementById('mobileProjectsTicker');
+        if (existingTicker) {
+            existingTicker.remove();
+        }
+        
         // Create main ticker container
         this.container = document.createElement('div');
         this.container.className = 'mobile-projects-ticker';
+        this.container.id = 'mobileProjectsTicker';
         this.container.innerHTML = `
             <div class="ticker-header">
                 <h3><i class="fas fa-rocket"></i> Featured Projects</h3>
                 <div class="ticker-controls">
-                    <button class="ticker-pause-btn" id="tickerPause">
+                    <button class="ticker-speed-btn" id="tickerSpeed" title="Change Speed">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </button>
+                    <button class="ticker-pause-btn" id="tickerPause" title="Pause/Play">
                         <i class="fas fa-pause"></i>
                     </button>
                 </div>
             </div>
-            <div class="ticker-viewport">
+            <div class="ticker-viewport" id="tickerViewport">
                 <div class="ticker-track" id="tickerTrack"></div>
             </div>
             <div class="ticker-gradient-left"></div>
             <div class="ticker-gradient-right"></div>
+            <div class="ticker-status">
+                <span class="status-text">Swipe to pause • Tap cards for details</span>
+            </div>
         `;
         
         showcase.parentNode.insertBefore(this.container, showcase.nextSibling);
         this.ticker = document.getElementById('tickerTrack');
+        this.viewport = document.getElementById('tickerViewport');
     }
     
     createProjectCards() {
         if (!this.ticker || typeof projectsData === 'undefined') return;
         
-        // Create cards from project data
+        // Clear existing cards
+        this.ticker.innerHTML = '';
+        this.cards = [];
+        
+        // Create first set of cards
         projectsData.forEach((project, index) => {
             const card = this.createCard(project, index);
             this.ticker.appendChild(card);
             this.cards.push(card);
         });
         
-        // Duplicate cards for seamless loop
+        // Create duplicate set for seamless loop
         projectsData.forEach((project, index) => {
             const card = this.createCard(project, index, true);
             this.ticker.appendChild(card);
         });
-        
-        // Calculate total width
-        setTimeout(() => {
-            this.calculateTotalWidth();
-        }, 100);
     }
     
     createCard(project, index, isDuplicate = false) {
         const card = document.createElement('div');
         card.className = `ticker-card ${isDuplicate ? 'duplicate' : ''}`;
         card.setAttribute('data-index', index);
+        card.setAttribute('data-project-id', project.id || `project-${index}`);
         
-        // Create gradient background based on project type
+        // Enhanced gradient backgrounds
         const gradients = [
             'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
             'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', 
             'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
             'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-            'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
+            'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+            'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
+            'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)'
         ];
         
         const linksHTML = project.links?.length > 0 ? `
@@ -10483,7 +8639,7 @@ class MobileProjectsTicker {
                 ${project.links.map(link => `
                     <a href="${link.url}" target="_blank" rel="noopener noreferrer"
                        class="ticker-link ${link.type === 'github' ? 'github' : 'demo'}"
-                       onclick="event.stopPropagation()">
+                       onclick="event.stopPropagation(); window.open('${link.url}', '_blank');">
                         <i class="fas ${link.type === 'github' ? 'fa-code' : 'fa-external-link-alt'}"></i>
                         <span>${link.text}</span>
                     </a>
@@ -10493,38 +8649,81 @@ class MobileProjectsTicker {
         
         card.innerHTML = `
             <div class="card-background" style="background: ${project.background || gradients[index % gradients.length]}"></div>
+            <div class="card-overlay"></div>
             <div class="card-content">
                 <div class="card-header">
                     <div class="card-icon">
-                        <i class="${project.icon}"></i>
+                        <i class="${project.icon || 'fas fa-code'}"></i>
                     </div>
                     <div class="card-info">
-                        <span class="card-category">${project.subtitle}</span>
+                        <span class="card-category">${project.subtitle || 'Project'}</span>
                         <h4 class="card-title">${project.title}</h4>
                     </div>
                 </div>
                 <p class="card-description">${project.description}</p>
                 <div class="card-tech">
-                    ${project.tech?.slice(0, 3).map(tech => `<span class="tech-badge">${tech}</span>`).join('') || ''}
+                    ${project.tech?.slice(0, 4).map(tech => `<span class="tech-badge">${tech}</span>`).join('') || ''}
                 </div>
                 ${linksHTML}
             </div>
             <div class="card-shine"></div>
+            <div class="card-glow"></div>
         `;
         
         return card;
     }
     
-    calculateTotalWidth() {
+    calculateDimensions() {
         if (this.cards.length === 0) return;
         
-        let width = 0;
-        this.cards.forEach(card => {
-            width += card.offsetWidth + 20; // 20px margin
-        });
+        // Wait for DOM to be ready
+        setTimeout(() => {
+            let singleSetWidth = 0;
+            
+            // Calculate width of one complete set
+            for (let i = 0; i < this.cards.length; i++) {
+                const cardWidth = this.cards[i].offsetWidth || 340; // fallback width
+                singleSetWidth += cardWidth + 20; // 20px gap
+            }
+            
+            this.singleSetWidth = singleSetWidth;
+            this.totalWidth = singleSetWidth * 2; // Two sets for seamless loop
+            
+            // Set ticker width
+            this.ticker.style.width = `${this.totalWidth + 100}px`;
+            
+            console.log('Ticker dimensions calculated:', {
+                singleSetWidth: this.singleSetWidth,
+                totalWidth: this.totalWidth,
+                cardCount: this.cards.length
+            });
+        }, 100);
+    }
+    
+    startAnimation() {
+        if (this.animationId) {
+            cancelAnimationFrame(this.animationId);
+        }
         
-        this.totalWidth = width;
-        this.ticker.style.width = `${width * 2}px`; // Double for duplicates
+        const animate = () => {
+            if (this.isPlaying && !this.isPaused && this.singleSetWidth > 0) {
+                this.currentOffset += this.speed;
+                
+                // Reset when we've moved past the first complete set
+                if (this.currentOffset >= this.singleSetWidth) {
+                    this.currentOffset = 0;
+                }
+                
+                // Apply transform
+                if (this.ticker) {
+                    this.ticker.style.transform = `translateX(-${this.currentOffset}px)`;
+                }
+            }
+            
+            this.animationId = requestAnimationFrame(animate);
+        };
+        
+        this.animationId = requestAnimationFrame(animate);
     }
     
     setupEventListeners() {
@@ -10536,76 +8735,103 @@ class MobileProjectsTicker {
             });
         }
         
-        // Pause on hover/touch
-        if (this.pauseOnHover) {
-            this.container.addEventListener('mouseenter', () => this.pauseAnimation());
-            this.container.addEventListener('mouseleave', () => this.resumeAnimation());
-            this.container.addEventListener('touchstart', () => this.pauseAnimation());
-            this.container.addEventListener('touchend', () => {
-                setTimeout(() => this.resumeAnimation(), 1000); // Resume after 1s
+        // Speed control button
+        const speedBtn = document.getElementById('tickerSpeed');
+        if (speedBtn) {
+            speedBtn.addEventListener('click', () => {
+                this.cycleSpeed();
             });
         }
         
-        // Handle visibility change
+        // Hover/Touch interactions
+        if (this.container) {
+            // Mouse events
+            this.container.addEventListener('mouseenter', () => {
+                this.pauseAnimation();
+                this.showStatus('Paused on hover');
+            });
+            
+            this.container.addEventListener('mouseleave', () => {
+                this.resumeAnimation();
+                this.hideStatus();
+            });
+            
+            // Touch events for mobile
+            let touchStartTime = 0;
+            
+            this.container.addEventListener('touchstart', (e) => {
+                touchStartTime = Date.now();
+                this.pauseAnimation();
+                this.showStatus('Paused');
+            }, { passive: true });
+            
+            this.container.addEventListener('touchend', (e) => {
+                const touchDuration = Date.now() - touchStartTime;
+                
+                // Resume after short delay
+                setTimeout(() => {
+                    this.resumeAnimation();
+                    this.hideStatus();
+                }, touchDuration < 300 ? 1000 : 500);
+            }, { passive: true });
+        }
+        
+        // Visibility change handler
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
                 this.pauseAnimation();
-            } else {
+            } else if (this.isPlaying) {
                 this.resumeAnimation();
             }
         });
         
-        // Card click handler
-        this.ticker.addEventListener('click', (e) => {
-            const card = e.target.closest('.ticker-card');
-            if (card && !e.target.closest('a')) {
-                this.handleCardClick(card);
-            }
-        });
-    }
-    
-    handleCardClick(card) {
-        // Add click animation
-        card.classList.add('clicked');
-        setTimeout(() => {
-            card.classList.remove('clicked');
-        }, 300);
-        
-        // Haptic feedback for mobile
-        if (navigator.vibrate) {
-            navigator.vibrate(50);
+        // Card interaction
+        if (this.ticker) {
+            this.ticker.addEventListener('click', (e) => {
+                const card = e.target.closest('.ticker-card');
+                if (card && !e.target.closest('a')) {
+                    this.handleCardClick(card);
+                }
+            });
         }
     }
     
-    startAnimation() {
-        if (!this.ticker || this.totalWidth === 0) return;
+    handleCardClick(card) {
+        // Add click feedback
+        card.classList.add('clicked');
+        setTimeout(() => {
+            card.classList.remove('clicked');
+        }, 200);
         
-        const animate = () => {
-            if (this.isPlaying && !this.isPaused) {
-                this.currentOffset += this.speed;
-                
-                // Reset when we've scrolled past the original set
-                if (this.currentOffset >= this.totalWidth) {
-                    this.currentOffset = 0;
-                }
-                
-                this.ticker.style.transform = `translateX(-${this.currentOffset}px)`;
+        // Haptic feedback
+        if (navigator.vibrate) {
+            navigator.vibrate(30);
+        }
+        
+        // Temporarily pause for interaction
+        this.pauseAnimation();
+        this.showStatus('Card selected');
+        
+        setTimeout(() => {
+            if (this.isPlaying) {
+                this.resumeAnimation();
+                this.hideStatus();
             }
-            
-            this.animationId = requestAnimationFrame(animate);
-        };
-        
-        this.animationId = requestAnimationFrame(animate);
+        }, 2000);
     }
     
     pauseAnimation() {
         this.isPaused = true;
-        this.container.classList.add('paused');
+        if (this.container) {
+            this.container.classList.add('paused');
+        }
     }
     
     resumeAnimation() {
         this.isPaused = false;
-        this.container.classList.remove('paused');
+        if (this.container) {
+            this.container.classList.remove('paused');
+        }
     }
     
     toggleAnimation() {
@@ -10614,18 +8840,52 @@ class MobileProjectsTicker {
         if (this.isPlaying) {
             this.isPlaying = false;
             this.isPaused = true;
-            pauseBtn.innerHTML = '<i class="fas fa-play"></i>';
-            this.container.classList.add('stopped');
+            if (pauseBtn) pauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            if (this.container) this.container.classList.add('stopped');
+            this.showStatus('Animation stopped');
         } else {
             this.isPlaying = true;
             this.isPaused = false;
-            pauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-            this.container.classList.remove('stopped');
+            if (pauseBtn) pauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            if (this.container) this.container.classList.remove('stopped');
+            this.hideStatus();
         }
     }
     
-    setSpeed(newSpeed) {
-        this.speed = Math.max(0.1, Math.min(3, newSpeed));
+    cycleSpeed() {
+        const speeds = [0.5, 1.2, 2.0, 3.0];
+        const speedNames = ['Slow', 'Normal', 'Fast', 'Very Fast'];
+        
+        const currentIndex = speeds.indexOf(this.speed);
+        const nextIndex = (currentIndex + 1) % speeds.length;
+        
+        this.speed = speeds[nextIndex];
+        this.showStatus(`Speed: ${speedNames[nextIndex]}`, 1500);
+    }
+    
+    showStatus(message, duration = 0) {
+        const statusText = this.container?.querySelector('.status-text');
+        if (statusText) {
+            statusText.textContent = message;
+            statusText.parentElement.classList.add('visible');
+            
+            if (duration > 0) {
+                setTimeout(() => this.hideStatus(), duration);
+            }
+        }
+    }
+    
+    hideStatus() {
+        const statusElement = this.container?.querySelector('.ticker-status');
+        if (statusElement) {
+            statusElement.classList.remove('visible');
+            setTimeout(() => {
+                const statusText = statusElement.querySelector('.status-text');
+                if (statusText) {
+                    statusText.textContent = 'Swipe to pause • Tap cards for details';
+                }
+            }, 300);
+        }
     }
     
     setupResizeListener() {
@@ -10637,25 +8897,51 @@ class MobileProjectsTicker {
                 this.isMobile = window.innerWidth <= 768;
                 
                 if (wasMobile !== this.isMobile) {
-                    if (this.isMobile) {
+                    if (this.isMobile && !this.isInitialized) {
                         this.init();
-                    } else {
+                    } else if (!this.isMobile && this.isInitialized) {
                         this.destroy();
                     }
-                } else if (this.isMobile) {
-                    this.calculateTotalWidth();
+                } else if (this.isMobile && this.isInitialized) {
+                    this.calculateDimensions();
                 }
             }, 300);
         });
     }
     
+    addRequiredStyles() {
+        // Ensure critical styles are present
+        if (!document.querySelector('#mobile-ticker-critical-styles')) {
+            const criticalStyles = document.createElement('style');
+            criticalStyles.id = 'mobile-ticker-critical-styles';
+            criticalStyles.textContent = `
+                .mobile-projects-ticker { display: block !important; }
+                .ticker-track { 
+                    transform: translateX(0px) !important;
+                    will-change: transform !important;
+                    backface-visibility: hidden !important;
+                }
+                .ticker-card { 
+                    flex-shrink: 0 !important;
+                    display: inline-block !important;
+                    vertical-align: top !important;
+                }
+            `;
+            document.head.appendChild(criticalStyles);
+        }
+    }
+    
     destroy() {
+        // Stop animation
         if (this.animationId) {
             cancelAnimationFrame(this.animationId);
+            this.animationId = null;
         }
         
+        // Remove container
         if (this.container) {
             this.container.remove();
+            this.container = null;
         }
         
         // Show desktop showcase
@@ -10664,30 +8950,53 @@ class MobileProjectsTicker {
             showcase.style.display = '';
         }
         
+        // Reset state
         this.cards = [];
         this.isPlaying = false;
+        this.isInitialized = false;
+        
+        console.log('Mobile ticker destroyed');
+    }
+    
+    // Public API methods
+    setSpeed(newSpeed) {
+        this.speed = Math.max(0.1, Math.min(5, newSpeed));
+    }
+    
+    getStatus() {
+        return {
+            isPlaying: this.isPlaying,
+            isPaused: this.isPaused,
+            speed: this.speed,
+            currentOffset: this.currentOffset,
+            totalWidth: this.totalWidth,
+            cardCount: this.cards.length
+        };
     }
 }
 
-// Initialize the mobile ticker
-let mobileProjectsTicker;
+// Initialize improved mobile ticker
+let improvedMobileProjectsTicker;
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Wait for project data to be available
+    // Wait for everything to load
     setTimeout(() => {
-        mobileProjectsTicker = new MobileProjectsTicker();
-    }, 500);
+        if (window.innerWidth <= 768) {
+            console.log('Initializing mobile projects ticker...');
+            improvedMobileProjectsTicker = new ImprovedMobileProjectsTicker();
+        }
+    }, 800);
 });
 
-// Clean up on page unload
+// Cleanup
 window.addEventListener('beforeunload', function() {
-    if (mobileProjectsTicker) {
-        mobileProjectsTicker.destroy();
+    if (improvedMobileProjectsTicker) {
+        improvedMobileProjectsTicker.destroy();
     }
 });
 
-// Export for global access
-window.MobileProjectsTicker = MobileProjectsTicker;
+// Export for debugging
+window.ImprovedMobileProjectsTicker = ImprovedMobileProjectsTicker;
 
     </script>
 </body>
