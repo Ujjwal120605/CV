@@ -8513,6 +8513,7 @@ function downloadFile(filePath) {
   link.click();
 }
 // Futuristic Mobile Projects Display - Holographic Card Design
+
 class FuturisticProjectsDisplay {
     constructor() {
         this.isMobile = window.innerWidth <= 768;
@@ -8676,7 +8677,7 @@ class FuturisticProjectsDisplay {
         
         const scheme = colorSchemes[index % colorSchemes.length];
         
-        const techBadges = project.tech?.slice(0, 4).map(tech => 
+        const techBadges = project.tech?.slice(0, 3).map(tech => 
             `<span class="tech-chip">${tech}</span>`
         ).join('') || '';
         
@@ -8688,7 +8689,7 @@ class FuturisticProjectsDisplay {
                        onclick="event.stopPropagation();">
                         <div class="link-glow"></div>
                         <i class="fas ${link.type === 'github' ? 'fa-code' : 'fa-external-link-alt'}"></i>
-                        <span>${link.text}</span>
+                        <span>${link.type === 'github' ? 'Code' : 'Demo'}</span>
                     </a>
                 `).join('')}
             </div>
@@ -8712,23 +8713,25 @@ class FuturisticProjectsDisplay {
                 </div>
                 
                 <div class="card-content">
-                    <div class="project-header">
-                        <div class="project-icon">
-                            <div class="icon-glow"></div>
-                            <i class="${project.icon || 'fas fa-code'}"></i>
+                    <div class="card-top">
+                        <div class="project-header">
+                            <div class="project-icon">
+                                <div class="icon-glow"></div>
+                                <i class="${project.icon || 'fas fa-code'}"></i>
+                            </div>
+                            <div class="project-meta">
+                                <span class="project-category">${project.subtitle || 'PROJECT'}</span>
+                                <h4 class="project-title">${project.title}</h4>
+                            </div>
                         </div>
-                        <div class="project-meta">
-                            <span class="project-category">${project.subtitle || 'PROJECT'}</span>
-                            <h4 class="project-title">${project.title}</h4>
+                        
+                        <div class="project-description">
+                            <p>${project.description}</p>
                         </div>
-                    </div>
-                    
-                    <div class="project-description">
-                        <p>${project.description}</p>
-                    </div>
-                    
-                    <div class="tech-stack">
-                        ${techBadges}
+                        
+                        <div class="tech-stack">
+                            ${techBadges}
+                        </div>
                     </div>
                     
                     ${linksHTML}
@@ -8945,7 +8948,7 @@ class FuturisticProjectsDisplay {
             
             .projects-viewport {
                 position: relative;
-                height: 420px;
+                height: 450px;
                 margin: 20px 0;
             }
             
@@ -9087,23 +9090,24 @@ class FuturisticProjectsDisplay {
             .card-content {
                 position: relative;
                 height: 100%;
-                padding: 25px;
+                padding: 20px;
                 display: flex;
                 flex-direction: column;
                 z-index: 2;
+                justify-content: space-between;
             }
             
             .project-header {
                 display: flex;
                 align-items: center;
-                gap: 15px;
-                margin-bottom: 20px;
+                gap: 12px;
+                margin-bottom: 15px;
             }
             
             .project-icon {
                 position: relative;
-                width: 50px;
-                height: 50px;
+                width: 45px;
+                height: 45px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -9118,15 +9122,15 @@ class FuturisticProjectsDisplay {
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
-                width: 60px;
-                height: 60px;
+                width: 55px;
+                height: 55px;
                 background: radial-gradient(circle, var(--primary-color, #00ffff)33 0%, transparent 70%);
                 filter: blur(10px);
                 animation: iconGlow 2s ease-in-out infinite;
             }
             
             .project-icon i {
-                font-size: 1.4rem;
+                font-size: 1.2rem;
                 color: var(--primary-color, #00ffff);
                 z-index: 1;
                 position: relative;
@@ -9137,76 +9141,90 @@ class FuturisticProjectsDisplay {
             }
             
             .project-category {
-                font-size: 0.75rem;
+                font-size: 0.7rem;
                 color: var(--secondary-color, #0080ff);
                 font-weight: 600;
                 text-transform: uppercase;
                 letter-spacing: 1px;
                 display: block;
-                margin-bottom: 5px;
+                margin-bottom: 3px;
             }
             
             .project-title {
-                font-size: 1.3rem;
+                font-size: 1.1rem;
                 color: #ffffff;
                 font-weight: 700;
                 margin: 0;
                 text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+                line-height: 1.2;
             }
             
             .project-description {
-                flex: 1;
-                margin-bottom: 20px;
+                margin: 12px 0;
             }
             
             .project-description p {
                 color: #cccccc;
-                line-height: 1.6;
+                line-height: 1.4;
                 margin: 0;
-                font-size: 0.95rem;
+                font-size: 0.85rem;
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
             }
             
             .tech-stack {
                 display: flex;
                 flex-wrap: wrap;
-                gap: 8px;
-                margin-bottom: 20px;
+                gap: 6px;
+                margin: 12px 0;
+                max-height: 60px;
+                overflow: hidden;
             }
             
             .tech-chip {
-                padding: 6px 12px;
+                padding: 4px 10px;
                 background: var(--accent-color, #40e0d0)22;
                 border: 1px solid var(--accent-color, #40e0d0)66;
                 color: var(--accent-color, #40e0d0);
-                border-radius: 20px;
-                font-size: 0.8rem;
+                border-radius: 15px;
+                font-size: 0.7rem;
                 font-weight: 500;
                 backdrop-filter: blur(5px);
                 text-shadow: 0 0 10px currentColor;
+                white-space: nowrap;
             }
             
             .project-links {
                 display: flex;
-                gap: 12px;
+                gap: 10px;
+                flex-shrink: 0;
+                justify-content: center;
                 margin-top: auto;
+                padding-top: 10px;
             }
             
             .holo-link {
                 position: relative;
-                padding: 10px 18px;
-                background: var(--primary-color, #00ffff)11;
+                padding: 8px 16px;
+                background: var(--primary-color, #00ffff)15;
                 border: 1px solid var(--primary-color, #00ffff);
-                border-radius: 8px;
+                border-radius: 6px;
                 color: var(--primary-color, #00ffff);
                 text-decoration: none;
-                font-size: 0.85rem;
+                font-size: 0.75rem;
                 font-weight: 600;
                 transition: all 0.3s ease;
                 display: flex;
                 align-items: center;
-                gap: 8px;
+                gap: 6px;
                 backdrop-filter: blur(5px);
                 overflow: hidden;
+                min-height: 36px;
+                flex: 1;
+                justify-content: center;
+                text-align: center;
             }
             
             .link-glow {
@@ -9555,19 +9573,35 @@ class FuturisticProjectsDisplay {
                 }
                 
                 .projects-viewport {
-                    height: 380px;
+                    height: 420px;
                 }
                 
                 .card-content {
-                    padding: 20px;
+                    padding: 18px;
                 }
                 
                 .project-title {
-                    font-size: 1.1rem;
+                    font-size: 1rem;
                 }
                 
                 .project-description p {
-                    font-size: 0.9rem;
+                    font-size: 0.8rem;
+                    -webkit-line-clamp: 2;
+                }
+                
+                .holo-link {
+                    padding: 6px 12px;
+                    font-size: 0.7rem;
+                    min-height: 32px;
+                }
+                
+                .tech-stack {
+                    max-height: 50px;
+                }
+                
+                .tech-chip {
+                    font-size: 0.65rem;
+                    padding: 3px 8px;
                 }
                 
                 .holographic-controls {
