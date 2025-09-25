@@ -126,6 +126,239 @@
         .mobile-nav ul li a:hover {
             color: #00bcd4;
         }
+        .internship-report-section {
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.report-title {
+  color: #00bcd4;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.report-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.report-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.2rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.report-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 188, 212, 0.1), transparent);
+  transition: left 0.6s;
+}
+
+.report-card:hover::before {
+  left: 100%;
+}
+
+.report-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(0, 188, 212, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 188, 212, 0.15);
+}
+
+.report-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+  transition: all 0.3s ease;
+}
+
+.report-card:hover .report-icon {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+}
+
+.report-info {
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.report-info h5 {
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+}
+
+.report-info p {
+  color: #aaa;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin: 0 0 0.8rem 0;
+}
+
+.report-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: #888;
+  flex-wrap: wrap;
+}
+
+.report-meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.report-meta i {
+  color: #00bcd4;
+}
+
+.report-download-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.2rem;
+  background: linear-gradient(135deg, #00bcd4, #00acc1);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  white-space: nowrap;
+  box-shadow: 0 4px 15px rgba(0, 188, 212, 0.3);
+}
+
+.report-download-btn:hover {
+  background: linear-gradient(135deg, #00acc1, #0097a7);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 188, 212, 0.4);
+  color: white;
+}
+
+.report-download-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 15px rgba(0, 188, 212, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .report-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .report-info {
+    order: 2;
+  }
+  
+  .report-download-btn {
+    order: 3;
+    align-self: stretch;
+    justify-content: center;
+  }
+  
+  .report-icon {
+    order: 1;
+    align-self: center;
+  }
+  
+  .report-meta {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .internship-report-section {
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+  
+  .report-card {
+    padding: 1rem;
+  }
+  
+  .report-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+  
+  .report-info h5 {
+    font-size: 1rem;
+  }
+  
+  .report-info p {
+    font-size: 0.85rem;
+  }
+  
+  .report-download-btn {
+    padding: 0.7rem 1rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Loading state for PDF viewer */
+.report-download-btn.loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.report-download-btn.loading::after {
+  content: '';
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+  margin-left: 0.5rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Success feedback */
+.report-download-btn.success {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.report-download-btn.success i::before {
+  content: '\f00c'; /* Font Awesome check icon */
+}
         /* Location Widget Styles */
 .location-widget {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
@@ -3857,28 +4090,60 @@ body.light-theme .voice-message.user {
         
         <!-- IFFCO Experience Card with background -->
         <div class="card iffco-card">
-          <div class="card-header">
-            <div class="company-icon">
-              <i class="fas fa-seedling"></i>
+            <div class="card-header">
+              <div class="company-icon">
+                <i class="fas fa-seedling"></i>
+              </div>
+              <div>
+                <h3>IT Intern</h3>
+                <p>Indian Farmers Fertiliser Coop Ltd.</p>
+                <p>Aonla, Uttar Pradesh, India</p>
+              </div>
+              <div class="duration">Jul 2025 - Sep 2025</div>
             </div>
-            <div>
-              <h3>IT Intern</h3>
-              <p>Indian Farmers Fertiliser Coop Ltd.</p>
-              <p>Aonla, Uttar Pradesh, India</p>
+            <p>
+              Contributed to web development tasks for the HRMS portal, enhancing user interface and functionality. 
+              Participated in instrumentation and plant visits to gain insights into industrial automation systems and their IT integration. 
+              Gained hands-on exposure to the IT infrastructure supporting large-scale manufacturing and administrative operations.
+            </p>
+            
+            <!-- Enhanced Report Section -->
+            <div class="internship-report-section">
+              <h4 class="report-title">
+                <i class="fas fa-file-alt"></i>
+                Internship Documentation
+              </h4>
+              <div class="report-container">
+                <div class="report-card">
+                  <div class="report-icon">
+                    <i class="fas fa-file-pdf"></i>
+                  </div>
+                  <div class="report-info">
+                    <h5>Internship Report</h5>
+                    <p>Comprehensive documentation of work completed, learning outcomes, and technical contributions during the internship period.</p>
+                    <div class="report-meta">
+                      <span><i class="fas fa-calendar"></i> August 2025</span>
+                      <span><i class="fas fa-file-alt"></i> PDF Format</span>
+                    </div>
+                  </div>
+                  <a href="iffco_report.pdf (2).pdf" 
+                     target="_blank" 
+                     rel="noopener noreferrer" 
+                     class="report-download-btn"
+                     title="View Internship Report">
+                    <i class="fas fa-external-link-alt"></i>
+                    <span>View Report</span>
+                  </a>
+                </div>
+              </div>
             </div>
-            <div class="duration">Jul 2025 - Sep 2025</div>
+            
+            <div class="skills-list">
+              <span class="skill-tag">Problem Solving</span>
+              <span class="skill-tag">Communication</span>
+              <span class="skill-tag">Software Development</span>
+            </div>
           </div>
-          <p>
-            Contributed to web development tasks for the HRMS portal, enhancing user interface and functionality. 
-            Participated in instrumentation and plant visits to gain insights into industrial automation systems and their IT integration. 
-            Gained hands-on exposure to the IT infrastructure supporting large-scale manufacturing and administrative operations.
-          </p>
-          <div class="skills-list">
-            <span class="skill-tag">Problem Solving</span>
-            <span class="skill-tag">Communication</span>
-            <span class="skill-tag">Software Development</span>
-          </div>
-        </div>
 
         <div class="card">
             <div class="card-header">
@@ -9833,6 +10098,33 @@ if (typeof performance !== 'undefined' && performance.mark) {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = EnhancedMobileSwipeManager;
 }
+document.addEventListener('DOMContentLoaded', function() {
+  const reportBtn = document.querySelector('.report-download-btn');
+  
+  if (reportBtn) {
+    reportBtn.addEventListener('click', function(e) {
+      // Add loading state
+      this.classList.add('loading');
+      
+      // Remove loading state after a short delay
+      setTimeout(() => {
+        this.classList.remove('loading');
+        this.classList.add('success');
+        
+        // Reset success state
+        setTimeout(() => {
+          this.classList.remove('success');
+        }, 2000);
+      }, 500);
+    });
+    
+    // Optional: Track PDF opens for analytics
+    reportBtn.addEventListener('click', function() {
+      // Add your analytics tracking here if needed
+      console.log('IFFCO Internship Report opened');
+    });
+  }
+});
 
     </script>
 </body>
