@@ -5648,6 +5648,9 @@ function generateResponse(message) {
     if (matchesKeywords(lowerMessage, ['looking for', 'opportunities', 'hiring', 'job', 'internship opportunity'])) {
         return `Ujjwal is always open to exciting opportunities in software development, machine learning, and electronics. Feel free to reach out to him with interesting projects or positions!`;
     }
+    if (matchesKeywords(lowerMessage, ['technical skills', 'ujjwal', 'skills', 'work', 'learn'])) {
+        return `Ujjwal has a lot of good technical skills like python ,data structures algo in c++,good communication,knowledge in nextjs,tailwindcss,machine learning,html,css,and javascript,dbms and sql`;
+    }
     
     // Interests & Personal
     if (matchesKeywords(lowerMessage, ['interests', 'hobbies', 'likes', 'passionate about'])) {
