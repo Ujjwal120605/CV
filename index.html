@@ -77,6 +77,7 @@
         .nav-links a:hover {
             color: #00bcd4;
         }
+        
 
         /* Mobile Navigation Menu */
         .mobile-menu {
@@ -126,6 +127,255 @@
         .mobile-nav ul li a:hover {
             color: #00bcd4;
         }
+        /* ===================== */
+/* Internship Certificate Section */
+/* ===================== */
+/* Modal animation */
+.certificate-modal {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.certificate-modal.show {
+  opacity: 1;
+}
+
+/* Zoomed PDF iframe */
+#certificateFrame {
+  width: 100%;
+  height: 500px;
+  border: none;
+  transition: transform 0.3s ease;
+}
+
+/* Toast notification */
+.custom-toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #333;
+  color: white;
+  padding: 0.8rem 1.2rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  z-index: 9999;
+}
+.custom-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.internship-certificate-section {
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.certificate-title {
+  color: #f59e0b; /* amber highlight */
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.certificate-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.certificate-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.2rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.certificate-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.12), transparent);
+  transition: left 0.6s;
+}
+
+.certificate-card:hover::before {
+  left: 100%;
+}
+
+.certificate-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(245, 158, 11, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.2);
+}
+
+.certificate-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35);
+  transition: all 0.3s ease;
+}
+
+.certificate-card:hover .certificate-icon {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.45);
+}
+
+.certificate-info {
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.certificate-info h5 {
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+}
+
+.certificate-info p {
+  color: #bbb;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin: 0 0 0.8rem 0;
+}
+
+.certificate-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: #999;
+  flex-wrap: wrap;
+}
+
+.certificate-meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.certificate-meta i {
+  color: #f59e0b;
+}
+
+.certificate-view-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.2rem;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  white-space: nowrap;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35);
+  cursor: pointer;
+  border: none;
+}
+
+.certificate-view-btn:hover {
+  background: linear-gradient(135deg, #d97706, #b45309);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.45);
+  color: white;
+}
+
+.certificate-view-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .certificate-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .certificate-info {
+    order: 2;
+  }
+
+  .certificate-view-btn {
+    order: 3;
+    align-self: stretch;
+    justify-content: center;
+  }
+
+  .certificate-icon {
+    order: 1;
+    align-self: center;
+  }
+
+  .certificate-meta {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .internship-certificate-section {
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+
+  .certificate-card {
+    padding: 1rem;
+  }
+
+  .certificate-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+
+  .certificate-info h5 {
+    font-size: 1rem;
+  }
+
+  .certificate-info p {
+    font-size: 0.85rem;
+  }
+
+  .certificate-view-btn {
+    padding: 0.7rem 1rem;
+    font-size: 0.85rem;
+  }
+}
+
         .internship-report-section {
   margin: 1.5rem 0;
   padding: 1.5rem;
@@ -4137,6 +4387,40 @@ body.light-theme .voice-message.user {
                 </div>
               </div>
             </div>
+            <div class="internship-certificate-section">
+                <h4 class="certificate-title">
+                  <i class="fas fa-certificate"></i>
+                  Internship Certificate
+                </h4>
+                <div class="certificate-container">
+                  <div class="certificate-card">
+                    <div class="certificate-icon">
+                      <i class="fas fa-award"></i>
+                    </div>
+                    <div class="certificate-info">
+                      <h5>Completion Certificate</h5>
+                      <p>
+                        Official certificate of completion for the IT internship program at
+                        Indian Farmers Fertiliser Cooperative Limited (IFFCO).
+                      </p>
+                      <div class="certificate-meta">
+                        <span><i class="fas fa-calendar"></i> September 2025</span>
+                        <span><i class="fas fa-file-pdf"></i> PDF Certificate</span>
+                      </div>
+                    </div>
+                    <a href="certificate.pdf" 
+                       target="_blank" 
+                       rel="noopener noreferrer" 
+                       class="certificate-view-btn"
+                       title="View Internship Certificate">
+                      <i class="fas fa-external-link-alt"></i>
+                      <span>View Certificate</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              
+              
             
             <div class="skills-list">
               <span class="skill-tag">Problem Solving</span>
@@ -5293,7 +5577,7 @@ function sendMessage() {
             addMessage(response, 'bot');
         }, 1000 + Math.random() * 1000);
     }
-}
+}     
 
 function addMessage(message, sender) {
     const messagesContainer = document.getElementById('chatbot-messages');
@@ -9990,144 +10274,13 @@ class EnhancedMobileSwipeManager {
 
 // Global instance
 let enhancedMobileSwipeManager;
-
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(() => {
-        if (typeof projectsData !== 'undefined') {
-            enhancedMobileSwipeManager = new EnhancedMobileSwipeManager();
-        } else {
-            // Enhanced sample data for demonstration
-            window.projectsData = [
-                {
-                    id: 1,
-                    title: "AI-Powered Analytics Dashboard",
-                    subtitle: "Machine Learning & Data Science",
-                    description: "Comprehensive analytics platform that leverages advanced machine learning algorithms to predict user behavior, optimize business workflows, and provide real-time insights with stunning interactive visualizations.",
-                    icon: "fas fa-brain",
-                    background: "linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(29, 78, 216, 0.08))",
-                    tech: ["React", "TensorFlow", "Python", "Node.js", "D3.js", "MongoDB"],
-                    links: [
-                        { text: "View Live Demo", url: "#", type: "live" },
-                        { text: "Source Code", url: "#", type: "github" }
-                    ]
-                },
-                {
-                    id: 2,
-                    title: "Blockchain Wallet & DeFi Hub",
-                    subtitle: "Web3 & Decentralized Finance",
-                    description: "Secure and feature-rich cryptocurrency wallet with multi-signature support, hardware wallet integration, yield farming, staking rewards, and seamless DeFi protocol interactions.",
-                    icon: "fas fa-coins",
-                    background: "linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.08))",
-                    tech: ["Solidity", "Web3.js", "React", "MetaMask", "Hardhat", "IPFS"],
-                    links: [
-                        { text: "Launch App", url: "#", type: "live" },
-                        { text: "View Code", url: "#", type: "github" }
-                    ]
-                },
-                {
-                    id: 3,
-                    title: "Augmented Reality Shopping",
-                    subtitle: "AR/VR & E-commerce",
-                    description: "Revolutionary shopping experience using cutting-edge AR technology to let customers visualize products in their real environment, try on items virtually, and make informed purchasing decisions.",
-                    icon: "fas fa-shopping-bag",
-                    background: "linear-gradient(135deg, rgba(245, 101, 101, 0.15), rgba(220, 38, 38, 0.08))",
-                    tech: ["ARKit", "Swift", "CoreML", "SceneKit", "RealityKit", "Unity"],
-                    links: [
-                        { text: "Try AR Demo", url: "#", type: "live" },
-                        { text: "GitHub Repo", url: "#", type: "github" }
-                    ]
-                },
-                {
-                    id: 4,
-                    title: "Real-time Collaboration Suite",
-                    subtitle: "Team Productivity & Communication",
-                    description: "Advanced collaboration platform featuring real-time document editing, HD video calls, screen sharing, AI-powered meeting summaries, and intelligent task management for modern teams.",
-                    icon: "fas fa-users",
-                    background: "linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(217, 119, 6, 0.08))",
-                    tech: ["Next.js", "WebRTC", "Socket.io", "PostgreSQL", "Redis", "Docker"],
-                    links: [
-                        { text: "Start Free Trial", url: "#", type: "live" },
-                        { text: "Open Source", url: "#", type: "github" }
-                    ]
-                },
-                {
-                    id: 5,
-                    title: "Neural Network Designer",
-                    subtitle: "Artificial Intelligence Tools",
-                    description: "Visual neural network architecture designer with drag-and-drop interface, automated hyperparameter tuning, model training visualization, and deployment pipeline integration.",
-                    icon: "fas fa-project-diagram",
-                    background: "linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(124, 58, 237, 0.08))",
-                    tech: ["PyTorch", "Vue.js", "FastAPI", "Kubernetes", "MLflow", "Grafana"],
-                    links: [
-                        { text: "Try Designer", url: "#", type: "live" },
-                        { text: "Fork Project", url: "#", type: "github" }
-                    ]
-                }
-            ];
-            enhancedMobileSwipeManager = new EnhancedMobileSwipeManager();
-        }
-    }, 500);
-});
-
-// Enhanced page visibility handling
-document.addEventListener('visibilitychange', function() {
-    if (enhancedMobileSwipeManager && enhancedMobileSwipeManager.isMobile) {
-        if (document.hidden) {
-            enhancedMobileSwipeManager.pauseAutoSlide();
-            enhancedMobileSwipeManager.isStreamlineActive = false;
-            document.body.style.setProperty('--animation-play-state', 'paused');
-        } else if (!enhancedMobileSwipeManager.isUserInteracting) {
-            enhancedMobileSwipeManager.resumeAutoSlideAfterPause();
-            enhancedMobileSwipeManager.isStreamlineActive = true;
-            document.body.style.setProperty('--animation-play-state', 'running');
-        }
-    }
-});
-
-// Performance monitoring
-if (typeof performance !== 'undefined' && performance.mark) {
-    document.addEventListener('DOMContentLoaded', () => {
-        performance.mark('mobile-swipe-init-start');
-        
-        setTimeout(() => {
-            performance.mark('mobile-swipe-init-end');
-            performance.measure('mobile-swipe-init', 'mobile-swipe-init-start', 'mobile-swipe-init-end');
-        }, 1000);
-    });
+function downloadFile(filePath) {
+  const link = document.createElement("a");
+  link.href = filePath;
+  link.download = filePath.split('/').pop(); 
+  link.click();
 }
 
-// Export for external use
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = EnhancedMobileSwipeManager;
-}
-document.addEventListener('DOMContentLoaded', function() {
-  const reportBtn = document.querySelector('.report-download-btn');
-  
-  if (reportBtn) {
-    reportBtn.addEventListener('click', function(e) {
-      // Add loading state
-      this.classList.add('loading');
-      
-      // Remove loading state after a short delay
-      setTimeout(() => {
-        this.classList.remove('loading');
-        this.classList.add('success');
-        
-        // Reset success state
-        setTimeout(() => {
-          this.classList.remove('success');
-        }, 2000);
-      }, 500);
-    });
-    
-    // Optional: Track PDF opens for analytics
-    reportBtn.addEventListener('click', function() {
-      // Add your analytics tracking here if needed
-      console.log('IFFCO Internship Report opened');
-    });
-  }
-});
 
     </script>
 </body>
