@@ -1456,211 +1456,312 @@
 }
 
 /* Active card states */
-.mobile-swipe-card.active {
-    transform: scale(1.02);
-    box-shadow: 
-        0 30px 60px rgba(0, 0, 0, 0.6),
-        0 15px 40px rgba(59, 130, 246, 0.1),
-        inset 0 1px 0 rgba(148, 163, 184, 0.15);
-    border-color: rgba(59, 130, 246, 0.3);
+/* Mobile Projects Ticker Styles */
+.mobile-projects-ticker {
+    background: linear-gradient(135deg, rgba(15, 15, 15, 0.95), rgba(30, 30, 30, 0.95));
+    border-radius: 20px;
+    margin: 2rem 0;
+    overflow: hidden;
+    border: 1px solid rgba(0, 188, 212, 0.2);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    position: relative;
 }
 
-.mobile-swipe-card.tap-highlight {
-    transform: scale(1.03);
-    box-shadow: 0 35px 70px rgba(59, 130, 246, 0.2);
-}
-
-/* Progress indicator */
-.swipe-progress {
-    position: absolute;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
+.ticker-header {
     display: flex;
-    gap: 12px;
-    z-index: 10;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    background: linear-gradient(90deg, rgba(0, 188, 212, 0.1), rgba(255, 107, 107, 0.1));
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.progress-dot {
-    width: 10px;
-    height: 10px;
+.ticker-header h3 {
+    color: #00bcd4;
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ticker-controls {
+    display: flex;
+    gap: 1rem;
+}
+
+.ticker-pause-btn {
+    background: rgba(0, 188, 212, 0.2);
+    border: 1px solid rgba(0, 188, 212, 0.3);
+    color: #00bcd4;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    background: rgba(100, 116, 139, 0.4);
-    transition: all 0.3s ease;
     cursor: pointer;
-    border: 1px solid rgba(71, 85, 105, 0.3);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.progress-dot.active {
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    transform: scale(1.3);
-    box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
-    border-color: rgba(59, 130, 246, 0.5);
-}
-
-.progress-dot:hover:not(.active) {
-    background: rgba(148, 163, 184, 0.6);
+.ticker-pause-btn:hover {
+    background: rgba(0, 188, 212, 0.3);
     transform: scale(1.1);
 }
 
-/* Ripple effects */
-@keyframes tapRipple {
-    0% {
-        transform: scale(0);
-        opacity: 0.8;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 0;
-    }
+.ticker-viewport {
+    height: 280px;
+    overflow: hidden;
+    position: relative;
+    background: rgba(0, 0, 0, 0.2);
 }
 
-.tap-ripple {
-    position: absolute;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%);
-    animation: tapRipple 0.6s ease-out;
-    pointer-events: none;
+.ticker-track {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    gap: 20px;
+    padding: 20px;
+    transition: none;
+    will-change: transform;
 }
 
-/* Magnetic field effect */
-.magnetic-field {
+.mobile-projects-ticker.paused .ticker-track {
+    animation-play-state: paused;
+}
+
+.ticker-card {
+    flex: none;
+    width: 320px;
+    height: 240px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.ticker-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 35px rgba(0, 188, 212, 0.2);
+    border-color: rgba(0, 188, 212, 0.4);
+}
+
+.ticker-card.clicked {
+    transform: scale(0.95);
+}
+
+.card-background {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
+    opacity: 0.15;
+    z-index: 1;
+}
+
+.card-content {
+    position: relative;
+    z-index: 2;
+    padding: 1.5rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    color: white;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.card-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, rgba(0, 188, 212, 0.2), rgba(0, 188, 212, 0.1));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: #00bcd4;
+    border: 1px solid rgba(0, 188, 212, 0.3);
+}
+
+.card-info {
+    flex: 1;
+}
+
+.card-category {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #aaa;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0.3rem 0 0 0;
+    color: #fff;
+    line-height: 1.2;
+}
+
+.card-description {
+    font-size: 0.85rem;
+    color: #ccc;
+    line-height: 1.4;
+    margin-bottom: 1rem;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.card-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.tech-badge {
+    background: rgba(0, 188, 212, 0.2);
+    color: #00bcd4;
+    padding: 0.3rem 0.7rem;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    border: 1px solid rgba(0, 188, 212, 0.3);
+}
+
+.ticker-links {
+    display: flex;
+    gap: 0.8rem;
+}
+
+.ticker-link {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.7rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.ticker-link.github {
+    background: rgba(255, 107, 107, 0.15);
+    color: #ff6b6b;
+    border-color: rgba(255, 107, 107, 0.3);
+}
+
+.ticker-link.github:hover {
+    background: rgba(255, 107, 107, 0.25);
+    transform: translateY(-2px);
+}
+
+.ticker-link.demo {
+    background: rgba(0, 188, 212, 0.15);
+    color: #00bcd4;
+    border-color: rgba(0, 188, 212, 0.3);
+}
+
+.ticker-link.demo:hover {
+    background: rgba(0, 188, 212, 0.25);
+    transform: translateY(-2px);
+}
+
+.card-shine {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.6s ease;
+    z-index: 3;
     pointer-events: none;
-    border-radius: 24px;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    background: radial-gradient(circle at center, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
 }
 
-.mobile-swipe-card.active .magnetic-field {
-    opacity: 1;
+.ticker-card:hover .card-shine {
+    left: 100%;
 }
 
-/* Mobile Stack Container (fallback for older mobile implementation) */
-.mobile-stack-container {
-    display: none;
+.ticker-gradient-left,
+.ticker-gradient-right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 40px;
+    z-index: 10;
+    pointer-events: none;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .projects-showcase {
-        display: none !important;
-    }
-    
-    .mobile-swipe-container {
-        display: flex;
-    }
-    
-    .mobile-swipe-card {
-        width: calc(100vw - 30px);
-        margin: 0 15px;
-    }
-    
-    .mobile-swipe-content {
-        padding: 25px;
-    }
-    
-    .mobile-swipe-title {
-        font-size: 22px;
-    }
-    
-    .mobile-swipe-description {
-        font-size: 15px;
-        margin: 20px 0;
-    }
-    
-    .mobile-swipe-links {
-        gap: 12px;
-    }
-    
-    .mobile-swipe-link {
-        padding: 14px 18px;
-        font-size: 13px;
-    }
+.ticker-gradient-left {
+    left: 0;
+    background: linear-gradient(90deg, rgba(15, 15, 15, 1), transparent);
 }
 
+.ticker-gradient-right {
+    right: 0;
+    background: linear-gradient(-90deg, rgba(15, 15, 15, 1), transparent);
+}
+
+/* Mobile specific adjustments */
 @media (max-width: 480px) {
-    .mobile-swipe-card {
-        width: calc(100vw - 20px);
-        margin: 0 10px;
-        height: calc(85vh - 40px);
+    .ticker-header {
+        padding: 1rem;
     }
     
-    .mobile-swipe-content {
-        padding: 20px;
+    .ticker-header h3 {
+        font-size: 1rem;
     }
     
-    .mobile-swipe-header {
-        margin-bottom: 20px;
+    .ticker-card {
+        width: 280px;
+        height: 220px;
     }
     
-    .mobile-swipe-icon {
-        width: 55px;
-        height: 55px;
-        margin-right: 15px;
+    .card-content {
+        padding: 1.2rem;
     }
     
-    .mobile-swipe-icon i {
-        font-size: 22px;
+    .ticker-pause-btn {
+        width: 35px;
+        height: 35px;
     }
-    
-    .mobile-swipe-title {
-        font-size: 20px;
-    }
-    
-    .mobile-swipe-description {
-        font-size: 14px;
-        margin: 18px 0;
-    }
-    
-    .mobile-swipe-links {
-        flex-direction: column;
-        gap: 10px;
-        margin-top: 20px;
-    }
-    
-    .mobile-swipe-link {
-        padding: 12px 16px;
-    }
+}
+
+/* Animation states */
+.mobile-projects-ticker.stopped .ticker-track {
+    animation-play-state: paused;
 }
 
 /* Performance optimizations */
-.mobile-swipe-card:not(.visible) {
+.ticker-track {
     transform: translateZ(0);
-    will-change: auto;
+    backface-visibility: hidden;
 }
 
-.mobile-swipe-card.visible {
-    will-change: transform, opacity;
-}
-
-/* Accessibility improvements */
-@media (prefers-reduced-motion: reduce) {
-    .mobile-swipe-card::before {
-        animation: none;
-    }
-    
-    .mobile-swipe-card,
-    .mobile-swipe-link {
-        transition: none;
-    }
-}
-
-@media (prefers-contrast: high) {
-    .mobile-swipe-card {
-        border: 2px solid #3b82f6;
-        background: rgba(15, 23, 42, 0.95);
-    }
-    
-    .mobile-swipe-tech-tag {
-        border: 2px solid #94a3b8;
-        background: rgba(71, 85, 105, 0.8);
-    }
+.ticker-card {
+    transform: translateZ(0);
+    backface-visibility: hidden;
 }
         /* GitHub Dashboard Styles */
 /* GitHub Dashboard Styles */
@@ -10280,7 +10381,313 @@ function downloadFile(filePath) {
   link.download = filePath.split('/').pop(); 
   link.click();
 }
+// Mobile Projects Ticker - TV News Style Animation
+class MobileProjectsTicker {
+    constructor() {
+        this.isMobile = window.innerWidth <= 768;
+        this.container = null;
+        this.ticker = null;
+        this.cards = [];
+        this.isPlaying = true;
+        this.speed = 0.8; // pixels per frame
+        this.currentOffset = 0;
+        this.totalWidth = 0;
+        this.animationId = null;
+        this.pauseOnHover = true;
+        this.isPaused = false;
+        
+        if (this.isMobile) {
+            this.init();
+        }
+        
+        this.setupResizeListener();
+    }
+    
+    init() {
+        this.createTickerContainer();
+        this.createProjectCards();
+        this.setupEventListeners();
+        this.startAnimation();
+    }
+    
+    createTickerContainer() {
+        const projectsSection = document.getElementById('projects');
+        const showcase = document.getElementById('projectsShowcase');
+        
+        if (!projectsSection || !showcase) return;
+        
+        // Hide desktop showcase on mobile
+        showcase.style.display = 'none';
+        
+        // Create main ticker container
+        this.container = document.createElement('div');
+        this.container.className = 'mobile-projects-ticker';
+        this.container.innerHTML = `
+            <div class="ticker-header">
+                <h3><i class="fas fa-rocket"></i> Featured Projects</h3>
+                <div class="ticker-controls">
+                    <button class="ticker-pause-btn" id="tickerPause">
+                        <i class="fas fa-pause"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="ticker-viewport">
+                <div class="ticker-track" id="tickerTrack"></div>
+            </div>
+            <div class="ticker-gradient-left"></div>
+            <div class="ticker-gradient-right"></div>
+        `;
+        
+        showcase.parentNode.insertBefore(this.container, showcase.nextSibling);
+        this.ticker = document.getElementById('tickerTrack');
+    }
+    
+    createProjectCards() {
+        if (!this.ticker || typeof projectsData === 'undefined') return;
+        
+        // Create cards from project data
+        projectsData.forEach((project, index) => {
+            const card = this.createCard(project, index);
+            this.ticker.appendChild(card);
+            this.cards.push(card);
+        });
+        
+        // Duplicate cards for seamless loop
+        projectsData.forEach((project, index) => {
+            const card = this.createCard(project, index, true);
+            this.ticker.appendChild(card);
+        });
+        
+        // Calculate total width
+        setTimeout(() => {
+            this.calculateTotalWidth();
+        }, 100);
+    }
+    
+    createCard(project, index, isDuplicate = false) {
+        const card = document.createElement('div');
+        card.className = `ticker-card ${isDuplicate ? 'duplicate' : ''}`;
+        card.setAttribute('data-index', index);
+        
+        // Create gradient background based on project type
+        const gradients = [
+            'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', 
+            'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+            'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+            'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
+        ];
+        
+        const linksHTML = project.links?.length > 0 ? `
+            <div class="ticker-links">
+                ${project.links.map(link => `
+                    <a href="${link.url}" target="_blank" rel="noopener noreferrer"
+                       class="ticker-link ${link.type === 'github' ? 'github' : 'demo'}"
+                       onclick="event.stopPropagation()">
+                        <i class="fas ${link.type === 'github' ? 'fa-code' : 'fa-external-link-alt'}"></i>
+                        <span>${link.text}</span>
+                    </a>
+                `).join('')}
+            </div>
+        ` : '';
+        
+        card.innerHTML = `
+            <div class="card-background" style="background: ${project.background || gradients[index % gradients.length]}"></div>
+            <div class="card-content">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="${project.icon}"></i>
+                    </div>
+                    <div class="card-info">
+                        <span class="card-category">${project.subtitle}</span>
+                        <h4 class="card-title">${project.title}</h4>
+                    </div>
+                </div>
+                <p class="card-description">${project.description}</p>
+                <div class="card-tech">
+                    ${project.tech?.slice(0, 3).map(tech => `<span class="tech-badge">${tech}</span>`).join('') || ''}
+                </div>
+                ${linksHTML}
+            </div>
+            <div class="card-shine"></div>
+        `;
+        
+        return card;
+    }
+    
+    calculateTotalWidth() {
+        if (this.cards.length === 0) return;
+        
+        let width = 0;
+        this.cards.forEach(card => {
+            width += card.offsetWidth + 20; // 20px margin
+        });
+        
+        this.totalWidth = width;
+        this.ticker.style.width = `${width * 2}px`; // Double for duplicates
+    }
+    
+    setupEventListeners() {
+        // Pause/Resume button
+        const pauseBtn = document.getElementById('tickerPause');
+        if (pauseBtn) {
+            pauseBtn.addEventListener('click', () => {
+                this.toggleAnimation();
+            });
+        }
+        
+        // Pause on hover/touch
+        if (this.pauseOnHover) {
+            this.container.addEventListener('mouseenter', () => this.pauseAnimation());
+            this.container.addEventListener('mouseleave', () => this.resumeAnimation());
+            this.container.addEventListener('touchstart', () => this.pauseAnimation());
+            this.container.addEventListener('touchend', () => {
+                setTimeout(() => this.resumeAnimation(), 1000); // Resume after 1s
+            });
+        }
+        
+        // Handle visibility change
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                this.pauseAnimation();
+            } else {
+                this.resumeAnimation();
+            }
+        });
+        
+        // Card click handler
+        this.ticker.addEventListener('click', (e) => {
+            const card = e.target.closest('.ticker-card');
+            if (card && !e.target.closest('a')) {
+                this.handleCardClick(card);
+            }
+        });
+    }
+    
+    handleCardClick(card) {
+        // Add click animation
+        card.classList.add('clicked');
+        setTimeout(() => {
+            card.classList.remove('clicked');
+        }, 300);
+        
+        // Haptic feedback for mobile
+        if (navigator.vibrate) {
+            navigator.vibrate(50);
+        }
+    }
+    
+    startAnimation() {
+        if (!this.ticker || this.totalWidth === 0) return;
+        
+        const animate = () => {
+            if (this.isPlaying && !this.isPaused) {
+                this.currentOffset += this.speed;
+                
+                // Reset when we've scrolled past the original set
+                if (this.currentOffset >= this.totalWidth) {
+                    this.currentOffset = 0;
+                }
+                
+                this.ticker.style.transform = `translateX(-${this.currentOffset}px)`;
+            }
+            
+            this.animationId = requestAnimationFrame(animate);
+        };
+        
+        this.animationId = requestAnimationFrame(animate);
+    }
+    
+    pauseAnimation() {
+        this.isPaused = true;
+        this.container.classList.add('paused');
+    }
+    
+    resumeAnimation() {
+        this.isPaused = false;
+        this.container.classList.remove('paused');
+    }
+    
+    toggleAnimation() {
+        const pauseBtn = document.getElementById('tickerPause');
+        
+        if (this.isPlaying) {
+            this.isPlaying = false;
+            this.isPaused = true;
+            pauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            this.container.classList.add('stopped');
+        } else {
+            this.isPlaying = true;
+            this.isPaused = false;
+            pauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            this.container.classList.remove('stopped');
+        }
+    }
+    
+    setSpeed(newSpeed) {
+        this.speed = Math.max(0.1, Math.min(3, newSpeed));
+    }
+    
+    setupResizeListener() {
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                const wasMobile = this.isMobile;
+                this.isMobile = window.innerWidth <= 768;
+                
+                if (wasMobile !== this.isMobile) {
+                    if (this.isMobile) {
+                        this.init();
+                    } else {
+                        this.destroy();
+                    }
+                } else if (this.isMobile) {
+                    this.calculateTotalWidth();
+                }
+            }, 300);
+        });
+    }
+    
+    destroy() {
+        if (this.animationId) {
+            cancelAnimationFrame(this.animationId);
+        }
+        
+        if (this.container) {
+            this.container.remove();
+        }
+        
+        // Show desktop showcase
+        const showcase = document.getElementById('projectsShowcase');
+        if (showcase) {
+            showcase.style.display = '';
+        }
+        
+        this.cards = [];
+        this.isPlaying = false;
+    }
+}
 
+// Initialize the mobile ticker
+let mobileProjectsTicker;
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Wait for project data to be available
+    setTimeout(() => {
+        mobileProjectsTicker = new MobileProjectsTicker();
+    }, 500);
+});
+
+// Clean up on page unload
+window.addEventListener('beforeunload', function() {
+    if (mobileProjectsTicker) {
+        mobileProjectsTicker.destroy();
+    }
+});
+
+// Export for global access
+window.MobileProjectsTicker = MobileProjectsTicker;
 
     </script>
 </body>
