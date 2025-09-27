@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <script type="text/javascript" 
+        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ujjwal Bajpai - Software Engineer</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -127,6 +129,112 @@
         .mobile-nav ul li a:hover {
             color: #00bcd4;
         }
+        /* Enhanced Form Styles */
+.form-status {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.form-status.success {
+    background: rgba(76, 175, 80, 0.1);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    color: #4caf50;
+}
+
+.form-status.error {
+    background: rgba(255, 107, 107, 0.1);
+    border: 1px solid rgba(255, 107, 107, 0.3);
+    color: #ff6b6b;
+}
+
+.form-status.info {
+    background: rgba(0, 188, 212, 0.1);
+    border: 1px solid rgba(0, 188, 212, 0.3);
+    color: #00bcd4;
+}
+
+.field-error {
+    color: #ff6b6b;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.field-error.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.form-group.error input,
+.form-group.error textarea {
+    border-color: #ff6b6b !important;
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1) !important;
+}
+
+.form-group.success input,
+.form-group.success textarea {
+    border-color: #4caf50 !important;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1) !important;
+}
+
+.send-btn {
+    position: relative;
+    overflow: hidden;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.send-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.btn-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.send-btn.success {
+    background: linear-gradient(45deg, #4caf50, #45a049) !important;
+}
+
+.send-btn.success .btn-text i:before {
+    content: '\f00c'; /* FontAwesome check icon */
+}
+
+/* Loading animation */
+@keyframes formPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.contact-form.submitting {
+    animation: formPulse 2s infinite;
+    pointer-events: none;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    .form-status {
+        margin-bottom: 1rem;
+        padding: 0.8rem;
+        font-size: 0.9rem;
+    }
+    
+    .field-error {
+        font-size: 0.8rem;
+    }
+}
         /* ===================== */
 /* Internship Certificate Section */
 /* ===================== */
@@ -4774,31 +4882,46 @@ body.light-theme .voice-message.user {
                 </div>
                 
                 <form class="contact-form" id="contactForm">
+                    <!-- Status Messages -->
+                    <div class="form-status" id="formStatus" style="display: none;">
+                        <div class="status-message" id="statusMessage"></div>
+                    </div>
+
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="name"><i class="fas fa-user"></i> Your Name</label>
-                            <input type="text" id="name" name="name" required placeholder="John Doe">
+                            <label for="from_name"><i class="fas fa-user"></i> Your Name</label>
+                            <input type="text" id="from_name" name="from_name" required placeholder="John Doe">
+                            <div class="field-error" id="name-error"></div>
                         </div>
                         
                         <div class="form-group">
-                            <label for="email"><i class="fas fa-envelope"></i> Your Email</label>
-                            <input type="email" id="email" name="email" required placeholder="john@example.com">
+                            <label for="from_email"><i class="fas fa-envelope"></i> Your Email</label>
+                            <input type="email" id="from_email" name="from_email" required placeholder="john@example.com">
+                            <div class="field-error" id="email-error"></div>
                         </div>
                     </div>
                     
                     <div class="form-group">
                         <label for="subject"><i class="fas fa-tag"></i> Subject</label>
                         <input type="text" id="subject" name="subject" required placeholder="Let's work together!">
+                        <div class="field-error" id="subject-error"></div>
                     </div>
                     
                     <div class="form-group">
                         <label for="message"><i class="fas fa-comment"></i> Message</label>
                         <textarea id="message" name="message" rows="6" required placeholder="Tell me about your project or inquiry..."></textarea>
+                        <div class="field-error" id="message-error"></div>
                     </div>
                     
-                    <button type="submit" class="btn btn-primary send-btn">
-                        <i class="fas fa-paper-plane"></i>
-                        Send Message
+                    <button type="submit" class="btn btn-primary send-btn" id="sendBtn">
+                        <span class="btn-text">
+                            <i class="fas fa-paper-plane"></i>
+                            Send Message
+                        </span>
+                        <span class="btn-loading" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            Sending...
+                        </span>
                     </button>
                 </form>
             </div>
@@ -9750,6 +9873,475 @@ window.addEventListener('beforeunload', function() {
 // Export for debugging
 window.FuturisticProjectsDisplay = FuturisticProjectsDisplay;
 
+
+// EmailJS Configuration
+const EMAILJS_CONFIG = {
+    SERVICE_ID: 'service_qa2c1r6',  // Replace with your EmailJS service ID
+    TEMPLATE_ID: 'template_xquu89d', // Replace with your EmailJS template ID
+    PUBLIC_KEY: 'k2dBL5Xibrgd0zTSF'   // Replace with your EmailJS public key
+};
+
+// Initialize EmailJS
+(function() {
+    emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
+})();
+
+// Enhanced Contact Form Handler with EmailJS
+class ContactFormHandler {
+    constructor() {
+        this.form = document.getElementById('contactForm');
+        this.statusDiv = document.getElementById('formStatus');
+        this.statusMessage = document.getElementById('statusMessage');
+        this.submitBtn = document.getElementById('sendBtn');
+        this.isSubmitting = false;
+        
+        this.init();
+    }
+    
+    init() {
+        if (this.form) {
+            this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+            this.setupRealTimeValidation();
+        }
+    }
+    
+    setupRealTimeValidation() {
+        const inputs = this.form.querySelectorAll('input, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('blur', () => this.validateField(input));
+            input.addEventListener('input', () => this.clearFieldError(input));
+        });
+    }
+    
+    async handleSubmit(e) {
+        e.preventDefault();
+        
+        if (this.isSubmitting) return;
+        
+        // Validate all fields
+        if (!this.validateForm()) {
+            this.showStatus('Please correct the errors below.', 'error');
+            return;
+        }
+        
+        this.isSubmitting = true;
+        this.updateSubmitButton('loading');
+        this.form.classList.add('submitting');
+        
+        try {
+            // Prepare form data
+            const formData = new FormData(this.form);
+            const templateParams = {
+                from_name: formData.get('from_name'),
+                from_email: formData.get('from_email'),
+                subject: formData.get('subject'),
+                message: formData.get('message'),
+                to_name: 'Ujjwal Bajpai', // Your name
+                reply_to: formData.get('from_email')
+            };
+            
+            // Send email via EmailJS
+            const response = await emailjs.send(
+                EMAILJS_CONFIG.SERVICE_ID,
+                EMAILJS_CONFIG.TEMPLATE_ID,
+                templateParams
+            );
+            
+            console.log('Email sent successfully:', response);
+            this.handleSuccess();
+            
+        } catch (error) {
+            console.error('Email sending failed:', error);
+            this.handleError(error);
+        } finally {
+            this.isSubmitting = false;
+            this.form.classList.remove('submitting');
+        }
+    }
+    
+    handleSuccess() {
+        this.showStatus('Message sent successfully! I\'ll get back to you soon.', 'success');
+        this.updateSubmitButton('success');
+        this.form.reset();
+        this.clearAllErrors();
+        
+        // Reset button after delay
+        setTimeout(() => {
+            this.updateSubmitButton('default');
+            this.hideStatus();
+        }, 3000);
+        
+        // Send confirmation to user (optional)
+        this.sendConfirmationEmail();
+    }
+    
+    handleError(error) {
+        let errorMessage = 'Failed to send message. Please try again.';
+        
+        if (error.status === 400) {
+            errorMessage = 'Invalid form data. Please check your inputs.';
+        } else if (error.status === 403) {
+            errorMessage = 'Service temporarily unavailable. Please try again later.';
+        } else if (error.status === 429) {
+            errorMessage = 'Too many requests. Please wait a moment before trying again.';
+        }
+        
+        this.showStatus(errorMessage, 'error');
+        this.updateSubmitButton('default');
+    }
+    
+    async sendConfirmationEmail() {
+        try {
+            const confirmationParams = {
+                to_name: document.getElementById('from_name').value,
+                to_email: document.getElementById('from_email').value,
+                from_name: 'Ujjwal Bajpai',
+                subject: 'Thank you for contacting me!'
+            };
+            
+            // You'll need a separate template for confirmation emails
+            await emailjs.send(
+                EMAILJS_CONFIG.SERVICE_ID,
+                'confirmation_template_id', // Create this template in EmailJS
+                confirmationParams
+            );
+        } catch (error) {
+            console.log('Confirmation email failed:', error);
+            // Don't show error to user as main email was successful
+        }
+    }
+    
+    validateForm() {
+        const fields = ['from_name', 'from_email', 'subject', 'message'];
+        let isValid = true;
+        
+        fields.forEach(fieldName => {
+            const field = document.getElementById(fieldName);
+            if (!this.validateField(field)) {
+                isValid = false;
+            }
+        });
+        
+        return isValid;
+    }
+    
+    validateField(field) {
+        const value = field.value.trim();
+        const fieldName = field.name;
+        let isValid = true;
+        let errorMessage = '';
+        
+        // Clear previous error state
+        this.clearFieldError(field);
+        
+        // Required field validation
+        if (!value) {
+            isValid = false;
+            errorMessage = 'This field is required.';
+        }
+        // Email validation
+        else if (fieldName === 'from_email') {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) {
+                isValid = false;
+                errorMessage = 'Please enter a valid email address.';
+            }
+        }
+        // Name validation
+        else if (fieldName === 'from_name') {
+            if (value.length < 2) {
+                isValid = false;
+                errorMessage = 'Name must be at least 2 characters long.';
+            }
+        }
+        // Subject validation
+        else if (fieldName === 'subject') {
+            if (value.length < 5) {
+                isValid = false;
+                errorMessage = 'Subject must be at least 5 characters long.';
+            }
+        }
+        // Message validation
+        else if (fieldName === 'message') {
+            if (value.length < 10) {
+                isValid = false;
+                errorMessage = 'Message must be at least 10 characters long.';
+            }
+        }
+        
+        if (!isValid) {
+            this.showFieldError(field, errorMessage);
+        } else {
+            this.showFieldSuccess(field);
+        }
+        
+        return isValid;
+    }
+    
+    showFieldError(field, message) {
+        const formGroup = field.closest('.form-group');
+        const errorDiv = formGroup.querySelector('.field-error');
+        
+        formGroup.classList.remove('success');
+        formGroup.classList.add('error');
+        
+        if (errorDiv) {
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
+        }
+    }
+    
+    showFieldSuccess(field) {
+        const formGroup = field.closest('.form-group');
+        
+        formGroup.classList.remove('error');
+        formGroup.classList.add('success');
+    }
+    
+    clearFieldError(field) {
+        const formGroup = field.closest('.form-group');
+        const errorDiv = formGroup.querySelector('.field-error');
+        
+        formGroup.classList.remove('error', 'success');
+        
+        if (errorDiv) {
+            errorDiv.classList.remove('show');
+        }
+    }
+    
+    clearAllErrors() {
+        const formGroups = this.form.querySelectorAll('.form-group');
+        formGroups.forEach(group => {
+            group.classList.remove('error', 'success');
+            const errorDiv = group.querySelector('.field-error');
+            if (errorDiv) {
+                errorDiv.classList.remove('show');
+            }
+        });
+    }
+    
+    showStatus(message, type) {
+        if (!this.statusDiv || !this.statusMessage) return;
+        
+        this.statusMessage.textContent = message;
+        this.statusDiv.className = `form-status ${type}`;
+        this.statusDiv.style.display = 'block';
+        
+        // Add icon based on type
+        const icon = type === 'success' ? '✓' : 
+                    type === 'error' ? '✗' : 'ℹ';
+        this.statusMessage.textContent = `${icon} ${message}`;
+    }
+    
+    hideStatus() {
+        if (this.statusDiv) {
+            this.statusDiv.style.display = 'none';
+        }
+    }
+    
+    updateSubmitButton(state) {
+        if (!this.submitBtn) return;
+        
+        const btnText = this.submitBtn.querySelector('.btn-text');
+        const btnLoading = this.submitBtn.querySelector('.btn-loading');
+        
+        switch (state) {
+            case 'loading':
+                this.submitBtn.disabled = true;
+                this.submitBtn.classList.add('loading');
+                if (btnText) btnText.style.display = 'none';
+                if (btnLoading) btnLoading.style.display = 'flex';
+                break;
+                
+            case 'success':
+                this.submitBtn.disabled = false;
+                this.submitBtn.classList.remove('loading');
+                this.submitBtn.classList.add('success');
+                if (btnText) {
+                    btnText.style.display = 'flex';
+                    btnText.innerHTML = '<i class="fas fa-check"></i> Message Sent!';
+                }
+                if (btnLoading) btnLoading.style.display = 'none';
+                break;
+                
+            case 'default':
+            default:
+                this.submitBtn.disabled = false;
+                this.submitBtn.classList.remove('loading', 'success');
+                if (btnText) {
+                    btnText.style.display = 'flex';
+                    btnText.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
+                }
+                if (btnLoading) btnLoading.style.display = 'none';
+                break;
+        }
+    }
+}
+
+// Copy to clipboard functionality
+function copyToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+            showCopyFeedback(text);
+        }).catch(() => {
+            fallbackCopyToClipboard(text);
+        });
+    } else {
+        fallbackCopyToClipboard(text);
+    }
+}
+
+function fallbackCopyToClipboard(text) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+        document.execCommand('copy');
+        showCopyFeedback(text);
+    } catch (err) {
+        console.error('Fallback: Could not copy text: ', err);
+        showCopyError();
+    }
+    
+    document.body.removeChild(textArea);
+}
+
+function showCopyFeedback(text) {
+    const copyButtons = document.querySelectorAll('.copy-btn');
+    const isEmail = text.includes('@');
+    const isPhone = text.includes('+91');
+    
+    copyButtons.forEach(btn => {
+        const parentCard = btn.closest('.contact-info-card');
+        const cardType = parentCard.querySelector('h4').textContent.toLowerCase();
+        
+        if ((isEmail && cardType === 'email') || (isPhone && cardType === 'phone')) {
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i>';
+            btn.style.background = 'rgba(76, 175, 80, 0.3)';
+            btn.style.color = '#4caf50';
+            btn.style.transform = 'scale(1.1)';
+            
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                btn.style.background = 'rgba(0, 188, 212, 0.2)';
+                btn.style.color = '#00bcd4';
+                btn.style.transform = 'scale(1)';
+            }, 2000);
+        }
+    });
+    
+    // Show toast notification
+    showToast(`${isEmail ? 'Email' : 'Phone number'} copied to clipboard!`);
+}
+
+function showCopyError() {
+    showToast('Could not copy to clipboard', 'error');
+}
+
+function showToast(message, type = 'success') {
+    // Remove existing toast
+    const existingToast = document.querySelector('.copy-toast');
+    if (existingToast) {
+        existingToast.remove();
+    }
+    
+    const toast = document.createElement('div');
+    toast.className = `copy-toast ${type}`;
+    toast.innerHTML = `
+        <i class="fas ${type === 'success' ? 'fa-check' : 'fa-exclamation-triangle'}"></i>
+        <span>${message}</span>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Trigger animation
+    setTimeout(() => toast.classList.add('show'), 100);
+    
+    // Remove after delay
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// Initialize contact form handler when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if EmailJS is loaded
+    if (typeof emailjs === 'undefined') {
+        console.error('EmailJS not loaded. Please check your EmailJS script tag.');
+        return;
+    }
+    
+    // Initialize contact form
+    new ContactFormHandler();
+    
+    console.log('Contact form with EmailJS initialized successfully');
+});
+
+// Add toast styles if not already present
+if (!document.querySelector('#toast-styles')) {
+    const toastStyles = document.createElement('style');
+    toastStyles.id = 'toast-styles';
+    toastStyles.textContent = `
+        .copy-toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(15, 15, 15, 0.95);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 188, 212, 0.3);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            z-index: 10000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .copy-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .copy-toast.success {
+            border-color: rgba(76, 175, 80, 0.5);
+            color: #4caf50;
+        }
+        
+        .copy-toast.error {
+            border-color: rgba(255, 107, 107, 0.5);
+            color: #ff6b6b;
+        }
+        
+        .copy-toast i {
+            font-size: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .copy-toast {
+                bottom: 20px;
+                right: 20px;
+                left: 20px;
+                width: auto;
+            }
+        }
+    `;
+    document.head.appendChild(toastStyles);
+}
     </script>
 </body>
 </html>
