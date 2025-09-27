@@ -22,6 +22,38 @@
             line-height: 1.6;
             overflow-x: hidden;
         }
+        /* Typewriter Effect Styles */
+.typewriter-container {
+    position: relative;
+    display: inline-block;
+    min-height: 60px; /* Prevent layout shift */
+}
+
+.typewriter-text {
+    position: relative;
+    display: inline-block;
+}
+
+.cursor {
+    display: inline-block;
+    width: 3px;
+    height: 1em;
+    background: #00bcd4;
+    margin-left: 2px;
+    animation: blink 1s infinite;
+    vertical-align: top;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* Subtitle typewriter */
+.subtitle-typewriter {
+    min-height: 30px;
+    margin-top: 1rem;
+}
 
         /* Particles.js Container */
         #particles-js {
@@ -4505,12 +4537,16 @@ body.light-theme .voice-message.user {
         <div class="hero-container">
             <div class="hero-text">
                 <h1>
-                    Hi, I'm <span class="gradient-text">Ujjwal&nbsp;Bajpai</span>
+                    Hi,I'm <span class="typewriter-container">
+                        <span class="typewriter-text gradient-text" id="nameTypewriter"></span>
+                        <span class="cursor"></span>
+                    </span>
                 </h1>
                 
-                <p>
-                    IT intern @IFFCO | Pre-final year RVCE undergraduate | ML & Data Structures enthusiast| Member ACM Chapter @RVCE | Building efficient, real-world tech
-                </p>
+                <div class="subtitle-typewriter">
+                    <p id="subtitleTypewriter"></p>
+                </div>
+                
                 <div class="buttons">
                     <a href="Resume_txt.pdf" class="btn btn-primary" target="_blank">
                         <i class="fas fa-download"></i>
@@ -4522,7 +4558,7 @@ body.light-theme .voice-message.user {
                     </a>
                 </div>
             </div>
-
+    
             <div class="hero-image">
                 <img src="ujjwal_pic.jpg.png" alt="Ujjwal Bajpai" class="profile-pic">
             </div>
@@ -10342,6 +10378,108 @@ if (!document.querySelector('#toast-styles')) {
     `;
     document.head.appendChild(toastStyles);
 }
+// Multi-text Typewriter class
+class MultiTypewriter {
+    constructor(element, texts, speed = 100, deleteSpeed = 50, pauseTime = 2000) {
+        this.element = element;
+        this.texts = texts;
+        this.speed = speed;
+        this.deleteSpeed = deleteSpeed;
+        this.pauseTime = pauseTime;
+        this.currentTextIndex = 0;
+        this.currentIndex = 0;
+        this.isDeleting = false;
+    }
+
+    type() {
+        const current = this.texts[this.currentTextIndex];
+        
+        if (this.isDeleting) {
+            this.element.textContent = current.substring(0, this.currentIndex - 1);
+            this.currentIndex--;
+        } else {
+            this.element.textContent = current.substring(0, this.currentIndex + 1);
+            this.currentIndex++;
+        }
+
+        let typeSpeed = this.isDeleting ? this.deleteSpeed : this.speed;
+
+        if (!this.isDeleting && this.currentIndex === current.length) {
+            typeSpeed = this.pauseTime;
+            this.isDeleting = true;
+        } else if (this.isDeleting && this.currentIndex === 0) {
+            this.isDeleting = false;
+            this.currentTextIndex = (this.currentTextIndex + 1) % this.texts.length;
+        }
+
+        setTimeout(() => this.type(), typeSpeed);
+    }
+
+    start() {
+        this.type();
+    }
+}
+
+// Simple typewriter for single text
+class SimpleTypewriter {
+    constructor(element, text, speed = 150) {
+        this.element = element;
+        this.text = text;
+        this.speed = speed;
+        this.currentIndex = 0;
+    }
+
+    type() {
+        if (this.currentIndex < this.text.length) {
+            this.element.textContent += this.text.charAt(this.currentIndex);
+            this.currentIndex++;
+            setTimeout(() => this.type(), this.speed);
+        }
+    }
+
+    start() {
+        this.element.textContent = ''; // Clear existing text
+        this.type();
+    }
+}
+
+
+function initTypewriterEffect() {
+
+    const nameElement = document.getElementById('nameTypewriter');
+    if (nameElement) {
+        const nameTypewriter = new SimpleTypewriter(nameElement, 'Ujjwal Bajpai', 150);
+        nameTypewriter.start();
+    }
+
+
+    const subtitleElement = document.getElementById('subtitleTypewriter');
+    if (subtitleElement) {
+        const subtitleTexts = [
+            'IT intern @IFFCO',
+            'Pre-final year RVCE undergraduate', 
+            'ML & Data Structures enthusiast',
+            'Member ACM Chapter @RVCE',
+            'Building efficient, real-world tech'
+        ];
+        
+        // Start subtitle after name finishes typing (2.5 seconds delay)
+        setTimeout(() => {
+            const subtitleTypewriter = new MultiTypewriter(subtitleElement, subtitleTexts, 80, 40, 1500);
+            subtitleTypewriter.start();
+        }, 2500);
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+   
+    initTypewriterEffect();
+    
+ 
+    loadTheme();
+   
+});
     </script>
 </body>
 </html>
