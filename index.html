@@ -564,6 +564,55 @@
   background: linear-gradient(90deg, transparent, rgba(0, 188, 212, 0.1), transparent);
   transition: left 0.6s;
 }
+/* Decrypted text effect for hero only */
+.decrypted-char {
+    display: inline-block;
+    animation: charReveal 0.6s ease-out forwards;
+    position: relative;
+}
+
+@keyframes charReveal {
+    0% {
+        opacity: 0;
+        transform: rotateX(90deg);
+        color: #ff6b6b;
+    }
+    50% {
+        color: #00bcd4;
+    }
+    100% {
+        opacity: 1;
+        transform: rotateX(0deg);
+        color: #ffffff;
+    }
+}
+
+.subtitle-typewriter p {
+    animation: fadeInSlide 1s ease-out 1.5s forwards;
+    opacity: 0;
+    font-size: 1.2rem;
+    color: #aaa;
+    margin-bottom: 2rem;
+}
+
+@keyframes fadeInSlide {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Remove old typewriter styles */
+.typewriter-container,
+.typewriter-text,
+.cursor,
+.subtitle-typewriter {
+    /* Clear old styles */
+}
 
 .report-card:hover::before {
   left: 100%;
@@ -4537,14 +4586,11 @@ body.light-theme .voice-message.user {
         <div class="hero-container">
             <div class="hero-text">
                 <h1>
-                    Hi,I'm <span class="typewriter-container">
-                        <span class="typewriter-text gradient-text" id="nameTypewriter"></span>
-                        <span class="cursor"></span>
-                    </span>
+                    Hi, I'm <span class="gradient-text" id="subtitle-typewriter">Ujjwal Bajpai</span>
                 </h1>
                 
                 <div class="subtitle-typewriter">
-                    <p id="subtitleTypewriter"></p>
+                    <p id="decryptedSubtitle">IT intern @IFFCO | ML Enthusiast | RV College of Engineering</p>
                 </div>
                 
                 <div class="buttons">
@@ -5963,10 +6009,14 @@ function generateResponse(message) {
                 }
             },
             {
-                name: "Hyperspectral Crop Mapping using Machine Learning",
-                description: "Deep learning model for crop classification using CNN architectures",
-                tech: ["Python", "Machine Learning", "CNN", "Remote Sensing"],
-                domain: "Agriculture Technology"
+                name: "CodRev",
+                description: "React based app based on reviewing and correcting codes by using api integration",
+                tech: ["Tailwind", "React","Gemini API"],
+                links:{
+                    github: "https://github.com/Ujjwal120605/codrev",
+                    demo: "https://codrev.vercel.app"
+
+                }
             },
             {
                 name: "IFFCO Login & Information Website",
@@ -7309,14 +7359,17 @@ const projectsData = [
         ]
     },
     {
-        id: 'crop-mapping',
-        title: 'Hyperspectral Crop Mapping',
-        subtitle: 'Machine Learning',
-        description: 'Advanced deep learning project for precision agriculture using hyperspectral satellite imagery. Implemented CNN architectures for crop classification with high accuracy.',
+        id: 'CodRev-Ai-React based code reviewer app',
+        title: 'CodRev',
+        subtitle: 'Web Development',
+        description: 'React based app to review code with the help of api integration from gemini.It reviews the time complexity of the code really well',
         background: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
         icon: 'fas fa-seedling',
-        tech: ['Python', 'TensorFlow', 'CNN', 'Remote Sensing'],
-        links: []
+        tech: ['React', 'Tailwind','Gemini Api'],
+        links: [
+        { type: 'github', url: 'https://github.com/Ujjwal120605/codrev', text: 'View Code' },
+            { type: 'demo', url: 'https://codrev.vercel.app', text: 'Live Demo' }
+        ]
     },
     {
         id: 'iffco-website',
@@ -7611,10 +7664,7 @@ document.addEventListener('visibilitychange', function() {
         document.body.style.setProperty('--animation-play-state', 'running');
     }
 });
-/**
- * Enhanced Certificates Interactive Features
- * Optimized for both desktop and mobile devices
- */
+
 
  class CertificateEnhancer {
     constructor() {
@@ -10486,6 +10536,257 @@ document.addEventListener('DOMContentLoaded', function() {
     loadTheme();
    
 });
+// ===== PRIORITY 1: DECRYPTED TEXT EFFECT CLASS =====
+class DecryptedTextEffect {
+    constructor(element, text, speed = 80) {
+        this.element = element;
+        this.text = text;
+        this.speed = speed;
+        this.index = 0;
+    }
+
+    decrypt() {
+        if (this.index < this.text.length) {
+            const char = this.text[this.index];
+            const span = document.createElement('span');
+            span.className = 'decrypted-char';
+            span.textContent = char;
+            span.style.animationDelay = (this.index * this.speed) + 'ms';
+            this.element.appendChild(span);
+            this.index++;
+            setTimeout(() => this.decrypt(), this.speed);
+        }
+    }
+
+    start() {
+        this.element.textContent = '';
+        this.decrypt();
+    }
+}
+
+// ===== PRIORITY 2: INITIALIZE DECRYPTED TEXT EFFECT =====
+function initDecryptedTextEffect() {
+    const nameElement = document.getElementById('decryptedName');
+    if (nameElement) {
+        const decrypted = new DecryptedTextEffect(nameElement, 'Ujjwal Bajpai', 70);
+        decrypted.start();
+    }
+}
+
+// ===== DOM READY - PRIORITY EXECUTION =====
+document.addEventListener('DOMContentLoaded', function() {
+    // PRIORITY 1: Initialize decrypted text effect FIRST
+    console.log('Initializing decrypted text effect...');
+    initDecryptedTextEffect();
+    
+    // PRIORITY 2: Load theme
+    console.log('Loading theme...');
+    loadTheme();
+    
+    // PRIORITY 3: Initialize other features if they exist
+    console.log('Initializing other features...');
+    
+    // Voice Chatbot
+    if (typeof VoiceChatbot !== 'undefined') {
+        try {
+            voiceChatbot = new VoiceChatbot();
+        } catch (error) {
+            console.log('Voice chatbot skipped:', error.message);
+        }
+    }
+    
+    // Location Manager
+    if (typeof LocationManager !== 'undefined') {
+        try {
+            locationManager = new LocationManager();
+        } catch (error) {
+            console.log('Location manager skipped:', error.message);
+        }
+    }
+    
+    // Project Manager
+    if (typeof ProjectManager !== 'undefined') {
+        try {
+            projectManager = new ProjectManager();
+        } catch (error) {
+            console.log('Project manager skipped:', error.message);
+        }
+    }
+    
+    // Certificate Enhancer
+    if (typeof CertificateEnhancer !== 'undefined') {
+        try {
+            certificateEnhancer = new CertificateEnhancer();
+        } catch (error) {
+            console.log('Certificate enhancer skipped:', error.message);
+        }
+    }
+    
+    // Futuristic Projects Display
+    if (typeof FuturisticProjectsDisplay !== 'undefined') {
+        try {
+            futuristicProjectsDisplay = new FuturisticProjectsDisplay();
+        } catch (error) {
+            console.log('Futuristic projects display skipped:', error.message);
+        }
+    }
+    
+    // Contact Form Handler
+    if (typeof ContactFormHandler !== 'undefined') {
+        try {
+            new ContactFormHandler();
+        } catch (error) {
+            console.log('Contact form handler skipped:', error.message);
+        }
+    }
+    
+    // GitHub Data
+    if (typeof fetchGitHubData !== 'undefined') {
+        try {
+            fetchGitHubData();
+            generateActivityGrid();
+        } catch (error) {
+            console.log('GitHub data skipped:', error.message);
+        }
+    }
+    
+    console.log('✓ All features initialized successfully');
+});
+
+// ===== CLEANUP ON PAGE UNLOAD =====
+window.addEventListener('beforeunload', function() {
+    if (typeof voiceChatbot !== 'undefined' && voiceChatbot) {
+        try {
+            voiceChatbot.stopListening();
+            voiceChatbot.stopSpeaking();
+        } catch (error) {
+            console.log('Cleanup error:', error.message);
+        }
+    }
+});
+
+// ===== HANDLE VISIBILITY CHANGES =====
+document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+        if (typeof voiceChatbot !== 'undefined' && voiceChatbot) {
+            try {
+                voiceChatbot.stopListening();
+                voiceChatbot.stopSpeaking();
+            } catch (error) {
+                console.log('Visibility change cleanup error:', error.message);
+            }
+        }
+    }
+});
+
+// ===== MOBILE MENU FUNCTIONS =====
+function toggleMobileMenu() {
+    const mobileNav = document.getElementById('mobileNav');
+    const menuIcon = document.querySelector('.mobile-menu i');
+    
+    if (mobileNav && menuIcon) {
+        mobileNav.classList.toggle('active');
+        
+        if (mobileNav.classList.contains('active')) {
+            menuIcon.classList.remove('fa-bars');
+            menuIcon.classList.add('fa-times');
+        } else {
+            menuIcon.classList.remove('fa-times');
+            menuIcon.classList.add('fa-bars');
+        }
+    }
+}
+
+function closeMobileMenu() {
+    const mobileNav = document.getElementById('mobileNav');
+    const menuIcon = document.querySelector('.mobile-menu i');
+    
+    if (mobileNav && menuIcon) {
+        mobileNav.classList.remove('active');
+        menuIcon.classList.remove('fa-times');
+        menuIcon.classList.add('fa-bars');
+    }
+}
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', function(event) {
+    const mobileNav = document.getElementById('mobileNav');
+    const navContainer = document.querySelector('.nav-container');
+    
+    if (navContainer && mobileNav && !navContainer.contains(event.target) && mobileNav.classList.contains('active')) {
+        closeMobileMenu();
+    }
+});
+
+// Handle window resize
+window.addEventListener('resize', function() {
+    const mobileNav = document.getElementById('mobileNav');
+    if (window.innerWidth > 768 && mobileNav && mobileNav.classList.contains('active')) {
+        closeMobileMenu();
+    }
+});
+
+// ===== CERTIFICATE MODAL FUNCTIONS =====
+function openCertModal(imageSrc) {
+    const modal = document.getElementById('certModal');
+    const modalImg = document.getElementById('certModalImg');
+    if (modal && modalImg) {
+        modal.style.display = 'block';
+        modalImg.src = imageSrc;
+    }
+}
+
+function closeCertModal() {
+    const modal = document.getElementById('certModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('certModal');
+    if (modal && event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// ===== THEME TOGGLE =====
+function toggleTheme() {
+    const body = document.body;
+    const themeIcon = document.getElementById('theme-icon');
+    
+    body.classList.toggle('light-theme');
+    
+    if (body.classList.contains('light-theme')) {
+        if (themeIcon) {
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+    } else {
+        if (themeIcon) {
+            themeIcon.classList.remove('fa-sun');
+            themeIcon.classList.add('fa-moon');
+        }
+    }
+}
+
+function loadTheme() {
+    const body = document.body;
+    const themeIcon = document.getElementById('theme-icon');
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    
+    if (savedTheme === 'light') {
+        body.classList.add('light-theme');
+        if (themeIcon) {
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+    }
+}
+
     </script>
 </body>
 </html>
+
+
